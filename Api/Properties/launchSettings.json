@@ -2,8 +2,10 @@
   "profiles": {
     "Api": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7019 start --cors *",
-      "launchBrowser": false
+      "commandLineArgs": "start --cors * --port 7019",
+      "environmentVariables": {
+        "Connection_String": "Server=(localdb)\\masterPCDB;Database=MasterPCDB;Trusted_Connection=True;MultipleActiveResultSets=true"
+      }
     }
   }
 }
