@@ -1,0 +1,82 @@
+﻿@namespace MasterPC_WASM.Components.Tables
+@using Shared.View_Models
+
+<MudPaper Elevation="3">
+    <MudDataGrid Items="@Elements" QuickFilter="_quickFilter">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">CPUs</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Property="cpu => cpu.Name">
+                <CellTemplate>
+                    <MudStack Row AlignItems="AlignItems.Center">
+                        <MudImage Avatar="true" Src="favicon.ico" />
+                        <MudText Typo="Typo.body1"><b>@(context.Item.Name)</b></MudText>
+                    </MudStack>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="cpu => cpu.CoreCount" Title="Core Count" />
+
+            <PropertyColumn Property="cpu => cpu.CoreClock" Title="Core Clock">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit">@(context.Item.CoreClock is not null ? context.Item.CoreClock + " MHz" : null)</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="cpu => cpu.BoostClock" Title="Boost Clock">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit"> @(context.Item.BoostClock is not null ? context.Item.BoostClock + " MHz" : null)</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="cpu => cpu.TDP" Title="TDP">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit"> @(context.Item.TDP is not null ? context.Item.TDP + " W" : null)</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="cpu => cpu.Price" Title="Price">
+                <CellTemplate>
+                    <MudStack Row AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                        <b>
+                            <MudText Typo="Typo.inherit"> @(string.Format("${0:N2}", context.Item.Price))</MudText>
+                        </b>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Add</MudButton>
+                    </MudStack>
+                </CellTemplate>
+            </PropertyColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="CPUVM" />
+        </PagerContent>
+    </MudDataGrid>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public List<CPUVM>? Elements { get; set; }
+
+    private string? _searchString { get; set; }
+
+    private Func<CPUVM, bool> _quickFilter => cpu =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (cpu.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (!String.IsNullOrEmpty(cpu.Manufacturer) && cpu.Manufacturer.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        //if ($"{cpu.Number} {x.Position} {x.Molar}".Contains(_searchString))
+        //    return true;
+
+        return false;
+    };
+
+}

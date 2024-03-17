@@ -1,0 +1,98 @@
+﻿@inject NavigationManager NavigationManager
+
+<MudAppBar Color="Color.Primary" Fixed="false" Elevation="0" Style="padding: 0em 3em">
+    <MudButton Color="Color.Inherit" Href="/" Size="Size.Large" Style="padding: 8px 4px">
+        <MudIcon Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Size="Size.Large" />
+
+        <MudText Color="Color.Inherit" Typo="Typo.h6" Style="padding-left: 10px">
+            MasterPC
+        </MudText>
+    </MudButton>
+
+    <MudSpacer />
+    @*
+    <AuthorizeView>
+    <Authorized>
+    <MudButton Size="Size.Large" Href="Account/Manage" StartIcon="@Icons.Material.Filled.AccountCircle" Color="Color.Inherit">@context.User.Identity?.Name</MudButton>
+    <MudButton Size="Size.Large" StartIcon="@Icons.Material.Filled.Favorite" Color="Color.Inherit">Favorite Parts</MudButton>
+    <MudButton Size="Size.Large" StartIcon="@Icons.Material.Filled.History" Color="Color.Inherit">Saved PC Builds</MudButton>
+    <MudButton Size="Size.Large" StartIcon="@Icons.Material.Filled.Logout" Color="Color.Inherit">Log Out</MudButton>
+    </Authorized>
+    <NotAuthorized>
+    <MudButton Size="Size.Large" Href="Account/Register" StartIcon="@Icons.Material.Filled.AppRegistration" Color="Color.Inherit">Register</MudButton>
+    <MudButton Size="Size.Large" Href="Account/Login" StartIcon="@Icons.Material.Filled.Login" Color="Color.Inherit">Login</MudButton>
+    </NotAuthorized>
+    </AuthorizeView> *@
+</MudAppBar>
+
+<MudDivider />
+
+<MudAppBar Color="Color.Primary" Fixed="false" Elevation="0" Style="width: 100%; padding: 0em 3em;">
+    <MudStack Row AlignItems="AlignItems.Center" Spacing="2">
+        <MudButton StartIcon="@Icons.Material.Filled.Construction" Color="Color.Inherit" Edge="Edge.Start">
+            PC Builder
+        </MudButton>
+
+        <MudMenu FullWidth="true" ActivationEvent="@MouseEvent.MouseOver" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
+            <ActivatorContent>
+                <MudButton Href="products" StartIcon="@Icons.Material.Filled.Category" EndIcon="@Icons.Material.Filled.ArrowDropDown" Color="Color.Inherit">
+                    Products
+                </MudButton>
+            </ActivatorContent>
+            <ChildContent>
+                <MudMenuItem Href="products/cpus"> CPUs </MudMenuItem>
+                <MudMenuItem Href="products/gpus"> GPUs </MudMenuItem>
+                <MudMenuItem Href="products/memory"> Memory </MudMenuItem>
+                <MudMenuItem Href="products/motherboards"> Motherboards </MudMenuItem>
+                <MudMenuItem Href="products/cases"> Cases </MudMenuItem>
+                <MudMenuItem Href="products/power-supplies"> Power Supplies </MudMenuItem>
+                <MudMenuItem Href="products/storage"> Storage </MudMenuItem>
+            </ChildContent>
+        </MudMenu>
+
+        <MudButton StartIcon="@Icons.Material.Filled.Computer" Color="Color.Inherit" Edge="Edge.Start">
+            Completed Builds
+        </MudButton>
+    </MudStack>
+
+    <MudSpacer />
+
+
+    @if (expandSearchBar)
+    {
+        <MudTextField Class="mt-0" @bind-Value="searchParams" Placeholder="Search" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Clearable="true" OnAdornmentClick="Search" OnKeyDown="SearchKeyPress" OnClearButtonClick="HandleClearSearch" Immediate="true" AdornmentColor="Color.Inherit" />
+    }
+    else
+    {
+        <MudIconButton Icon="@Icons.Material.Filled.Search" Color="Color.Inherit" OnClick="() => expandSearchBar = true" />
+    }
+
+</MudAppBar>
+
+@code {
+    private bool expandSearchBar { get; set; } = false;
+    public string? searchParams { get; set; }
+
+
+    private void Search()
+    {
+        if (searchParams != null)
+        {
+            NavigationManager.NavigateTo($"/search/{searchParams}");
+        }
+    }
+
+    private void SearchKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter")
+        {
+            Search();
+        }
+    }
+
+    private void HandleClearSearch()
+    {
+        searchParams = null;
+        expandSearchBar = false;
+    }
+}

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Data": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "Connection_String": "Server=(localdb)\\\\masterPCDB;Database=MasterPCDB;Trusted_Connection=True;MultipleActiveResultSets=true"
+      }
+    }
+  }
+}

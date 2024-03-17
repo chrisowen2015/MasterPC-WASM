@@ -5,7 +5,9 @@ VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterPC-WASM", "MasterPC-WASM\MasterPC-WASM.csproj", "{885A9D87-AE3C-43D5-B6A5-E9298A60565E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{F44145F2-6F3A-4531-862B-0F04727742FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api", "Api\Api.csproj", "{F44145F2-6F3A-4531-862B-0F04727742FC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{3B912935-F267-4568-8426-8B1A792C0D44}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{F44145F2-6F3A-4531-862B-0F04727742FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F44145F2-6F3A-4531-862B-0F04727742FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F44145F2-6F3A-4531-862B-0F04727742FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B912935-F267-4568-8426-8B1A792C0D44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B912935-F267-4568-8426-8B1A792C0D44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B912935-F267-4568-8426-8B1A792C0D44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B912935-F267-4568-8426-8B1A792C0D44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
