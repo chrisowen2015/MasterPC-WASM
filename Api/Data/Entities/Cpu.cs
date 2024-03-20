@@ -1,27 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Api.Data.Entities;
-
-public partial class Cpu
+﻿namespace Api.Data.Entities
 {
-    public string Id { get; set; } = null!;
+    public partial class Cpu
+    {
+        public string Id { get; set; } = null!;
 
-    public string Name { get; set; } = null!;
+        public string PCPId { get; set; } = null!;
 
-    public string? Manufacturer { get; set; }
+        public string Name { get; set; } = null!;
 
-    public double? Price { get; set; }
+        public string? ImgUrl { get; set; }
 
-    public int? CoreCount { get; set; }
+        public string? Manufacturer { get; set; }
 
-    public double? CoreClock { get; set; }
+        public string Socket { get; set; } = null!;
 
-    public double? BoostClock { get; set; }
+        public bool HasCooler { get; set; }
 
-    public int? Tdp { get; set; }
+        public double? Price { get; set; }
 
-    public string? Graphics { get; set; }
+        public int? CoreCount { get; set; }
 
-    public bool? Smt { get; set; }
+        public double? CoreClock { get; set; }
+
+        public double? BoostClock { get; set; }
+
+        public int? Tdp { get; set; }
+
+        public string? Graphics { get; set; }
+
+        public bool? Smt { get; set; }
+    }
+
 }
