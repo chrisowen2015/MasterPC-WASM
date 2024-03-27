@@ -118,33 +118,4 @@
     {
         NavigationManager.NavigateToLogout("/authentication/logout", "/");
     }
-
-    protected async override Task OnInitializedAsync()
-    {
-        var authstate = await GetAuthenticationStateAsync.GetAuthenticationStateAsync();
-        User = authstate.User;
-        //user.FindAll("role");
-        /*
-        foreach (var claim in user.Identities)
-            {
-            Console.WriteLine("Role Claim Type" + ": " + claim.RoleClaimType);
-            Console.WriteLine("Authentication Type" + ": " + claim.AuthenticationType);
-            Console.WriteLine("Name Claim Type" + ": " + claim.NameClaimType);
-            Console.WriteLine("Name" + ": " + claim.Name);
-            Console.WriteLine("Label" + ": " + claim.Label);
-        }
-        */
-        Console.WriteLine("Printing Groups");
-        @foreach (var group in GetUserGroups(User))
-        {
-            Console.WriteLine(group);
-        }
-
-    }
-
-    private IEnumerable<string> GetUserGroups(ClaimsPrincipal user)
-    {
-        var groupsClaim = user.FindAll("groups").Select(c => c.Value);
-        return groupsClaim;
-    }
 }
