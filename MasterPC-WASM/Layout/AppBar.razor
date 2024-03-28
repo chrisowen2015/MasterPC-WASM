@@ -1,4 +1,6 @@
-﻿@inject NavigationManager NavigationManager
+﻿@using System.Security.Claims
+@inject AuthenticationStateProvider GetAuthenticationStateAsync
+@inject NavigationManager NavigationManager
 
 <MudAppBar Color="Color.Primary" Fixed="false" Elevation="0" Style="padding: 0em 3em">
     <MudButton Color="Color.Inherit" Href="/" Size="Size.Large" Style="padding: 8px 4px">
@@ -10,6 +12,21 @@
     </MudButton>
 
     <MudSpacer />
+
+    <AuthorizeView>
+        <Authorized>
+            <MudButton Color="Color.Inherit" Href="/user">
+                Welcome @context.User.Identity?.Name
+            </MudButton>
+            <MudButton Color="Color.Inherit" OnClick="LogOut">
+                Log Out
+            </MudButton>
+        </Authorized>
+        <NotAuthorized>
+            <MudButton Size="Size.Large" Href="Account/Register" StartIcon="@Icons.Material.Filled.AppRegistration" Color="Color.Inherit">Register</MudButton>
+            <MudButton Size="Size.Large" Href="Account/Login" StartIcon="@Icons.Material.Filled.Login" Color="Color.Inherit">Login</MudButton>
+        </NotAuthorized>
+    </AuthorizeView>
     @*
     <AuthorizeView>
     <Authorized>
@@ -73,6 +90,7 @@
     private bool expandSearchBar { get; set; } = false;
     public string? searchParams { get; set; }
 
+    private ClaimsPrincipal User { get; set; }
 
     private void Search()
     {
@@ -94,5 +112,10 @@
     {
         searchParams = null;
         expandSearchBar = false;
+    }
+
+    private void LogOut()
+    {
+        NavigationManager.NavigateToLogout("/authentication/logout", "/");
     }
 }
