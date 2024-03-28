@@ -2,8 +2,249 @@
 
 @attribute [Authorize(Policy = "superusers")]
 
-<h3>Admin</h3>
+@using MasterPC_WASM.Components.Tables;
+@using MasterPC_WASM.Services.CPU;
+@using MasterPC_WASM.Utils;
+@using Shared.View_Models;
+
+@inject ICPUService cpuService;
+
+<div>
+    <div style="padding-top: 2em; display: flex; justify-content: center; align-items: center; background-color: @(theme is not null ? theme.Palette.Tertiary : null)">
+        <MudText Align="Align.Center" Typo="Typo.h2 " Style="font-weight: 500"> Admin Dashboard </MudText>
+    </div>
+
+    <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="margin-top: 2em">
+        <MudGrid>
+            <MudItem sm="12">
+                <MudText Align="Align.Center" Typo="Typo.h4">
+                    Select the desired Entities to operate on.
+                </MudText>
+            </MudItem>
+
+            <MudItem sm="12">
+                <MudStack AlignItems="AlignItems.Center">
+                    <MudRadioGroup T="String" ValueChanged="(value) => RadioButtonChanged(value)">
+                        <MudRadio Value="@("Cases")">Cases</MudRadio>
+                        <MudRadio Value="@("CPUCoolers")">CPU Coolers</MudRadio>
+                        <MudRadio Value="@("CPUs")">CPUs</MudRadio>
+                        <MudRadio Value="@("GPUs")">GPUs</MudRadio>
+                        <MudRadio Value="@("Motherboards")">Motherboards</MudRadio>
+                        <MudRadio Value="@("PSUs")">PSUs</MudRadio>
+                        <MudRadio Value="@("RAM")">RAM</MudRadio>
+                        <MudRadio Value="@("Storage")">Storage</MudRadio>
+                    </MudRadioGroup>
+                </MudStack>
+            </MudItem>
+
+            <MudItem sm="12">
+                <MudText Align="Align.Center" Typo="Typo.h5">
+                    Send to Database?
+                </MudText>
+            </MudItem>
+
+            <MudItem sm="12">
+                <MudStack AlignItems="AlignItems.Center">
+                    <MudRadioGroup @bind-Value="SendToDatabase">
+                        <MudRadio Value="true">Yes</MudRadio>
+                        <MudRadio Value="false">No</MudRadio>
+                    </MudRadioGroup>
+                </MudStack>
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+
+    @switch (SelectedEntity)
+    {
+        case "Cases":
+            <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="margin-top: 2em">
+                <MudGrid>
+                    <MudItem xs="12" lg="3">
+                        <MudPaper Elevation="3" Style="padding: 2em">
+                            <MudText Align="Align.Center" Typo="Typo.h5" Style="font-weight: 500"> Upload Cases</MudText>
+                            @* Upload Cases Input file goes here*@
+                        </MudPaper>
+                    </MudItem>
+
+                    <MudItem xs="12" lg="9">
+                        @* Cases Table Goes Here*@
+                    </MudItem>
+                </MudGrid>
+            </MudContainer>
+            break;
+        case "CPUCoolers":
+            <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="margin-top: 2em">
+                <MudGrid>
+                    <MudItem xs="12" lg="3">
+                        <MudPaper Elevation="3" Style="padding: 2em">
+                            <MudText Align="Align.Center" Typo="Typo.h5" Style="font-weight: 500"> Upload CPU Coolers</MudText>
+                            @* Upload CPU Coolers Input file goes here*@
+                        </MudPaper>
+                    </MudItem>
+
+                    <MudItem xs="12" lg="9">
+                        @* CPU Cooler Table Goes Here*@
+                    </MudItem>
+                </MudGrid>
+            </MudContainer>
+            break;
+        case "CPUs":
+            <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="margin-top: 2em">
+                <MudGrid>
+                    <MudItem xs="12" lg="3">
+                        <MudPaper Elevation="3" Style="padding: 2em">
+                            <MudText Align="Align.Center" Typo="Typo.h5" Style="font-weight: 500"> Upload CPUs</MudText>
+                            <InputFile OnChange="HandleCPUUpload" />
+                        </MudPaper>
+                    </MudItem>
+
+                    <MudItem xs="12" lg="9">
+                        <CPUTable Elements="@cpus" />
+                    </MudItem>
+                </MudGrid>
+            </MudContainer>
+            break;
+        case "GPUs":
+            <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="margin-top: 2em">
+                <MudGrid>
+                    <MudItem xs="12" lg="3">
+                        <MudPaper Elevation="3" Style="padding: 2em">
+                            <MudText Align="Align.Center" Typo="Typo.h5" Style="font-weight: 500"> Upload GPUs</MudText>
+                            @* Upload GPUs file goes here*@
+                        </MudPaper>
+                    </MudItem>
+
+                    <MudItem xs="12" lg="9">
+                        @* GPUs Table Goes Here*@
+                    </MudItem>
+                </MudGrid>
+            </MudContainer>
+            break;
+        case "Motherboards":
+            <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="margin-top: 2em">
+                <MudGrid>
+                    <MudItem xs="12" lg="3">
+                        <MudPaper Elevation="3" Style="padding: 2em">
+                            <MudText Align="Align.Center" Typo="Typo.h5" Style="font-weight: 500"> Upload Motherboards</MudText>
+                            @* Upload Motherboards file goes here*@
+                        </MudPaper>
+                    </MudItem>
+
+                    <MudItem xs="12" lg="9">
+                        @* Motherboards Table Goes Here*@
+                    </MudItem>
+                </MudGrid>
+            </MudContainer>
+            break;
+        case "PSUs":
+            <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="margin-top: 2em">
+                <MudGrid>
+                    <MudItem xs="12" lg="3">
+                        <MudPaper Elevation="3" Style="padding: 2em">
+                            <MudText Align="Align.Center" Typo="Typo.h5" Style="font-weight: 500"> Upload PSUs</MudText>
+                            @* Upload PSUs file goes here*@
+                        </MudPaper>
+                    </MudItem>
+
+                    <MudItem xs="12" lg="9">
+                        @* PSUs Table Goes Here*@
+                    </MudItem>
+                </MudGrid>
+            </MudContainer>
+            break;
+        case "RAM":
+            <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="margin-top: 2em">
+                <MudGrid>
+                    <MudItem xs="12" lg="3">
+                        <MudPaper Elevation="3" Style="padding: 2em">
+                            <MudText Align="Align.Center" Typo="Typo.h5" Style="font-weight: 500"> Upload RAM</MudText>
+                            @* Upload RAM file goes here*@
+                        </MudPaper>
+                    </MudItem>
+
+                    <MudItem xs="12" lg="9">
+                        @* RAM Table Goes Here*@
+                    </MudItem>
+                </MudGrid>
+            </MudContainer>
+            break;
+        case "Storage":
+            <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="margin-top: 2em">
+                <MudGrid>
+                    <MudItem xs="12" lg="3">
+                        <MudPaper Elevation="3" Style="padding: 2em">
+                            <MudText Align="Align.Center" Typo="Typo.h5" Style="font-weight: 500"> Upload Storage</MudText>
+                            @* Upload Storage file goes here*@
+                        </MudPaper>
+                    </MudItem>
+
+                    <MudItem xs="12" lg="9">
+                        @* Storage Table Goes Here*@
+                    </MudItem>
+                </MudGrid>
+            </MudContainer>
+            break;
+        default:
+            <MudText Align="Align.Center" Typo="Typo.h5" Style="padding-top: 2em">Select an Entity to operate on.</MudText>
+            break;
+    }
+
+</div>
 
 @code {
+    [CascadingParameter]
+    private MudTheme? theme { get; set; }
 
+    private string? SelectedEntity { get; set; } = "";
+    private bool SendToDatabase { get; set; } = false;
+
+    private List<CPUVM> cpus = new List<CPUVM>();
+
+    private void RadioButtonChanged(string value)
+    {
+        switch(SelectedEntity)
+        {
+            case "Cases":
+                // Cases
+                break;
+            case "CPUCoolers":
+                // CPU Coolers
+                break;
+            case "CPUs":
+                cpus.Clear();
+                break;
+            case "GPUs":
+                // GPUs
+                break;
+            case "Motherboards":
+                // Motherboards
+                break;
+            case "PSUs":
+                // PSUs
+                break;
+            case "RAM":
+                // RAM
+                break;
+            case "Storage":
+                // Storage
+                break;
+            default:
+                break;
+        }
+
+        SelectedEntity = value;
+    }
+
+    async Task HandleCPUUpload(InputFileChangeEventArgs e)
+    {
+        cpus = await FileUploadFunctions.HandleCPUUpload(e);
+
+        if(SendToDatabase)
+        {
+            foreach (var cpu in cpus)
+            {
+                await cpuService.AddCPUAsync(cpu);
+            }
+        }
+    }
 }

@@ -1,5 +1,7 @@
-﻿using Shared.View_Models;
+﻿using Microsoft.AspNetCore.Authorization;
+using Shared.View_Models;
 using System.Net.Http.Json;
+using System.Security.Claims;
 
 namespace MasterPC_WASM.Services.CPU
 {
@@ -32,12 +34,14 @@ namespace MasterPC_WASM.Services.CPU
 
         public async Task<CPUVM> GetCPUByIdAsync(string id)
         {
-            return await _httpClient.GetFromJsonAsync<CPUVM>($"api/CPUs/{id}");
+            return await _httpClient.GetFromJsonAsync<CPUVM>($"api/cpu/{id}");
         }
 
+        [Authorize(Roles = "superuser")]
         public async Task<string> AddCPUAsync(CPUVM cpu)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/CPU", cpu);
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, "superuser") }));
+            var response = await _httpClient.PostAsJsonAsync("api/cpu", cpu);
 
             if (response.StatusCode == System.Net.HttpStatusCode.Created)
             {

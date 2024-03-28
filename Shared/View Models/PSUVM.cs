@@ -1,6 +1,6 @@
 ﻿namespace Shared.View_Models
 {
-    public class PSU
+    public class PSUVM
     {
         public string Id { get; set; } = null!;
 

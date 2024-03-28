@@ -4,6 +4,8 @@
     {
         public string? Id { get; set; }
 
+        public string PCPId { get; set; } = null!;
+
         public string Name { get; set; } = null!;
 
         public string? ImgUrl { get; set; }

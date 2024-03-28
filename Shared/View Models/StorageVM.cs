@@ -1,6 +1,6 @@
-﻿namespace Shared.ViewModels
+﻿namespace Shared.View_Models
 {
-    public class Storage
+    public class StorageVM
     {
         public string Id { get; set; } = null!;
 
