@@ -2,7 +2,7 @@
 @using Shared.View_Models
 
 <MudPaper Elevation="3">
-    <MudDataGrid Items="@Elements" QuickFilter="_quickFilter">
+    <MudDataGrid Items="@Elements" QuickFilter="_quickFilter" ColumnResizeMode="ResizeMode.Container">
         <ToolBarContent>
             <MudText Typo="Typo.h6">CPUs</MudText>
             <MudSpacer />
@@ -10,18 +10,22 @@
                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <Columns>
-            <PropertyColumn Property="cpu => cpu.Name">
+            <PropertyColumn Property="cpu => cpu.PCPId" Title="PCP ID" />
+
+            <PropertyColumn Property="cpu => cpu.Name" Title="Name">
                 <CellTemplate>
                     <MudStack Row AlignItems="AlignItems.Center">
-                        <MudImage Avatar="true" Src="favicon.ico" />
-                        <MudText Typo="Typo.body1"><b>@(context.Item.Name)</b></MudText>
+                        <MudImage Height="50" Width="50" Avatar="true" Src="@(context.Item.ImgUrl != null ? context.Item.ImgUrl : "favicon.ico")" />
+                        <a href="@("product/cpu/" + context.Item.Id)"><MudText Typo="Typo.body1"><b>@(context.Item.Name)</b></MudText></a>
                     </MudStack>
                 </CellTemplate>
             </PropertyColumn>
 
-            <PropertyColumn Property="cpu => cpu.CoreCount" Title="Core Count" />
+            <PropertyColumn Property="cpu => cpu.Manufacturer" Title="Manufacturer" />
 
-            <PropertyColumn Property="cpu => cpu.CoreClock" Title="Core Clock">
+            <PropertyColumn Property="cpu => cpu.CoreCount" Title="Core Count" CellStyle="max-width: 10px; overflow-x: hidden; white-space: nowrap;" />
+
+            <PropertyColumn Property="cpu => cpu.CoreClock" Title="Core Clock" >
                 <CellTemplate>
                     <MudText Typo="Typo.inherit">@(context.Item.CoreClock is not null ? context.Item.CoreClock + " MHz" : null)</MudText>
                 </CellTemplate>
@@ -36,6 +40,22 @@
             <PropertyColumn Property="cpu => cpu.TDP" Title="TDP">
                 <CellTemplate>
                     <MudText Typo="Typo.inherit"> @(context.Item.TDP is not null ? context.Item.TDP + " W" : null)</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="cpu => cpu.Socket" Title="Socket" />
+
+            <PropertyColumn Property="cpu => cpu.Graphics" Title="Integrated Graphics" />
+
+            <PropertyColumn Property="cpu => cpu.SMT" Title="SMT">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit"> @(context.Item.SMT is not null && context.Item.SMT == true ? "Yes" : "No")</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="cpu => cpu.HasCooler" Title="Stock Cooler">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit"> @(context.Item.HasCooler ? "Yes" : "No")</MudText>
                 </CellTemplate>
             </PropertyColumn>
 

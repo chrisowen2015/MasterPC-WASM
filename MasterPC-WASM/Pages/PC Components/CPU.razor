@@ -1,0 +1,31 @@
+﻿@page "/product/cpu/{CPUId}"
+
+@using MasterPC_WASM.Components.Tables
+@using MasterPC_WASM.Services.CPU
+
+@inject NavigationManager NavigationManager
+@inject ICPUService cpuService
+
+<CPUTable Elements="CpuList" />
+
+
+@code {
+    [Parameter] public String CPUId { get; set; }
+
+    public CPUVM CpuVM { get; set; }
+
+    public List<CPUVM> CpuList = new List<CPUVM>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (CPUId == null)
+        {
+            NavigationManager.NavigateTo("/products/cpu");
+        }
+        else
+        {
+            CpuVM = await cpuService.GetCPUByIdAsync(CPUId);
+            CpuList.Add(CpuVM);
+        }
+    }
+}

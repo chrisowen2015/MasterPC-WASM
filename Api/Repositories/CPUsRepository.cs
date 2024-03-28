@@ -32,8 +32,12 @@ namespace Api.Repository
                 CPUVM cpuVM = new CPUVM
                 {
                     Id = cpu.Id,
+                    PCPId = cpu.PCPId,
                     Name = cpu.Name,
+                    ImgUrl = cpu.ImgUrl,
                     Manufacturer = cpu.Manufacturer,
+                    Socket = cpu.Socket,
+                    HasCooler = cpu.HasCooler,
                     Price = cpu.Price,
                     CoreCount = cpu.CoreCount,
                     CoreClock = cpu.CoreClock,
@@ -53,8 +57,12 @@ namespace Api.Repository
             CPUVM? cpu = await _context.Cpus.Where(c => c.Id == id).Select(c => new CPUVM
             {
                 Id = c.Id,
+                PCPId = c.PCPId,
                 Name = c.Name,
+                ImgUrl = c.ImgUrl,
                 Manufacturer = c.Manufacturer,
+                Socket = c.Socket,
+                HasCooler = c.HasCooler,
                 Price = c.Price,
                 CoreCount = c.CoreCount,
                 CoreClock = c.CoreClock,
@@ -79,8 +87,12 @@ namespace Api.Repository
             Cpu newCPU = new Cpu
             {
                 Id = Guid.NewGuid().ToString(),
+                PCPId = cpu.PCPId,
                 Name = cpu.Name,
+                ImgUrl = cpu.ImgUrl,
                 Manufacturer = cpu.Manufacturer,
+                Socket = cpu.Socket,
+                HasCooler = cpu.HasCooler,
                 Price = cpu.Price,
                 CoreCount = cpu.CoreCount,
                 CoreClock = cpu.CoreClock,
