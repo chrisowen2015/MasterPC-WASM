@@ -52,6 +52,26 @@
                     </MudRadioGroup>
                 </MudStack>
             </MudItem>
+            @if (!String.IsNullOrEmpty(_dbSuccessMessage) && _dbSuccessMessage.Contains("error"))
+            {
+                <MudItem sm="12">
+                    <MudAlert Severity="Severity.Error">
+                        <b>
+                            @_dbSuccessMessage
+                        </b>
+                    </MudAlert>
+                </MudItem>
+            }
+            else if (!String.IsNullOrEmpty(_dbSuccessMessage) && _dbSuccessMessage.Contains("success"))
+            {
+                <MudItem sm="12">
+                    <MudAlert Severity="Severity.Success">
+                        <b>
+                            @_dbSuccessMessage
+                        </b>
+                    </MudAlert>
+                </MudItem>
+            }
         </MudGrid>
     </MudContainer>
 
@@ -199,6 +219,8 @@
     private string? SelectedEntity { get; set; } = "";
     private bool SendToDatabase { get; set; } = false;
 
+    private string? _dbSuccessMessage { get; set; } = "";
+
     private List<CaseVM> cases = new List<CaseVM>();
     private List<CPUCoolerVM> cpuCoolers = new List<CPUCoolerVM>();
     private List<CPUVM> cpus = new List<CPUVM>();
@@ -210,7 +232,7 @@
 
     private void RadioButtonChanged(string value)
     {
-        switch(SelectedEntity)
+        switch (SelectedEntity)
         {
             case "Cases":
                 // Cases
@@ -240,24 +262,34 @@
                 break;
         }
 
+        _dbSuccessMessage = "";
         SelectedEntity = value;
     }
 
     async Task HandleCaseUpload(InputFileChangeEventArgs e)
     {
+        _dbSuccessMessage = "";
         cases = await FileUploadFunctions.HandleCaseUpload(e);
 
         if (SendToDatabase)
         {
             foreach (var caseVM in cases)
             {
-                await caseService.AddCaseAsync(caseVM);
+                string? result = await caseService.AddCaseAsync(caseVM);
+
+                if (result is null)
+                {
+                    _dbSuccessMessage = "There was an error uploading the Case. Please try again.";
+                    break;
+                }
             }
+            _dbSuccessMessage = "All Cases uploaded successfully.";
         }
     }
 
     async Task HandleCPUCoolerUpload(InputFileChangeEventArgs e)
     {
+        _dbSuccessMessage = "";
         cpuCoolers = await FileUploadFunctions.HandleCPUCoolerUpload(e);
 
         if (SendToDatabase)
@@ -271,22 +303,31 @@
 
     async Task HandleCPUUpload(InputFileChangeEventArgs e)
     {
+        _dbSuccessMessage = "";
         cpus = await FileUploadFunctions.HandleCPUUpload(e);
 
-        if(SendToDatabase)
+        if (SendToDatabase)
         {
             foreach (var cpu in cpus)
             {
-                await cpuService.AddCPUAsync(cpu);
+                string? result = await cpuService.AddCPUAsync(cpu);
+
+                if (result is null)
+                {
+                    _dbSuccessMessage = "There was an error uploading the CPU. Please try again.";
+                    break;
+                }
             }
+            _dbSuccessMessage = "All CPUs uploaded successfully.";
         }
     }
 
     async Task HandleGPUUpload(InputFileChangeEventArgs e)
     {
+        _dbSuccessMessage = "";
         gpus = await FileUploadFunctions.HandleGPUUpload(e);
 
-        if(SendToDatabase)
+        if (SendToDatabase)
         {
             foreach (var gpu in gpus)
             {
@@ -297,9 +338,10 @@
 
     async Task HandleMotherboardUpload(InputFileChangeEventArgs e)
     {
+        _dbSuccessMessage = "";
         motherboards = await FileUploadFunctions.HandleMotherboardUpload(e);
 
-        if(SendToDatabase)
+        if (SendToDatabase)
         {
             foreach (var motherboard in motherboards)
             {
@@ -310,9 +352,10 @@
 
     async Task HandlePSUUpload(InputFileChangeEventArgs e)
     {
+        _dbSuccessMessage = "";
         psus = await FileUploadFunctions.HandlePSUUpload(e);
 
-        if(SendToDatabase)
+        if (SendToDatabase)
         {
             foreach (var psu in psus)
             {
@@ -323,9 +366,10 @@
 
     async Task HandleRAMUpload(InputFileChangeEventArgs e)
     {
+        _dbSuccessMessage = "";
         ram = await FileUploadFunctions.HandleRAMUpload(e);
 
-        if(SendToDatabase)
+        if (SendToDatabase)
         {
             foreach (var ramVM in ram)
             {
@@ -336,9 +380,10 @@
 
     async Task HandleStorageUpload(InputFileChangeEventArgs e)
     {
+        _dbSuccessMessage = "";
         storage = await FileUploadFunctions.HandleStorageUpload(e);
 
-        if(SendToDatabase)
+        if (SendToDatabase)
         {
             foreach (var storageVM in storage)
             {
