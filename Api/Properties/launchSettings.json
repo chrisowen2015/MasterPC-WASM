@@ -4,7 +4,8 @@
       "commandName": "Project",
       "commandLineArgs": "start --cors * --port 7019",
       "environmentVariables": {
-        "Connection_String": "Server=(localdb)\\masterPCDB;Database=MasterPCDB;Trusted_Connection=True;MultipleActiveResultSets=true"
+        "Connection_String": "Server=(localdb)\\masterPCDB;Database=MasterPCDB;Trusted_Connection=True;MultipleActiveResultSets=true",
+        "Admin_Id": "2db79c27-24a9-4c74-b63c-9076b7d20d68"
       }
     }
   }

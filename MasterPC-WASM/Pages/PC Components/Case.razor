@@ -1,0 +1,31 @@
+﻿@page "/product/case/{CaseId}"
+
+@using MasterPC_WASM.Components.Tables
+@using MasterPC_WASM.Services
+
+@inject NavigationManager NavigationManager
+@inject ICaseService caseService
+
+<CaseTable Elements="CaseList" />
+
+
+@code {
+    [Parameter] public String CaseId { get; set; }
+
+    public CaseVM CaseVM { get; set; }
+
+    public List<CaseVM> CaseList = new List<CaseVM>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (CaseId == null)
+        {
+            NavigationManager.NavigateTo("/products/cases");
+        }
+        else
+        {
+            CaseVM = await caseService.GetCaseByIdAsync(CaseId);
+            CaseList.Add(CaseVM);
+        }
+    }
+}

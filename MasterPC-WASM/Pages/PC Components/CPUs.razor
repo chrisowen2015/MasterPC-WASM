@@ -1,7 +1,7 @@
 ﻿@page "/products/cpus"
 
 @using Microsoft.AspNetCore.Authorization;
-@using MasterPC_WASM.Services.CPU;
+@using MasterPC_WASM.Services;
 @using MasterPC_WASM.Components.Tables;
 
 @inject ICPUService cpuService
@@ -159,7 +159,7 @@
     {
         new BreadcrumbItem("Home", href: "/", icon: Icons.Material.Filled.Home),
         new BreadcrumbItem("Products", href: "/products", icon: Icons.Material.Filled.ProductionQuantityLimits),
-        new BreadcrumbItem("CPU", href: "/cpus", icon: Icons.Material.Filled.ProductionQuantityLimits, disabled: true),
+        new BreadcrumbItem("CPUs", href: "/products/cpus", icon: Icons.Material.Filled.ProductionQuantityLimits, disabled: true),
     };
 
     //private List<string> socketList = new List<string>();

@@ -5,14 +5,9 @@ using Api.Services;
 
 namespace Api.Functions.CPUs
 {
-    public class GetCPUsFunction
+    public class GetCasesFunction(ICPUService cpuService)
     {
-        private readonly ICPUService _cpuService;
-
-        public GetCPUsFunction(ICPUService cpuService)
-        {
-            _cpuService = cpuService;
-        }
+        private readonly ICPUService _cpuService = cpuService;
 
         [Function("GetCPUsFunction")]
         public async Task<IActionResult> Run(
