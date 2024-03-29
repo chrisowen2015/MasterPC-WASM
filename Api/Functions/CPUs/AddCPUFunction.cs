@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http;
+/*using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Api.Services;
@@ -29,3 +29,4 @@ namespace Api.Functions.CPUs
         }
     }
 }
+*/
