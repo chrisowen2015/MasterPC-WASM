@@ -78,12 +78,12 @@
                     <MudItem xs="12" lg="3">
                         <MudPaper Elevation="3" Style="padding: 2em">
                             <MudText Align="Align.Center" Typo="Typo.h5" Style="font-weight: 500"> Upload CPU Coolers</MudText>
-                            @* Upload CPU Coolers Input file goes here*@
+                            <InputFile OnChange="HandleCPUCoolerUpload" />
                         </MudPaper>
                     </MudItem>
 
                     <MudItem xs="12" lg="9">
-                        @* CPU Cooler Table Goes Here*@
+                        <CPUCoolerTable Elements="cpuCoolers" />
                     </MudItem>
                 </MudGrid>
             </MudContainer>
@@ -126,12 +126,12 @@
                     <MudItem xs="12" lg="3">
                         <MudPaper Elevation="3" Style="padding: 2em">
                             <MudText Align="Align.Center" Typo="Typo.h5" Style="font-weight: 500"> Upload Motherboards</MudText>
-                            @* Upload Motherboards file goes here*@
+                            <InputFile OnChange="HandleMotherboardUpload" />
                         </MudPaper>
                     </MudItem>
 
                     <MudItem xs="12" lg="9">
-                        @* Motherboards Table Goes Here*@
+                        <MotherboardTable Elements="motherboards" />
                     </MudItem>
                 </MudGrid>
             </MudContainer>
@@ -142,12 +142,12 @@
                     <MudItem xs="12" lg="3">
                         <MudPaper Elevation="3" Style="padding: 2em">
                             <MudText Align="Align.Center" Typo="Typo.h5" Style="font-weight: 500"> Upload PSUs</MudText>
-                            @* Upload PSUs file goes here*@
+                            <InputFile OnChange="HandlePSUUpload" />
                         </MudPaper>
                     </MudItem>
 
                     <MudItem xs="12" lg="9">
-                        @* PSUs Table Goes Here*@
+                        <PSUTable Elements="psus" />
                     </MudItem>
                 </MudGrid>
             </MudContainer>
@@ -158,12 +158,12 @@
                     <MudItem xs="12" lg="3">
                         <MudPaper Elevation="3" Style="padding: 2em">
                             <MudText Align="Align.Center" Typo="Typo.h5" Style="font-weight: 500"> Upload RAM</MudText>
-                            @* Upload RAM file goes here*@
+                            <InputFile OnChange="HandleRAMUpload" />
                         </MudPaper>
                     </MudItem>
 
                     <MudItem xs="12" lg="9">
-                        @* RAM Table Goes Here*@
+                        <RAMTable Elements="ram" />
                     </MudItem>
                 </MudGrid>
             </MudContainer>
@@ -174,12 +174,12 @@
                     <MudItem xs="12" lg="3">
                         <MudPaper Elevation="3" Style="padding: 2em">
                             <MudText Align="Align.Center" Typo="Typo.h5" Style="font-weight: 500"> Upload Storage</MudText>
-                            @* Upload Storage file goes here*@
+                            <InputFile OnChange="HandleStorageUpload" />
                         </MudPaper>
                     </MudItem>
 
                     <MudItem xs="12" lg="9">
-                        @* Storage Table Goes Here*@
+                        <StorageTable Elements="storage" />
                     </MudItem>
                 </MudGrid>
             </MudContainer>
@@ -198,9 +198,14 @@
     private string? SelectedEntity { get; set; } = "";
     private bool SendToDatabase { get; set; } = false;
 
+    private List<CaseVM> cases = new List<CaseVM>();
+    private List<CPUCoolerVM> cpuCoolers = new List<CPUCoolerVM>();
     private List<CPUVM> cpus = new List<CPUVM>();
     private List<GPUVM> gpus = new List<GPUVM>();
-    private List<CaseVM> cases = new List<CaseVM>();
+    private List<MotherboardVM> motherboards = new List<MotherboardVM>();
+    private List<PSUVM> psus = new List<PSUVM>();
+    private List<RAMVM> ram = new List<RAMVM>();
+    private List<StorageVM> storage = new List<StorageVM>();
 
     private void RadioButtonChanged(string value)
     {
@@ -210,7 +215,7 @@
                 // Cases
                 break;
             case "CPUCoolers":
-                // CPU Coolers
+                cpuCoolers.Clear();
                 break;
             case "CPUs":
                 cpus.Clear();
@@ -235,6 +240,32 @@
         }
 
         SelectedEntity = value;
+    }
+
+    async Task HandleCaseUpload(InputFileChangeEventArgs e)
+    {
+        cases = await FileUploadFunctions.HandleCaseUpload(e);
+
+        if (SendToDatabase)
+        {
+            foreach (var caseVM in cases)
+            {
+                //await caseService.AddCaseAsync(caseVM);
+            }
+        }
+    }
+
+    async Task HandleCPUCoolerUpload(InputFileChangeEventArgs e)
+    {
+        cpuCoolers = await FileUploadFunctions.HandleCPUCoolerUpload(e);
+
+        if (SendToDatabase)
+        {
+            foreach (var cpuCooler in cpuCoolers)
+            {
+                //await cpuCoolerService.AddCPUCoolerAsync(cpuCooler);
+            }
+        }
     }
 
     async Task HandleCPUUpload(InputFileChangeEventArgs e)
@@ -263,15 +294,54 @@
         }
     }
 
-    async Task HandleCaseUpload(InputFileChangeEventArgs e)
+    async Task HandleMotherboardUpload(InputFileChangeEventArgs e)
     {
-        cases = await FileUploadFunctions.HandleCaseUpload(e);
+        motherboards = await FileUploadFunctions.HandleMotherboardUpload(e);
 
         if(SendToDatabase)
         {
-            foreach (var caseVM in cases)
+            foreach (var motherboard in motherboards)
             {
-                //await caseService.AddCaseAsync(caseVM);
+                //await motherboardService.AddMotherboardAsync(motherboard);
+            }
+        }
+    }
+
+    async Task HandlePSUUpload(InputFileChangeEventArgs e)
+    {
+        psus = await FileUploadFunctions.HandlePSUUpload(e);
+
+        if(SendToDatabase)
+        {
+            foreach (var psu in psus)
+            {
+                //await psuService.AddPSUAsync(psu);
+            }
+        }
+    }
+
+    async Task HandleRAMUpload(InputFileChangeEventArgs e)
+    {
+        ram = await FileUploadFunctions.HandleRAMUpload(e);
+
+        if(SendToDatabase)
+        {
+            foreach (var ramVM in ram)
+            {
+                //await ramService.AddRAMAsync(ramVM);
+            }
+        }
+    }
+
+    async Task HandleStorageUpload(InputFileChangeEventArgs e)
+    {
+        storage = await FileUploadFunctions.HandleStorageUpload(e);
+
+        if(SendToDatabase)
+        {
+            foreach (var storageVM in storage)
+            {
+                //await storageService.AddStorageAsync(storageVM);
             }
         }
     }

@@ -25,6 +25,12 @@
         public string manufacturerShortName { get; set; } = null!;
         public string manufacturerFullName { get; set; } = null!;
     }
+
+    public class CPUCoolerManufacturers
+    {
+        public string manufacturerShortName { get; set; } = null!;
+        public string manufacturerFullName { get; set; } = null!;
+    }
     public class DataInjestionConstants
     {
         public static PowerSupplyManufacturers[] powerSupplyManufacturers =>
@@ -421,6 +427,70 @@
                     manufacturerShortName = "Western",
                     manufacturerFullName = "Western Digital"
                 },
+            ];
+
+        public static CPUCoolerManufacturers[] cpuCoolerManufacturers =>
+            [
+                new CPUCoolerManufacturers
+                {
+                    manufacturerShortName = "Cooler",
+                    manufacturerFullName = "Cooler Master"
+                },
+                new CPUCoolerManufacturers
+                {
+                    manufacturerShortName = "be",
+                    manufacturerFullName = "be quiet!"
+                },
+                new CPUCoolerManufacturers
+                {
+                    manufacturerShortName = "Fractal",
+                    manufacturerFullName = "Fractal Design"
+                },
+                new CPUCoolerManufacturers
+                {
+                    manufacturerShortName = "FSP",
+                    manufacturerFullName = "FSP Group"
+                },
+                new CPUCoolerManufacturers
+                {
+                    manufacturerShortName = "Gelid",
+                    manufacturerFullName = "Gelid Solutions"
+                },
+                new CPUCoolerManufacturers
+                {
+                    manufacturerShortName = "Geometric",
+                    manufacturerFullName = "Geometric Future"
+                },
+                new CPUCoolerManufacturers
+                {
+                    manufacturerShortName = "Iceberg",
+                    manufacturerFullName = "Iceberg Thermal"
+                },
+                new CPUCoolerManufacturers
+                {
+                    manufacturerShortName = "In",
+                    manufacturerFullName = "In Win"
+                },
+                new CPUCoolerManufacturers
+                {
+                    manufacturerShortName = "Lian",
+                    manufacturerFullName = "Lian Li"
+                },
+                new CPUCoolerManufacturers
+                {
+                    manufacturerShortName = "Mars",
+                    manufacturerFullName = "Mars Gaming"
+                },
+                new CPUCoolerManufacturers
+                {
+                    manufacturerShortName = "PC",
+                    manufacturerFullName = "PC Cooler"
+                },
+                new CPUCoolerManufacturers
+                {
+                    manufacturerShortName = "Zero",
+                    manufacturerFullName = "Zero Infinity"
+                }
             ];
     }
 }

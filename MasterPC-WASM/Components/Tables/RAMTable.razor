@@ -1,0 +1,107 @@
+﻿@namespace MasterPC_WASM.Components.Tables
+@using Shared.View_Models
+
+<MudPaper Elevation="3">
+    <MudDataGrid Items="@Elements" QuickFilter="_quickFilter" ColumnResizeMode="ResizeMode.Container">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Memory</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Property="ramVM => ramVM.PCPId" Title="PCP ID" />
+
+            <PropertyColumn Property="ramVM => ramVM.Name" Title="Name">
+                <CellTemplate>
+                    <MudStack Row AlignItems="AlignItems.Center">
+                        <MudImage Height="50" Width="50" Avatar="true" Src="@(context.Item.ImgUrl != null ? context.Item.ImgUrl : "favicon.ico")" />
+                        <a href="@("product/ram/" + context.Item.Id)"><MudText Typo="Typo.body1"><b>@(context.Item.Name)</b></MudText></a>
+                    </MudStack>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="ramVM => ramVM.Manufacturer" Title="Manufacturer" />
+
+            <PropertyColumn Property="ramVM => ramVM.Type" Title="Type" />
+
+            <PropertyColumn Property="ramVM => ramVM.Speed" Title="Speed">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit"> @(context.Item.Speed is not null ? context.Item.Speed + " MHz" : null)</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="ramVM => ramVM.NumModules" Title="Modules" />
+
+            <PropertyColumn Property="ramVM => ramVM.Capacity" Title="Size">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit"> @(context.Item.Capacity is not null ? context.Item.Capacity + " GB" : null)</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="ramVM => ramVM.PricePerGB" Title="Price/GB">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit"> @(context.Item.Capacity is not null ? context.Item.Capacity + " GB" : null)</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="ramVM => ramVM.Color" Title="Color" />
+
+            <PropertyColumn Property="ramVM => ramVM.RGB" Title="RGB">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit"> @(context.Item.RGB is not null && (bool)context.Item.RGB ? "Yes" : "No")</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="ramVM => ramVM.FirstWordLatency" Title="First Word Latency">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit"> @(context.Item.FirstWordLatency is not null ? context.Item.FirstWordLatency + " ns" : null)</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="ramVM => ramVM.CASLatency" Title="CAS Latency" />
+
+            <PropertyColumn Property="ramVM => ramVM.HeatSpreader" Title="Heat Spreader">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit"> @(context.Item.HeatSpreader is not null && (bool)context.Item.HeatSpreader ? "Yes" : "No")</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="ramVM => ramVM.Price" Title="Price">
+                <CellTemplate>
+                    <MudStack Row AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                        <b>
+                            <MudText Typo="Typo.inherit"> @(string.Format("${0:N2}", context.Item.Price))</MudText>
+                        </b>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Add</MudButton>
+                    </MudStack>
+                </CellTemplate>
+            </PropertyColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="RAMVM" />
+        </PagerContent>
+    </MudDataGrid>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public List<RAMVM>? Elements { get; set; }
+
+    private string? _searchString { get; set; }
+
+    private Func<RAMVM, bool> _quickFilter => ramVM =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (ramVM.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (!String.IsNullOrEmpty(ramVM.Manufacturer) && ramVM.Manufacturer.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
+
+}

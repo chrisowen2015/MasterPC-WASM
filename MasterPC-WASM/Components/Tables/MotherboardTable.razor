@@ -1,0 +1,87 @@
+﻿@namespace MasterPC_WASM.Components.Tables
+@using Shared.View_Models
+
+<MudPaper Elevation="3">
+    <MudDataGrid Items="@Elements" QuickFilter="_quickFilter" ColumnResizeMode="ResizeMode.Container">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Motherboards</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Property="motherboardVM => motherboardVM.PCPId" Title="PCP ID" />
+
+            <PropertyColumn Property="motherboardVM => motherboardVM.Name" Title="Name">
+                <CellTemplate>
+                    <MudStack Row AlignItems="AlignItems.Center">
+                        <MudImage Height="50" Width="50" Avatar="true" Src="@(context.Item.ImgUrl != null ? context.Item.ImgUrl : "favicon.ico")" />
+                        <a href="@("product/motherboard/" + context.Item.Id)"><MudText Typo="Typo.body1"><b>@(context.Item.Name)</b></MudText></a>
+                    </MudStack>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="motherboardVM => motherboardVM.Manufacturer" Title="Manufacturer" />
+
+            <PropertyColumn Property="motherboardVM => motherboardVM.Socket" Title="CPU Socket" />
+
+            <PropertyColumn Property="motherboardVM => motherboardVM.FormFactor" Title="Form Factor" />
+
+            <PropertyColumn Property="motherboardVM => motherboardVM.Chipset" Title="Chipset" />
+
+            <PropertyColumn Property="motherboardVM => motherboardVM.IntegratedWifi" Title="Wi-Fi" />
+
+            <PropertyColumn Property="motherboardVM => motherboardVM.MaxMemory" Title="Max Memory">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit"> @(context.Item.MaxMemory is not null ? context.Item.MaxMemory + " GB" : null)</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="motherboardVM => motherboardVM.MemorySlots" Title="Memory Slots" />
+
+            <PropertyColumn Property="motherboardVM => motherboardVM.Color" Title="Color" />
+
+            <PropertyColumn Property="motherboardVM => motherboardVM.M2Slot" Title="Has M.2 Slot">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit">@(context.Item.M2Slot is not null && (bool) context.Item.M2Slot ? "Yes" : "No")</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="motherboardVM => motherboardVM.Price" Title="Price">
+                <CellTemplate>
+                    <MudStack Row AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                        <b>
+                            <MudText Typo="Typo.inherit"> @(string.Format("${0:N2}", context.Item.Price))</MudText>
+                        </b>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Add</MudButton>
+                    </MudStack>
+                </CellTemplate>
+            </PropertyColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="MotherboardVM" />
+        </PagerContent>
+    </MudDataGrid>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public List<MotherboardVM>? Elements { get; set; }
+
+    private string? _searchString { get; set; }
+
+    private Func<MotherboardVM, bool> _quickFilter => motherboardVM =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (motherboardVM.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (!String.IsNullOrEmpty(motherboardVM.Manufacturer) && motherboardVM.Manufacturer.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
+
+}

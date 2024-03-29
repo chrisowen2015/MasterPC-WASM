@@ -1,0 +1,126 @@
+﻿@namespace MasterPC_WASM.Components.Tables
+@using Shared.View_Models
+
+<MudPaper Elevation="3">
+    <MudDataGrid Items="@Elements" QuickFilter="_quickFilter" ColumnResizeMode="ResizeMode.Container">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Storage</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Property="storageVM => storageVM.PCPId" Title="PCP ID" />
+
+            <PropertyColumn Property="storageVM => storageVM.Name" Title="Name">
+                <CellTemplate>
+                    <MudStack Row AlignItems="AlignItems.Center">
+                        <MudImage Height="50" Width="50" Avatar="true" Src="@(context.Item.ImgUrl != null ? context.Item.ImgUrl : "favicon.ico")" />
+                        <a href="@("product/storage/" + context.Item.Id)"><MudText Typo="Typo.body1"><b>@(context.Item.Name)</b></MudText></a>
+                    </MudStack>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="storageVM => storageVM.Manufacturer" Title="Manufacturer" />
+
+            <PropertyColumn Property="storageVM => storageVM.Type" Title="Type" />
+
+            <PropertyColumn Property="storageVM => storageVM.Capacity" Title="Capacity">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit"> @(GetCapacity(context.Item.Capacity))</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="storageVM => storageVM.PricePerGB" Title="Price/GB">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit"> @(string.Format("${0:N3}", context.Item.PricePerGB))</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="storageVM => storageVM.Cache" Title="Cache">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit"> @(GetCache(context.Item.Cache)) </MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="storageVM => storageVM.FormFactor" Title="Form Factor" />
+
+            <PropertyColumn Property="storageVM => storageVM.Interface" Title="Interface" />
+
+            <PropertyColumn Property="storageVM => storageVM.IsNVMe" Title="NVMe" />
+
+            <PropertyColumn Property="storageVM => storageVM.Price" Title="Price">
+                <CellTemplate>
+                    <MudStack Row AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                        <b>
+                            <MudText Typo="Typo.inherit"> @(string.Format("${0:N2}", context.Item.Price))</MudText>
+                        </b>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Add</MudButton>
+                    </MudStack>
+                </CellTemplate>
+            </PropertyColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="StorageVM" />
+        </PagerContent>
+    </MudDataGrid>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public List<StorageVM>? Elements { get; set; }
+
+    private string? _searchString { get; set; }
+
+    private Func<StorageVM, bool> _quickFilter => storageVM =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (storageVM.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (!String.IsNullOrEmpty(storageVM.Manufacturer) && storageVM.Manufacturer.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
+
+    private string? GetCapacity(int? capacity)
+    {
+        if (capacity is not null)
+        {
+            if (capacity < 1000)
+            {
+                return capacity + " GB";
+            }
+            else
+            {
+                return (capacity / 1000) + " TB";
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private string? GetCache(int? cache)
+    {
+        if (cache is not null)
+        {
+            if (cache < 1000)
+            {
+                return cache + " MB";
+            }
+            else
+            {
+                return (cache / 1000) + " GB";
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
+}
