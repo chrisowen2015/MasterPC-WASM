@@ -10,8 +10,6 @@ namespace Api.Repository
         public Task<List<CPUVM>> GetCPUsAsync();
         public Task<CPUVM> GetCPUByIdAsync(string id);
         public Task<string> AddCPUAsync(CPUVM cpu);
-        public Task<bool> UpdateCPUAsync(CPUVM cpu);
-        public Task<bool> DeleteCPUAsync(string id);
     }
 
     public class CPUsRepository : ICPUsRepository
@@ -106,47 +104,6 @@ namespace Api.Repository
             await _context.SaveChangesAsync();
 
             return newCPU.Id;
-        }
-
-        public async Task<bool> UpdateCPUAsync(CPUVM cpu)
-        {
-            Cpu? existingCPU = await _context.Cpus.Where(c => c.Id == cpu.Id).SingleOrDefaultAsync();
-
-            if (existingCPU is not null)
-            {
-                existingCPU.Name = cpu.Name;
-                existingCPU.Manufacturer = cpu.Manufacturer;
-                existingCPU.Price = cpu.Price;
-                existingCPU.CoreCount = cpu.CoreCount;
-                existingCPU.CoreClock = cpu.CoreClock;
-                existingCPU.BoostClock = cpu.BoostClock;
-                existingCPU.Tdp = cpu.TDP;
-                existingCPU.Graphics = cpu.Graphics;
-                existingCPU.Smt = cpu.SMT;
-
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public async Task<bool> DeleteCPUAsync(string id)
-        {
-            Cpu? existingCPU = await _context.Cpus.Where(c => c.Id == id).SingleOrDefaultAsync();
-
-            if (existingCPU is not null)
-            {
-                _context.Cpus.Remove(existingCPU);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
     }
 }

@@ -1,4 +1,3 @@
-/*
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
@@ -14,15 +13,20 @@ namespace Api.Functions.CPUs
 
         [Function("AddCPUFunction")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "cpu")] HttpRequest req)
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "cpu/{userId}")] HttpRequest req, string userId)
         {
-            var body = await new StreamReader(req.Body).ReadToEndAsync();
-            var cpuVM = JsonSerializer.Deserialize<CPUVM>(body, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+            if(userId == Environment.GetEnvironmentVariable("Admin_Id"))
+            {
+                var body = await new StreamReader(req.Body).ReadToEndAsync();
+                var cpuVM = JsonSerializer.Deserialize<CPUVM>(body, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
 
-            string cpuId = await _cpuService.AddCPUAsync(cpuVM);
+                string cpuId = await _cpuService.AddCPUAsync(cpuVM);
 
-            return new OkObjectResult(cpuId);
+                return new CreatedResult(string.Empty, cpuId);
+            } else
+            {
+                return new UnauthorizedResult();
+            }
         }
     }
 }
-*/

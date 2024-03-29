@@ -11,21 +11,10 @@ namespace MasterPC_WASM.Services
         public Task<CaseVM> GetCaseByIdAsync(string id);
         public Task<string> AddCaseAsync(CaseVM caseVM);
     }
-    public class CaseServiceClient : ICaseService
+    public class CaseServiceClient(HttpClient httpClient, AuthenticationStateProvider authState) : ICaseService
     {
-        private readonly HttpClient _httpClient;
-        private readonly AuthenticationStateProvider _authenticationStateProvider;
-
-        public CaseServiceClient(HttpClient httpClient, AuthenticationStateProvider authState)
-        {
-            _httpClient = httpClient;
-            _authenticationStateProvider = authState;
-        }
-
-        public bool OnClient()
-        {
-            return true;
-        }
+        private readonly HttpClient _httpClient = httpClient;
+        private readonly AuthenticationStateProvider _authenticationStateProvider = authState;
 
         public async Task<List<CaseVM>> GetCasesAsync()
         {

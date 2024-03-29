@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Authorization;
 using Shared.View_Models;
 using System.Net.Http.Json;
 using System.Security.Claims;
@@ -13,19 +14,10 @@ namespace MasterPC_WASM.Services
         public Task<bool> UpdateCPUAsync(CPUVM cpu);
         public Task<bool> DeleteCPUAsync(string id);
     }
-    public class CPUServiceClient : ICPUService
+    public class CPUServiceClient(HttpClient httpClient, AuthenticationStateProvider authenticationStateProvider) : ICPUService
     {
-        private readonly HttpClient _httpClient;
-
-        public CPUServiceClient(HttpClient httpClient)
-        {
-            _httpClient = httpClient;
-        }
-
-        public bool OnClient()
-        {
-            return true;
-        }
+        private readonly HttpClient _httpClient = httpClient;
+        private readonly AuthenticationStateProvider _authenticationStateProvider = authenticationStateProvider;
 
         public async Task<List<CPUVM>> GetCPUsAsync()
         {
@@ -40,13 +32,15 @@ namespace MasterPC_WASM.Services
         [Authorize(Roles = "superuser")]
         public async Task<string> AddCPUAsync(CPUVM cpu)
         {
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, "superuser") }));
-            var response = await _httpClient.PostAsJsonAsync("api/cpu", cpu);
+            var user = _authenticationStateProvider.GetAuthenticationStateAsync().Result.User;
+            var userId = user.Identities.First().Claims.First(c => c.Type == "oid").Value;
+
+            var response = await _httpClient.PostAsJsonAsync("api/cpu/{userId}", cpu);
 
             if (response.StatusCode == System.Net.HttpStatusCode.Created)
             {
-                Uri u = response.Headers.Location;
-                string id = u.Segments.Last();
+                string id = response.Content.ReadAsStringAsync().Result.ToString();
+
                 return id;
             }
             else
