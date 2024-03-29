@@ -4,62 +4,56 @@
 <MudPaper Elevation="3">
     <MudDataGrid Items="@Elements" QuickFilter="_quickFilter" ColumnResizeMode="ResizeMode.Container">
         <ToolBarContent>
-            <MudText Typo="Typo.h6">CPUs</MudText>
+            <MudText Typo="Typo.h6">GPUs</MudText>
             <MudSpacer />
             <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <Columns>
-            <PropertyColumn Property="cpu => cpu.PCPId" Title="PCP ID" />
+            <PropertyColumn Property="gpu => gpu.PCPId" Title="PCP ID" />
 
-            <PropertyColumn Property="cpu => cpu.Name" Title="Name">
+            <PropertyColumn Property="gpu => gpu.Name" Title="Name">
                 <CellTemplate>
                     <MudStack Row AlignItems="AlignItems.Center">
                         <MudImage Height="50" Width="50" Avatar="true" Src="@(context.Item.ImgUrl != null ? context.Item.ImgUrl : "favicon.ico")" />
-                        <a href="@("product/cpu/" + context.Item.Id)"><MudText Typo="Typo.body1"><b>@(context.Item.Name)</b></MudText></a>
+                        <a href="@("product/gpu/" + context.Item.Id)"><MudText Typo="Typo.body1"><b>@(context.Item.Name)</b></MudText></a>
                     </MudStack>
                 </CellTemplate>
             </PropertyColumn>
 
-            <PropertyColumn Property="cpu => cpu.Manufacturer" Title="Manufacturer" />
+            <PropertyColumn Property="gpu => gpu.Manufacturer" Title="Manufacturer" />
 
-            <PropertyColumn Property="cpu => cpu.CoreCount" Title="Core Count" CellStyle="max-width: 10px; overflow-x: hidden; white-space: nowrap;" />
+            <PropertyColumn Property="gpu => gpu.Chipset" Title="Chipset" />
 
-            <PropertyColumn Property="cpu => cpu.CoreClock" Title="Core Clock" >
+            <PropertyColumn Property="gpu => gpu.CoreClock" Title="Core Clock">
                 <CellTemplate>
                     <MudText Typo="Typo.inherit">@(context.Item.CoreClock is not null ? context.Item.CoreClock + " MHz" : null)</MudText>
                 </CellTemplate>
             </PropertyColumn>
 
-            <PropertyColumn Property="cpu => cpu.BoostClock" Title="Boost Clock">
+            <PropertyColumn Property="gpu => gpu.BoostClock" Title="Boost Clock">
                 <CellTemplate>
                     <MudText Typo="Typo.inherit"> @(context.Item.BoostClock is not null ? context.Item.BoostClock + " MHz" : null)</MudText>
                 </CellTemplate>
             </PropertyColumn>
 
-            <PropertyColumn Property="cpu => cpu.TDP" Title="TDP">
+            <PropertyColumn Property="gpu => gpu.Memory" Title="Memory" />
+
+            <PropertyColumn Property="gpu => gpu.Tdp" Title="TDP">
                 <CellTemplate>
-                    <MudText Typo="Typo.inherit"> @(context.Item.TDP is not null ? context.Item.TDP + " W" : null)</MudText>
+                    <MudText Typo="Typo.inherit"> @(context.Item.Tdp is not null ? context.Item.Tdp + " W" : null)</MudText>
                 </CellTemplate>
             </PropertyColumn>
 
-            <PropertyColumn Property="cpu => cpu.Socket" Title="Socket" />
+            <PropertyColumn Property="gpu => gpu.Color" Title="Color" />
 
-            <PropertyColumn Property="cpu => cpu.Graphics" Title="Integrated Graphics" />
-
-            <PropertyColumn Property="cpu => cpu.SMT" Title="SMT">
+            <PropertyColumn Property="gpu => gpu.Length" Title="Length">
                 <CellTemplate>
-                    <MudText Typo="Typo.inherit"> @(context.Item.SMT is not null && context.Item.SMT == true ? "Yes" : "No")</MudText>
+                    <MudText Typo="Typo.inherit"> @(context.Item.Length + " mm")</MudText>
                 </CellTemplate>
             </PropertyColumn>
 
-            <PropertyColumn Property="cpu => cpu.HasCooler" Title="Stock Cooler">
-                <CellTemplate>
-                    <MudText Typo="Typo.inherit"> @(context.Item.HasCooler ? "Yes" : "No")</MudText>
-                </CellTemplate>
-            </PropertyColumn>
-
-            <PropertyColumn Property="cpu => cpu.Price" Title="Price">
+            <PropertyColumn Property="gpu => gpu.Price" Title="Price">
                 <CellTemplate>
                     <MudStack Row AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
                         <b>
@@ -71,26 +65,26 @@
             </PropertyColumn>
         </Columns>
         <PagerContent>
-            <MudDataGridPager T="CPUVM" />
+            <MudDataGridPager T="GPUVM" />
         </PagerContent>
     </MudDataGrid>
 </MudPaper>
 
 @code {
     [Parameter]
-    public List<CPUVM>? Elements { get; set; }
+    public List<GPUVM>? Elements { get; set; }
 
     private string? _searchString { get; set; }
 
-    private Func<CPUVM, bool> _quickFilter => cpu =>
+    private Func<GPUVM, bool> _quickFilter => gpu =>
     {
         if (string.IsNullOrWhiteSpace(_searchString))
             return true;
 
-        if (cpu.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+        if (gpu.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
             return true;
 
-        if (!String.IsNullOrEmpty(cpu.Manufacturer) && cpu.Manufacturer.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+        if (!String.IsNullOrEmpty(gpu.Manufacturer) && gpu.Manufacturer.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
             return true;
 
         return false;

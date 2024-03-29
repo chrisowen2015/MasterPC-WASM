@@ -1,0 +1,112 @@
+﻿@namespace MasterPC_WASM.Components.Tables
+@using Shared.View_Models
+
+<MudPaper Elevation="3">
+    <MudDataGrid Items="@Elements" QuickFilter="_quickFilter" ColumnResizeMode="ResizeMode.Container">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">CPU Coolers</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Property="cpuCoolerVM => cpuCoolerVM.PCPId" Title="PCP ID" />
+
+            <PropertyColumn Property="cpuCoolerVM => cpuCoolerVM.Name" Title="Name">
+                <CellTemplate>
+                    <MudStack Row AlignItems="AlignItems.Center">
+                        <MudImage Height="50" Width="50" Avatar="true" Src="@(context.Item.ImgUrl != null ? context.Item.ImgUrl : "favicon.ico")" />
+                        <a href="@("product/cpu-cooler/" + context.Item.Id)"><MudText Typo="Typo.body1"><b>@(context.Item.Name)</b></MudText></a>
+                    </MudStack>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="cpuCoolerVM => cpuCoolerVM.Manufacturer" Title="Manufacturer" />
+
+            <PropertyColumn Property="cpuCoolerVM => cpuCoolerVM.MinRPM" Title="Fan RPM">
+                <CellTemplate>
+                    @if (context.Item.MaxRPM is not null)
+                    {
+                        <MudText Typo="Typo.inherit"> @(context.Item.MinRPM + " - " + context.Item.MaxRPM + " RPM") </MudText>
+                    }
+                    else if (context.Item.MinRPM is not null)
+                    {
+                        <MudText Typo="Typo.inherit"> @(context.Item.MinRPM + " RPM") </MudText>
+                    }
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="cpuCoolerVM => cpuCoolerVM.MinNoise" Title="Noise Level">
+                <CellTemplate>
+                    @if (context.Item.MaxNoise is not null)
+                    {
+                        <MudText Typo="Typo.inherit"> @(context.Item.MinNoise + " - " + context.Item.MaxNoise + " dB") </MudText>
+                    }
+                    else if (context.Item.MinNoise is not null)
+                    {
+                        <MudText Typo="Typo.inherit"> @(context.Item.MinNoise + " dB") </MudText>
+                    }
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="cpuCoolerVM => cpuCoolerVM.Color" Title="Color" />
+
+            <PropertyColumn Property="cpuCoolerVM => cpuCoolerVM.RadiatorSize" Title="Radiator Size">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit"> @(context.Item.RadiatorSize is not null ? context.Item.RadiatorSize + " mm" : null)</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="cpuCoolerVM => cpuCoolerVM.CompatibleSockets" Title="Compatible Sockets" Sortable="false">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit"> @(GetCompatibleSockets(context.Item))</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="cpuCoolerVM => cpuCoolerVM.Price" Title="Price">
+                <CellTemplate>
+                    <MudStack Row AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                        <b>
+                            <MudText Typo="Typo.inherit"> @(string.Format("${0:N2}", context.Item.Price))</MudText>
+                        </b>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Add</MudButton>
+                    </MudStack>
+                </CellTemplate>
+            </PropertyColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="CPUCoolerVM" />
+        </PagerContent>
+    </MudDataGrid>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public List<CPUCoolerVM>? Elements { get; set; }
+
+    private string? _searchString { get; set; }
+
+    private Func<CPUCoolerVM, bool> _quickFilter => cpuCoolerVM =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (cpuCoolerVM.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (!String.IsNullOrEmpty(cpuCoolerVM.Manufacturer) && cpuCoolerVM.Manufacturer.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
+
+    private string GetCompatibleSockets(CPUCoolerVM cpuCoolerVM)
+    {
+        string compatibleSockets = "";
+
+        compatibleSockets = string.Join(", ", cpuCoolerVM.CompatibleSockets);
+
+        return compatibleSockets;
+    }
+
+}

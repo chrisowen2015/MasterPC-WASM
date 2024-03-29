@@ -1,0 +1,79 @@
+﻿@namespace MasterPC_WASM.Components.Tables
+@using Shared.View_Models
+
+<MudPaper Elevation="3">
+    <MudDataGrid Items="@Elements" QuickFilter="_quickFilter" ColumnResizeMode="ResizeMode.Container">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Cases</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Property="caseVM => caseVM.PCPId" Title="PCP ID" />
+
+            <PropertyColumn Property="caseVM => caseVM.Name" Title="Name">
+                <CellTemplate>
+                    <MudStack Row AlignItems="AlignItems.Center">
+                        <MudImage Height="50" Width="50" Avatar="true" Src="@(context.Item.ImgUrl != null ? context.Item.ImgUrl : "favicon.ico")" />
+                        <a href="@("product/case/" + context.Item.Id)"><MudText Typo="Typo.body1"><b>@(context.Item.Name)</b></MudText></a>
+                    </MudStack>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="caseVM => caseVM.Manufacturer" Title="Manufacturer" />
+
+            <PropertyColumn Property="caseVM => caseVM.Type" Title="Form Factor" />
+
+            <PropertyColumn Property="caseVM => caseVM.Psu" Title="PSU" />
+
+            <PropertyColumn Property="caseVM => caseVM.SidePanel" Title="Side Panel" />
+
+            <PropertyColumn Property="caseVM => caseVM.ExternalVolume" Title="External Volume">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit"> @(context.Item.ExternalVolume is not null ? context.Item.ExternalVolume + " L" : null)</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="caseVM => caseVM.InternalBays" Title="@("Internal 3.5\" Bays")" />
+
+            <PropertyColumn Property="caseVM => caseVM.Color" Title="Color" />
+
+            <PropertyColumn Property="caseVM => caseVM.Price" Title="Price">
+                <CellTemplate>
+                    <MudStack Row AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                        <b>
+                            <MudText Typo="Typo.inherit"> @(string.Format("${0:N2}", context.Item.Price))</MudText>
+                        </b>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Add</MudButton>
+                    </MudStack>
+                </CellTemplate>
+            </PropertyColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="CaseVM" />
+        </PagerContent>
+    </MudDataGrid>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public List<CaseVM>? Elements { get; set; }
+
+    private string? _searchString { get; set; }
+
+    private Func<CaseVM, bool> _quickFilter => caseVM =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (caseVM.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (!String.IsNullOrEmpty(caseVM.Manufacturer) && caseVM.Manufacturer.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
+
+}

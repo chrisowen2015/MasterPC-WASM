@@ -20,7 +20,7 @@
 
         public double? PricePerGB { get; set; }
 
-        public string? Cache { get; set; }
+        public int? Cache { get; set; }
 
         public string? FormFactor { get; set; }
 

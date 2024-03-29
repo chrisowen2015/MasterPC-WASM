@@ -22,9 +22,19 @@ namespace MasterPC_WASM.Utils
 
         public int? CASLatency { get; set; }
     }
+
+    public class CPUCoolerJSONParserVM : CPUCoolerVM
+    {
+        public string? RPM { get; set; }
+
+        public string? Noise { get; set; }
+
+        public string Sockets { get; set; } = null!;
+    }
+
     public class FileUploadFunctions
     {
-        public async Task<List<PSUVM>> HandlePSUUpload(InputFileChangeEventArgs e)
+        public static async Task<List<PSUVM>> HandlePSUUpload(InputFileChangeEventArgs e)
         {
             var file = e.File;
             var buffer = new byte[file.Size];
@@ -44,13 +54,18 @@ namespace MasterPC_WASM.Utils
                     manufacturer = DataInjestionConstants.powerSupplyManufacturers.First(x => x.manufacturerShortName == manufacturer).manufacturerFullName;
                 }
 
+                if (psu.ImgUrl is not null && !psu.ImgUrl.Contains("amazon.com"))
+                {
+                    psu.ImgUrl = null;
+                }
+
                 psu.Manufacturer = manufacturer;
             }
 
             return psuList;
         }
 
-        public async Task<List<GPUVM>> HandleGPUUpload(InputFileChangeEventArgs e)
+        public static async Task<List<GPUVM>> HandleGPUUpload(InputFileChangeEventArgs e)
         {
             var file = e.File;
             var buffer = new byte[file.Size];
@@ -71,110 +86,23 @@ namespace MasterPC_WASM.Utils
                 }
                 gpu.Manufacturer = manufacturer;
 
+                if (gpu.ImgUrl is not null && !gpu.ImgUrl.Contains("amazon.com"))
+                {
+                    gpu.ImgUrl = null;
+                }
             }
 
             return gpuList;
         }
 
-        private string GetMotherboardManufacturer(String model)
+        private static string GetMotherboardManufacturer(String model)
         {
             string manufacturer = model.Substring(0, model.IndexOf(' '));
 
             return manufacturer;
         }
 
-        private string GetMotherboardChipset(String model)
-        {
-            string chipset = "";
-
-            foreach (string intelChipset in DataInjestionConstants.intelMotherboardChipsets)
-            {
-                if (model.Contains(intelChipset))
-                {
-                    chipset = "Intel " + intelChipset;
-                    return chipset;
-                }
-            }
-
-            foreach (string amdChipset in DataInjestionConstants.amdMotherboardChipsets)
-            {
-                if (model.Contains(amdChipset))
-                {
-                    chipset = "AMD " + amdChipset;
-                    return chipset;
-                }
-            }
-
-            if (model.Contains("9300"))
-            {
-                chipset = "NVIDIA GeForce 9300";
-            }
-            else if (model.Contains("8200"))
-            {
-                chipset = "NVIDIA GeForce 8200";
-            }
-            else if (model.Contains("7050"))
-            {
-                chipset = "NVIDIA GeForce 7050";
-            }
-            else if (model.Contains("7025"))
-            {
-                chipset = "NVIDIA GeForce 7025";
-            }
-            else if (model.Contains("6100"))
-            {
-                chipset = "NVIDIA GeForce 6100";
-            }
-            else if (model.Contains("6150SE"))
-            {
-                chipset = "NVIDIA GeForce 6150SE";
-            }
-            else if (model.Contains("6150"))
-            {
-                chipset = "NVIDIA GeForce 6150";
-            }
-
-            if (chipset == "")
-            {
-                if (model.Contains("430"))
-                {
-                    chipset = "NVIDIA nForce 430 MCP";
-                }
-                else if (model.Contains("590"))
-                {
-                    chipset = "NVIDIA nForce 590 SLI MCP";
-                }
-                else if (model.Contains("720"))
-                {
-                    chipset = "NVIDIA nForce 720D";
-                }
-                else if (model.Contains("750a"))
-                {
-                    chipset = "NVIDIA nForce 750a";
-                }
-                else if (model.Contains("750i"))
-                {
-                    chipset = "NVIDIA nForce 750i";
-                }
-                else if (model.Contains("980"))
-                {
-                    chipset = "NVIDIA nForce 980a SLI";
-                }
-                else if (model.Contains("ION"))
-                {
-                    chipset = "NVIDIA ION";
-                }
-            }
-
-            if (chipset == "")
-            {
-                chipset = null;
-            }
-
-            return chipset;
-        }
-
-        public async Task<List<MotherboardVM>> HandleMotherboardUpload(InputFileChangeEventArgs e)
+        public static async Task<List<MotherboardVM>> HandleMotherboardUpload(InputFileChangeEventArgs e)
         {
             var file = e.File;
             var buffer = new byte[file.Size];
@@ -188,12 +116,16 @@ namespace MasterPC_WASM.Utils
             foreach (MotherboardVM motherboard in motherboardList)
             {
                 motherboard.Manufacturer = GetMotherboardManufacturer(motherboard.Name);
-                motherboard.Chipset = GetMotherboardChipset(motherboard.Name);
+
+                if (motherboard.ImgUrl is not null && !motherboard.ImgUrl.Contains("amazon.com"))
+                {
+                    motherboard.ImgUrl = null;
+                }
             }
 
             return motherboardList;
         }
-        private string GetMemoryManufacturer(String model)
+        private static string GetMemoryManufacturer(String model)
         {
             string manufacturer = model.Substring(0, model.IndexOf(' '));
 
@@ -204,7 +136,7 @@ namespace MasterPC_WASM.Utils
 
             return manufacturer;
         }
-        public async Task<List<RAMVM>> HandleRAMUpload(InputFileChangeEventArgs e)
+        public static async Task<List<RAMVM>> HandleRAMUpload(InputFileChangeEventArgs e)
         {
             List<RAMVM> RAMVMs = new List<RAMVM>();
             var file = e.File;
@@ -214,27 +146,24 @@ namespace MasterPC_WASM.Utils
 
             var jsonContent = System.Text.Encoding.UTF8.GetString(buffer);
 
-            List<MemoryJSONParserVM> parsedMemories = JsonConvert.DeserializeObject<List<MemoryJSONParserVM>>(jsonContent);
+            List<RAMVM> parsedMemories = JsonConvert.DeserializeObject<List<RAMVM>>(jsonContent);
 
-            foreach (MemoryJSONParserVM memory in parsedMemories)
+            foreach (RAMVM memory in parsedMemories)
             {
-                RAMVM newMemory = new RAMVM
-                {
-                    Name = memory.Name,
-                    Price = memory.Price,
-                    PricePerGB = memory.PricePerGB,
-                    Color = memory.Color,
-                    FirstWordLatency = memory.FirstWordLatency,
-                    CASLatency = memory.CASLatency
-                };
-                newMemory.Manufacturer = GetMemoryManufacturer(memory.Name);
-                newMemory.NumModules = memory.Modules[0];
-                newMemory.Capacity = memory.Modules[1];
-                newMemory.Type = "DDR" + memory.Speed[0];
-                newMemory.Speed = memory.Speed[1];
-                newMemory.RGB = memory.Name.ToUpper().Contains("RGB") ? true : false;
+                memory.Manufacturer = GetMemoryManufacturer(memory.Name);
+                memory.RGB = memory.Name.ToUpper().Contains("RGB") ? true : false;
 
-                RAMVMs.Add(newMemory);
+                if (memory.ImgUrl is not null && !memory.ImgUrl.Contains("amazon.com"))
+                {
+                    memory.ImgUrl = null;
+                }
+
+                if (memory.Price is not null && memory.Capacity is not null)
+                {
+                    memory.PricePerGB = memory.Price / memory.Capacity;
+                }
+
+                RAMVMs.Add(memory);
             }
             return RAMVMs;
         }
@@ -261,7 +190,7 @@ namespace MasterPC_WASM.Utils
                     cpu.Manufacturer = "Intel";
                 }
 
-                if(!cpu.ImgUrl.Contains("amazon.com"))
+                if (cpu.ImgUrl is not null && !cpu.ImgUrl.Contains("amazon.com"))
                 {
                     cpu.ImgUrl = null;
                 }
@@ -272,7 +201,7 @@ namespace MasterPC_WASM.Utils
             return cPUVMs;
         }
 
-        public async Task<List<CaseVM>> HandleCaseUpload(InputFileChangeEventArgs e)
+        public static async Task<List<CaseVM>> HandleCaseUpload(InputFileChangeEventArgs e)
         {
             List<CaseVM> caseVMs = new List<CaseVM>();
             var file = e.File;
@@ -291,9 +220,20 @@ namespace MasterPC_WASM.Utils
                 if (DataInjestionConstants.caseManufacturers.Any(x => x.manufacturerShortName == manufacturer))
                 {
                     caseVM.Manufacturer = DataInjestionConstants.caseManufacturers.First(x => x.manufacturerShortName == manufacturer).manufacturerFullName;
-                } else
+                }
+                else
                 {
                     caseVM.Manufacturer = manufacturer;
+                }
+
+                if (caseVM.ImgUrl is not null && !caseVM.ImgUrl.Contains("amazon.com"))
+                {
+                    caseVM.ImgUrl = null;
+                }
+
+                if (caseVM.Psu == "None")
+                {
+                    caseVM.Psu = null;
                 }
 
                 caseVMs.Add(caseVM);
@@ -301,7 +241,7 @@ namespace MasterPC_WASM.Utils
 
             return caseVMs;
         }
-        public async Task<List<StorageVM>> HandleStorageUpload(InputFileChangeEventArgs e)
+        public static async Task<List<StorageVM>> HandleStorageUpload(InputFileChangeEventArgs e)
         {
             List<StorageVM> storageVMs = new List<StorageVM>();
             var file = e.File;
@@ -320,15 +260,111 @@ namespace MasterPC_WASM.Utils
                 if (DataInjestionConstants.storageManufacturers.Any(x => x.manufacturerShortName == manufacturer))
                 {
                     storageVM.Manufacturer = DataInjestionConstants.storageManufacturers.First(x => x.manufacturerShortName == manufacturer).manufacturerFullName;
-                } else
+                }
+                else
                 {
                     storageVM.Manufacturer = manufacturer;
+                }
+
+                if (storageVM.ImgUrl is not null && !storageVM.ImgUrl.Contains("amazon.com"))
+                {
+                    storageVM.ImgUrl = null;
+                }
+
+                if (storageVM.Price is not null && storageVM.Capacity is not null)
+                {
+                    storageVM.PricePerGB = storageVM.Price / storageVM.Capacity;
                 }
 
                 storageVMs.Add(storageVM);
             }
 
             return storageVMs;
+        }
+
+
+        public static async Task<List<CPUCoolerVM>> HandleCPUCoolerUpload(InputFileChangeEventArgs e)
+        {
+            List<CPUCoolerVM> cpuCoolerVMs = new List<CPUCoolerVM>();
+            var file = e.File;
+            var buffer = new byte[file.Size];
+
+            await file.OpenReadStream().ReadAsync(buffer);
+
+            var jsonContent = System.Text.Encoding.UTF8.GetString(buffer);
+
+            List<CPUCoolerJSONParserVM> cPUCoolerJSONParserVMs = JsonConvert.DeserializeObject<List<CPUCoolerJSONParserVM>>(jsonContent);
+
+            foreach (CPUCoolerJSONParserVM coolerJSONParserVM in cPUCoolerJSONParserVMs)
+            {
+                CPUCoolerVM cPUCoolerVM = new CPUCoolerVM
+                {
+                    Name = coolerJSONParserVM.Name,
+                    PCPId = coolerJSONParserVM.PCPId,
+                    ImgUrl = coolerJSONParserVM.ImgUrl,
+                    Color = coolerJSONParserVM.Color,
+                    Price = coolerJSONParserVM.Price,
+                    RadiatorSize = coolerJSONParserVM.RadiatorSize,
+                };
+
+                if (coolerJSONParserVM.RPM is not null && !String.IsNullOrWhiteSpace(coolerJSONParserVM.RPM))
+                {
+                    if (!coolerJSONParserVM.RPM.Contains('-'))
+                    {
+                        cPUCoolerVM.MinRPM = int.Parse(coolerJSONParserVM.RPM);
+                    }
+                    else
+                    {
+                        string[] RPMs = coolerJSONParserVM.RPM.Split('-');
+                        cPUCoolerVM.MinRPM = int.Parse(RPMs[0]);
+                        cPUCoolerVM.MaxRPM = int.Parse(RPMs[1]);
+                    }
+                }
+
+                if (coolerJSONParserVM.Noise is not null && !String.IsNullOrWhiteSpace(coolerJSONParserVM.Noise))
+                {
+                    if (!coolerJSONParserVM.Noise.Contains('-'))
+                    {
+                        cPUCoolerVM.MinNoise = double.Parse(coolerJSONParserVM.Noise);
+                    }
+                    else
+                    {
+                        string[] noises = coolerJSONParserVM.Noise.Split('-');
+                        cPUCoolerVM.MinNoise = double.Parse(noises[0]);
+                        cPUCoolerVM.MaxNoise = double.Parse(noises[1]);
+                    }
+                }
+
+                if (coolerJSONParserVM.Sockets is not null && coolerJSONParserVM.Sockets.Contains(','))
+                {
+                    cPUCoolerVM.CompatibleSockets = coolerJSONParserVM.Sockets.Split(',').ToList();
+                }
+                else
+                {
+                    cPUCoolerVM.CompatibleSockets = new List<string>();
+                }
+
+
+                string manufacturer = cPUCoolerVM.Name.Substring(0, cPUCoolerVM.Name.IndexOf(' '));
+
+                if (DataInjestionConstants.cpuCoolerManufacturers.Any(x => x.manufacturerShortName == manufacturer))
+                {
+                    cPUCoolerVM.Manufacturer = DataInjestionConstants.cpuCoolerManufacturers.First(x => x.manufacturerShortName == manufacturer).manufacturerFullName;
+                }
+                else
+                {
+                    cPUCoolerVM.Manufacturer = manufacturer;
+                }
+
+                if (cPUCoolerVM.ImgUrl is not null && !cPUCoolerVM.ImgUrl.Contains("amazon.com"))
+                {
+                    cPUCoolerVM.ImgUrl = null;
+                }
+
+                cpuCoolerVMs.Add(cPUCoolerVM);
+            }
+
+            return cpuCoolerVMs;
         }
     }
 }

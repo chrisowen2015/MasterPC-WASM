@@ -1,0 +1,77 @@
+﻿@namespace MasterPC_WASM.Components.Tables
+@using Shared.View_Models
+
+<MudPaper Elevation="3">
+    <MudDataGrid Items="@Elements" QuickFilter="_quickFilter" ColumnResizeMode="ResizeMode.Container">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Power Supplies</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Property="psuVM => psuVM.PCPId" Title="PCP ID" />
+
+            <PropertyColumn Property="psuVM => psuVM.Name" Title="Name">
+                <CellTemplate>
+                    <MudStack Row AlignItems="AlignItems.Center">
+                        <MudImage Height="50" Width="50" Avatar="true" Src="@(context.Item.ImgUrl != null ? context.Item.ImgUrl : "favicon.ico")" />
+                        <a href="@("product/psu/" + context.Item.Id)"><MudText Typo="Typo.body1"><b>@(context.Item.Name)</b></MudText></a>
+                    </MudStack>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="psuVM => psuVM.Manufacturer" Title="Manufacturer" />
+
+            <PropertyColumn Property="psuVM => psuVM.Type" Title="Type" />
+
+            <PropertyColumn Property="psuVM => psuVM.Efficiency" Title="Efficiency" />
+
+            <PropertyColumn Property="psuVM => psuVM.Wattage" Title="Wattage">
+                <CellTemplate>
+                    <MudText Typo="Typo.inherit"> @(context.Item.Wattage is not null ? context.Item.Wattage + " W" : null)</MudText>
+                </CellTemplate>
+            </PropertyColumn>
+
+            <PropertyColumn Property="psuVM => psuVM.Modular" Title="Modular" />
+
+            <PropertyColumn Property="psuVM => psuVM.Color" Title="Color" />
+
+            <PropertyColumn Property="psuVM => psuVM.Price" Title="Price">
+                <CellTemplate>
+                    <MudStack Row AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                        <b>
+                            <MudText Typo="Typo.inherit"> @(string.Format("${0:N2}", context.Item.Price))</MudText>
+                        </b>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Add</MudButton>
+                    </MudStack>
+                </CellTemplate>
+            </PropertyColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="PSUVM" />
+        </PagerContent>
+    </MudDataGrid>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public List<PSUVM>? Elements { get; set; }
+
+    private string? _searchString { get; set; }
+
+    private Func<PSUVM, bool> _quickFilter => psuVM =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (psuVM.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (!String.IsNullOrEmpty(psuVM.Manufacturer) && psuVM.Manufacturer.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
+
+}

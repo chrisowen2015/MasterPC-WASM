@@ -18,7 +18,7 @@
 
         public string? Color { get; set; }
 
-        public int? Psu { get; set; }
+        public string? Psu { get; set; }
 
         public string? SidePanel { get; set; }
 
