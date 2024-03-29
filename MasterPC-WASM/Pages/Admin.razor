@@ -62,12 +62,12 @@
                     <MudItem xs="12" lg="3">
                         <MudPaper Elevation="3" Style="padding: 2em">
                             <MudText Align="Align.Center" Typo="Typo.h5" Style="font-weight: 500"> Upload Cases</MudText>
-                            @* Upload Cases Input file goes here*@
+                            <InputFile OnChange="HandleCaseUpload" />
                         </MudPaper>
                     </MudItem>
 
                     <MudItem xs="12" lg="9">
-                        @* Cases Table Goes Here*@
+                        <CaseTable Elements="cases" />
                     </MudItem>
                 </MudGrid>
             </MudContainer>
@@ -110,12 +110,12 @@
                     <MudItem xs="12" lg="3">
                         <MudPaper Elevation="3" Style="padding: 2em">
                             <MudText Align="Align.Center" Typo="Typo.h5" Style="font-weight: 500"> Upload GPUs</MudText>
-                            @* Upload GPUs file goes here*@
+                            <InputFile OnChange="HandleGPUUpload" />
                         </MudPaper>
                     </MudItem>
 
                     <MudItem xs="12" lg="9">
-                        @* GPUs Table Goes Here*@
+                        <GPUTable Elements="gpus" />
                     </MudItem>
                 </MudGrid>
             </MudContainer>
@@ -199,6 +199,8 @@
     private bool SendToDatabase { get; set; } = false;
 
     private List<CPUVM> cpus = new List<CPUVM>();
+    private List<GPUVM> gpus = new List<GPUVM>();
+    private List<CaseVM> cases = new List<CaseVM>();
 
     private void RadioButtonChanged(string value)
     {
@@ -214,7 +216,7 @@
                 cpus.Clear();
                 break;
             case "GPUs":
-                // GPUs
+                gpus.Clear();
                 break;
             case "Motherboards":
                 // Motherboards
@@ -244,6 +246,32 @@
             foreach (var cpu in cpus)
             {
                 await cpuService.AddCPUAsync(cpu);
+            }
+        }
+    }
+
+    async Task HandleGPUUpload(InputFileChangeEventArgs e)
+    {
+        gpus = await FileUploadFunctions.HandleGPUUpload(e);
+
+        if(SendToDatabase)
+        {
+            foreach (var gpu in gpus)
+            {
+                //await gpuService.AddGPUAsync(gpu);
+            }
+        }
+    }
+
+    async Task HandleCaseUpload(InputFileChangeEventArgs e)
+    {
+        cases = await FileUploadFunctions.HandleCaseUpload(e);
+
+        if(SendToDatabase)
+        {
+            foreach (var caseVM in cases)
+            {
+                //await caseService.AddCaseAsync(caseVM);
             }
         }
     }

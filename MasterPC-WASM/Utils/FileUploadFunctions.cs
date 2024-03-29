@@ -24,7 +24,7 @@ namespace MasterPC_WASM.Utils
     }
     public class FileUploadFunctions
     {
-        public async Task<List<PSUVM>> HandlePSUUpload(InputFileChangeEventArgs e)
+        public static async Task<List<PSUVM>> HandlePSUUpload(InputFileChangeEventArgs e)
         {
             var file = e.File;
             var buffer = new byte[file.Size];
@@ -50,7 +50,7 @@ namespace MasterPC_WASM.Utils
             return psuList;
         }
 
-        public async Task<List<GPUVM>> HandleGPUUpload(InputFileChangeEventArgs e)
+        public static async Task<List<GPUVM>> HandleGPUUpload(InputFileChangeEventArgs e)
         {
             var file = e.File;
             var buffer = new byte[file.Size];
@@ -71,19 +71,23 @@ namespace MasterPC_WASM.Utils
                 }
                 gpu.Manufacturer = manufacturer;
 
+                if (gpu.ImgUrl is not null && !gpu.ImgUrl.Contains("amazon.com"))
+                {
+                    gpu.ImgUrl = null;
+                }
             }
 
             return gpuList;
         }
 
-        private string GetMotherboardManufacturer(String model)
+        private static string GetMotherboardManufacturer(String model)
         {
             string manufacturer = model.Substring(0, model.IndexOf(' '));
 
             return manufacturer;
         }
 
-        private string GetMotherboardChipset(String model)
+        private static string GetMotherboardChipset(String model)
         {
             string chipset = "";
 
@@ -174,7 +178,7 @@ namespace MasterPC_WASM.Utils
             return chipset;
         }
 
-        public async Task<List<MotherboardVM>> HandleMotherboardUpload(InputFileChangeEventArgs e)
+        public static async Task<List<MotherboardVM>> HandleMotherboardUpload(InputFileChangeEventArgs e)
         {
             var file = e.File;
             var buffer = new byte[file.Size];
@@ -193,7 +197,7 @@ namespace MasterPC_WASM.Utils
 
             return motherboardList;
         }
-        private string GetMemoryManufacturer(String model)
+        private static string GetMemoryManufacturer(String model)
         {
             string manufacturer = model.Substring(0, model.IndexOf(' '));
 
@@ -204,7 +208,7 @@ namespace MasterPC_WASM.Utils
 
             return manufacturer;
         }
-        public async Task<List<RAMVM>> HandleRAMUpload(InputFileChangeEventArgs e)
+        public static async Task<List<RAMVM>> HandleRAMUpload(InputFileChangeEventArgs e)
         {
             List<RAMVM> RAMVMs = new List<RAMVM>();
             var file = e.File;
@@ -261,7 +265,7 @@ namespace MasterPC_WASM.Utils
                     cpu.Manufacturer = "Intel";
                 }
 
-                if(!cpu.ImgUrl.Contains("amazon.com"))
+                if(cpu.ImgUrl is not null && !cpu.ImgUrl.Contains("amazon.com"))
                 {
                     cpu.ImgUrl = null;
                 }
@@ -272,7 +276,7 @@ namespace MasterPC_WASM.Utils
             return cPUVMs;
         }
 
-        public async Task<List<CaseVM>> HandleCaseUpload(InputFileChangeEventArgs e)
+        public static async Task<List<CaseVM>> HandleCaseUpload(InputFileChangeEventArgs e)
         {
             List<CaseVM> caseVMs = new List<CaseVM>();
             var file = e.File;
@@ -296,12 +300,22 @@ namespace MasterPC_WASM.Utils
                     caseVM.Manufacturer = manufacturer;
                 }
 
+                if (caseVM.ImgUrl is not null && !caseVM.ImgUrl.Contains("amazon.com"))
+                {
+                    caseVM.ImgUrl = null;
+                }
+
+                if(caseVM.Psu == "None")
+                {
+                    caseVM.Psu = null;
+                }
+
                 caseVMs.Add(caseVM);
             }
 
             return caseVMs;
         }
-        public async Task<List<StorageVM>> HandleStorageUpload(InputFileChangeEventArgs e)
+        public static async Task<List<StorageVM>> HandleStorageUpload(InputFileChangeEventArgs e)
         {
             List<StorageVM> storageVMs = new List<StorageVM>();
             var file = e.File;
