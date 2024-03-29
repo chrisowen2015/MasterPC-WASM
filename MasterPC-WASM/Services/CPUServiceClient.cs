@@ -3,7 +3,7 @@ using Shared.View_Models;
 using System.Net.Http.Json;
 using System.Security.Claims;
 
-namespace MasterPC_WASM.Services.CPU
+namespace MasterPC_WASM.Services
 {
     public interface ICPUService
     {

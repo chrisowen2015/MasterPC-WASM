@@ -5,6 +5,7 @@ using Api.Services;
 using Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Api.Repository;
+using Api.Repositories;
 
 var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
@@ -19,6 +20,8 @@ var host = new HostBuilder()
 
         services.AddScoped<ICPUsRepository, CPUsRepository>();
         services.AddScoped<ICPUService, CPUServiceAPI>();
+        services.AddScoped<ICasesRepository, CasesRepository >();
+        services.AddScoped<ICaseService, CaseServiceAPI>();
     })
     .Build();
 

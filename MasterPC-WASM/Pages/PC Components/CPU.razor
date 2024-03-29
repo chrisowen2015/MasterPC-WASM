@@ -1,7 +1,7 @@
 ﻿@page "/product/cpu/{CPUId}"
 
 @using MasterPC_WASM.Components.Tables
-@using MasterPC_WASM.Services.CPU
+@using MasterPC_WASM.Services
 
 @inject NavigationManager NavigationManager
 @inject ICPUService cpuService
@@ -20,7 +20,7 @@
     {
         if (CPUId == null)
         {
-            NavigationManager.NavigateTo("/products/cpu");
+            NavigationManager.NavigateTo("/products/cpus");
         }
         else
         {

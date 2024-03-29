@@ -1,4 +1,4 @@
-using MasterPC_WASM.Services.CPU;
+using MasterPC_WASM.Services;
 using MasterPC_WASM;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -30,5 +30,6 @@ builder.Services.AddAuthorizationCore(options =>
 });
 
 builder.Services.AddScoped<ICPUService, CPUServiceClient>();
+builder.Services.AddScoped<ICaseService, CaseServiceClient>();
 
 await builder.Build().RunAsync();

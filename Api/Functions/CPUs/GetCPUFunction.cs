@@ -3,18 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Api.Services;
 using Shared.View_Models;
-using System.Text.Json;
 
 namespace Api.Functions.CPUs
 {
-    public class GetCPUFunction
+    public class GetCaseFunction(ICPUService cpuService)
     {
-        private readonly ICPUService _cpuService;
-
-        public GetCPUFunction(ICPUService cpuService)
-        {
-            _cpuService = cpuService;
-        }
+        private readonly ICPUService _cpuService = cpuService;
 
         [Function("GetCPUFunction")]
         public async Task<IActionResult> Run(

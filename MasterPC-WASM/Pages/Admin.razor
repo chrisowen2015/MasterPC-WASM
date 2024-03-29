@@ -3,11 +3,12 @@
 @attribute [Authorize(Policy = "superusers")]
 
 @using MasterPC_WASM.Components.Tables;
-@using MasterPC_WASM.Services.CPU;
+@using MasterPC_WASM.Services;
 @using MasterPC_WASM.Utils;
 @using Shared.View_Models;
 
 @inject ICPUService cpuService;
+@inject ICaseService caseService;
 
 <div>
     <div style="padding-top: 2em; display: flex; justify-content: center; align-items: center; background-color: @(theme is not null ? theme.Palette.Tertiary : null)">
@@ -250,7 +251,7 @@
         {
             foreach (var caseVM in cases)
             {
-                //await caseService.AddCaseAsync(caseVM);
+                await caseService.AddCaseAsync(caseVM);
             }
         }
     }
