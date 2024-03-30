@@ -1,4 +1,4 @@
-﻿using Api.Repository;
+﻿using Api.Repositories;
 using Shared.View_Models;
 
 namespace Api.Services

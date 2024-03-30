@@ -3,7 +3,7 @@ using Api.Data.Entities;
 using Api.Data;
 using Shared.View_Models;
 
-namespace Api.Repository
+namespace Api.Repositories
 {
     public interface ICPUsRepository
     {

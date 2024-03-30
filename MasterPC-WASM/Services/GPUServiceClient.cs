@@ -6,35 +6,35 @@ using System.Text.Json;
 
 namespace MasterPC_WASM.Services
 {
-    public interface ICPUService
+    public interface IGPUService
     {
-        public Task<List<CPUVM>> GetCPUsAsync();
-        public Task<CPUVM> GetCPUByIdAsync(string id);
-        public Task<string> AddCPUAsync(CPUVM cpu);
-        public Task<List<string>> AddCPUsAsync(List<CPUVM> CPUs);
-    }
-    public class CPUServiceClient(HttpClient httpClient, AuthenticationStateProvider authenticationStateProvider) : ICPUService
+        public Task<List<GPUVM>> GetGPUsAsync();
+        public Task<GPUVM> GetGPUByIdAsync(string id);
+        public Task<string> AddGPUAsync(GPUVM gpu);
+        public Task<List<string>> AddGPUsAsync(List<GPUVM> GPUs);
+    }   
+    public class GPUServiceClient(HttpClient httpClient, AuthenticationStateProvider authenticationStateProvider) : IGPUService
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly AuthenticationStateProvider _authenticationStateProvider = authenticationStateProvider;
 
-        public async Task<List<CPUVM>> GetCPUsAsync()
+        public async Task<List<GPUVM>> GetGPUsAsync()
         {
-            return await _httpClient.GetFromJsonAsync<List<CPUVM>>("api/cpus");
+            return await _httpClient.GetFromJsonAsync<List<GPUVM>>("api/gpus");
         }
 
-        public async Task<CPUVM> GetCPUByIdAsync(string id)
+        public async Task<GPUVM> GetGPUByIdAsync(string id)
         {
-            return await _httpClient.GetFromJsonAsync<CPUVM>($"api/cpu/{id}");
+            return await _httpClient.GetFromJsonAsync<GPUVM>($"api/gpu/{id}");
         }
 
         [Authorize(Roles = "superuser")]
-        public async Task<string> AddCPUAsync(CPUVM cpu)
+        public async Task<string> AddGPUAsync(GPUVM gpu)
         {
             var user = _authenticationStateProvider.GetAuthenticationStateAsync().Result.User;
             var userId = user.Identities.First().Claims.First(c => c.Type == "oid").Value;
 
-            var response = await _httpClient.PostAsJsonAsync("api/cpu/{userId}", cpu);
+            var response = await _httpClient.PostAsJsonAsync("api/gpu/{userId}", gpu);
 
             if (response.StatusCode == System.Net.HttpStatusCode.Created)
             {
@@ -48,12 +48,12 @@ namespace MasterPC_WASM.Services
             }
         }
 
-        public async Task<List<string>> AddCPUsAsync(List<CPUVM> CPUs)
+        public async Task<List<string>> AddGPUsAsync(List<GPUVM> GPUs)
         {
             var user = _authenticationStateProvider.GetAuthenticationStateAsync().Result.User;
             var userId = user.Identities.First().Claims.First(c => c.Type == "oid").Value;
 
-            var response = await _httpClient.PostAsJsonAsync($"api/cpus/{userId}", CPUs);
+            var response = await _httpClient.PostAsJsonAsync($"api/gpus/{userId}", GPUs);
 
             if (response.StatusCode == System.Net.HttpStatusCode.Created)
             {
