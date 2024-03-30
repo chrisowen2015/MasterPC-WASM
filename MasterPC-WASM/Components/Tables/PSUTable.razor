@@ -16,7 +16,7 @@
                 <CellTemplate>
                     <MudStack Row AlignItems="AlignItems.Center">
                         <MudImage Height="50" Width="50" Avatar="true" Src="@(context.Item.ImgUrl != null ? context.Item.ImgUrl : "favicon.ico")" />
-                        <a href="@("product/psu/" + context.Item.Id)"><MudText Typo="Typo.body1"><b>@(context.Item.Name)</b></MudText></a>
+                        <a href="@("product/power-supply/" + context.Item.Id)"><MudText Typo="Typo.body1"><b>@(context.Item.Name)</b></MudText></a>
                     </MudStack>
                 </CellTemplate>
             </PropertyColumn>
