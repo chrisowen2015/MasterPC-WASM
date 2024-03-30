@@ -31,5 +31,6 @@ builder.Services.AddAuthorizationCore(options =>
 
 builder.Services.AddScoped<ICPUService, CPUServiceClient>();
 builder.Services.AddScoped<ICaseService, CaseServiceClient>();
+builder.Services.AddScoped<ICPUCoolerService, CPUCoolerServiceClient>();
 
 await builder.Build().RunAsync();

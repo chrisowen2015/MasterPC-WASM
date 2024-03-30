@@ -15,6 +15,7 @@ public partial class MasterPcdbContext : DbContext
     }
 
     public virtual DbSet<Case> Cases { get; set; }
+    public virtual DbSet<CpuCooler> CpuCoolers { get; set; }
     public virtual DbSet<Cpu> Cpus { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 

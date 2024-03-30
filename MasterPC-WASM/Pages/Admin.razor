@@ -9,6 +9,7 @@
 
 @inject ICPUService cpuService;
 @inject ICaseService caseService;
+@inject ICPUCoolerService cpuCoolerService;
 
 <div>
     <div style="padding-top: 2em; display: flex; justify-content: center; align-items: center; background-color: @(theme is not null ? theme.Palette.Tertiary : null)">
@@ -294,9 +295,16 @@
 
         if (SendToDatabase)
         {
-            foreach (var cpuCooler in cpuCoolers)
+            try
             {
-                //await cpuCoolerService.AddCPUCoolerAsync(cpuCooler);
+                List<string> results = await cpuCoolerService.AddCPUCoolersAsync(cpuCoolers);
+
+                _dbSuccessMessage = "All CPU Coolers uploaded successfully.";
+            }
+            catch (Exception ex)
+            {
+                _dbSuccessMessage = "There was an error uploading the CPU Coolers. Please try again.";
+                Console.WriteLine(ex.Message);
             }
         }
     }

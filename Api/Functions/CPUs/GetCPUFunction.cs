@@ -6,7 +6,7 @@ using Shared.View_Models;
 
 namespace Api.Functions.CPUs
 {
-    public class GetCaseFunction(ICPUService cpuService)
+    public class GetCPUFunction(ICPUService cpuService)
     {
         private readonly ICPUService _cpuService = cpuService;
 

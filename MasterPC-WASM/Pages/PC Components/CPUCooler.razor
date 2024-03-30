@@ -1,0 +1,31 @@
+﻿@page "/product/cpu-cooler/{CpuCoolerId}"
+
+@using MasterPC_WASM.Components.Tables
+@using MasterPC_WASM.Services
+
+@inject NavigationManager NavigationManager
+@inject ICPUCoolerService cpuCoolerService
+
+<CPUCoolerTable Elements="CPUCoolerList" />
+
+
+@code {
+    [Parameter] public String CpuCoolerId { get; set; }
+
+    public CPUCoolerVM CPUCoolerVM { get; set; }
+
+    public List<CPUCoolerVM> CPUCoolerList = new List<CPUCoolerVM>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (CpuCoolerId == null)
+        {
+            NavigationManager.NavigateTo("/products/cpu-coolers");
+        }
+        else
+        {
+            CPUCoolerVM = await cpuCoolerService.GetCPUCoolerByIdAsync(CpuCoolerId);
+            CPUCoolerList.Add(CPUCoolerVM);
+        }
+    }
+}

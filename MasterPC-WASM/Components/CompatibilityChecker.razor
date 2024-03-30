@@ -1,0 +1,20 @@
+﻿<MudPaper Elevation="2" Style="padding: 1em">
+    <MudGrid>
+        <MudItem md="2">
+            <MudCheckBox Value="CompatibilityFilter" />
+        </MudItem>
+        <MudItem md="10">
+            <MudText Typo="Typo.h6">
+                Compatibility Filter
+            </MudText>
+            <MudText>
+                Selected Parts: <b>0 Parts</b>
+            </MudText>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public bool CompatibilityFilter { get; set; }
+}
