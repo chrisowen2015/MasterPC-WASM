@@ -1,11 +1,27 @@
 ﻿<MudAppBar Elevation="1">
     <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="DrawerToggle" />
+    
+    @if (!DrawerOpen)
+    {
+        <MudButton Color="Color.Inherit" Href="/" Size="Size.Large" Style="padding: 8px 4px">
+            <MudIcon Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Size="Size.Large" />
+
+            <MudText Color="Color.Inherit" Typo="Typo.h6" Style="padding-left: 10px">
+                MasterPC
+            </MudText>
+        </MudButton>
+    }
+
     <MudSpacer />
+
     <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
 </MudAppBar>
 
 @code {                                                                                                                                                                                                                                                                                         
     [Parameter]
     public EventCallback DrawerToggle { get; set; }
+
+    [Parameter]
+    public bool DrawerOpen { get; set; }
 }
                                                                         

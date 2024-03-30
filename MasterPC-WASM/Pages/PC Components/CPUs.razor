@@ -1,5 +1,6 @@
 ﻿@page "/products/cpus"
 
+@using MasterPC_WASM.Components
 @using Microsoft.AspNetCore.Authorization;
 @using MasterPC_WASM.Services;
 @using MasterPC_WASM.Components.Tables;
@@ -26,21 +27,8 @@
         <MudGrid>
             <MudItem xs="12" lg="3">
                 <MudPaper Elevation="1">
-                    <MudPaper Elevation="2" Style="padding: 1em">
-                        <MudGrid>
-                            <MudItem md="2">
-                                <MudCheckBox Value="compatibilityFilter" />
-                            </MudItem>
-                            <MudItem md="10">
-                                <MudText Typo="Typo.h6">
-                                    Compatibility Filter
-                                </MudText>
-                                <MudText>
-                                    Selected Parts: <b>0 Parts</b>
-                                </MudText>
-                            </MudItem>
-                        </MudGrid>
-                    </MudPaper>
+                    <CompatibilityChecker CompatibilityFilter="compatibilityFilter" />
+
                     <MudStack Row Justify="Justify.SpaceBetween" Style="padding: 16px 24px">
                         <MudText Typo="Typo.h6" >
                             Filters
