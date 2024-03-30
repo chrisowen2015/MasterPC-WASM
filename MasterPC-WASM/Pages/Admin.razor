@@ -10,6 +10,7 @@
 @inject ICPUService cpuService;
 @inject ICaseService caseService;
 @inject ICPUCoolerService cpuCoolerService;
+@inject IGPUService gpuService;
 
 <div>
     <div style="padding-top: 2em; display: flex; justify-content: center; align-items: center; background-color: @(theme is not null ? theme.Palette.Tertiary : null)">
@@ -337,9 +338,16 @@
 
         if (SendToDatabase)
         {
-            foreach (var gpu in gpus)
+            try
             {
-                //await gpuService.AddGPUAsync(gpu);
+                List<string> results = await gpuService.AddGPUsAsync(gpus);
+
+                _dbSuccessMessage = "All GPUs uploaded successfully.";
+            }
+            catch (Exception ex)
+            {
+                _dbSuccessMessage = "There was an error uploading the GPUs. Please try again.";
+                Console.WriteLine(ex.Message);
             }
         }
     }

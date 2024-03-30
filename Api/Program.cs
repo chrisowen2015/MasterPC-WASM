@@ -4,7 +4,6 @@ using Microsoft.Extensions.Hosting;
 using Api.Services;
 using Api.Data;
 using Microsoft.EntityFrameworkCore;
-using Api.Repository;
 using Api.Repositories;
 
 var host = new HostBuilder()
@@ -24,6 +23,8 @@ var host = new HostBuilder()
         services.AddScoped<ICaseService, CaseServiceAPI>();
         services.AddScoped<ICPUCoolersRepository, CPUCoolersRepository>();
         services.AddScoped<ICPUCoolerService, CPUCoolerServiceAPI>();
+        services.AddScoped<IGPUsRepository, GPUsRepository>();
+        services.AddScoped<IGPUService, GPUServiceAPI>();
     })
     .Build();
 
