@@ -14,6 +14,7 @@
 @inject IMotherboardService motherboardService;
 @inject IPSUService psuService;
 @inject IRAMService ramService;
+@inject IStorageService storageService;
 
 <div>
     <div style="padding-top: 2em; display: flex; justify-content: center; align-items: center; background-color: @(theme is not null ? theme.Palette.Tertiary : null)">
@@ -425,9 +426,16 @@
 
         if (SendToDatabase)
         {
-            foreach (var storageVM in storage)
+            try
             {
-                //await storageService.AddStorageAsync(storageVM);
+                List<string> results = await storageService.AddStoragesAsync(storage);
+
+                _dbSuccessMessage = "All Motherboards uploaded successfully.";
+            }
+            catch (Exception ex)
+            {
+                _dbSuccessMessage = "There was an error uploading the Motherboards. Please try again.";
+                Console.WriteLine(ex.Message);
             }
         }
     }

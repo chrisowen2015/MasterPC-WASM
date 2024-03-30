@@ -21,6 +21,7 @@ public partial class MasterPcdbContext : DbContext
     public virtual DbSet<Motherboard> Motherboards { get; set; }
     public virtual DbSet<PSU> PSUs { get; set; }
     public virtual DbSet<Ram> Rams { get; set; }
+    public virtual DbSet<Storage> Storages { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
     {
