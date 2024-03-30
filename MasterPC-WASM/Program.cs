@@ -36,5 +36,6 @@ builder.Services.AddScoped<IGPUService, GPUServiceClient>();
 builder.Services.AddScoped<IMotherboardService, MotherboardServiceClient>();
 builder.Services.AddScoped<IPSUService, PSUServiceClient>();
 builder.Services.AddScoped<IRAMService, RAMServiceClient>();
+builder.Services.AddScoped<IStorageService, StorageServiceClient>();
 
 await builder.Build().RunAsync();

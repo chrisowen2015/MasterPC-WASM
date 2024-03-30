@@ -19,7 +19,7 @@ var host = new HostBuilder()
 
         services.AddScoped<ICPUsRepository, CPUsRepository>();
         services.AddScoped<ICPUService, CPUServiceAPI>();
-        services.AddScoped<ICasesRepository, CasesRepository >();
+        services.AddScoped<ICasesRepository, CasesRepository>();
         services.AddScoped<ICaseService, CaseServiceAPI>();
         services.AddScoped<ICPUCoolersRepository, CPUCoolersRepository>();
         services.AddScoped<ICPUCoolerService, CPUCoolerServiceAPI>();
@@ -31,6 +31,8 @@ var host = new HostBuilder()
         services.AddScoped<IPSUService, PSUServiceAPI>();
         services.AddScoped<IRamRepository, RamRepository>();
         services.AddScoped<IRamService, RamServiceAPI>();
+        services.AddScoped<IStorageRepository, StorageRepository>();
+        services.AddScoped<IStorageService, StorageServiceAPI>();
     })
     .Build();
 
