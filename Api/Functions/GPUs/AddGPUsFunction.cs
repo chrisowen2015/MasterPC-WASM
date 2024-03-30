@@ -5,7 +5,7 @@ using Api.Services;
 using System.Text.Json;
 using Shared.View_Models;
 
-namespace Api.Functions.Cases
+namespace Api.Functions.GPUs
 {
     public class AddGPUsFunction(IGPUService gpuService)
     {

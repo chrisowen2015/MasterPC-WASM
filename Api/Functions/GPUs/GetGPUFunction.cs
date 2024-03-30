@@ -4,7 +4,7 @@ using Microsoft.Azure.Functions.Worker;
 using Api.Services;
 using Shared.View_Models;
 
-namespace Api.Functions.CPUs
+namespace Api.Functions.GPUs
 {
     public class GetGPUFunction(IGPUService gpuService)
     {

@@ -5,7 +5,7 @@ using Api.Services;
 using System.Text.Json;
 using Shared.View_Models;
 
-namespace Api.Functions.CPUs
+namespace Api.Functions.CPUCoolers
 {
     public class AddCPUCoolerFunction(ICPUCoolerService cpuCoolerService)
     {
