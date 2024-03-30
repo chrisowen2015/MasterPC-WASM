@@ -1,0 +1,31 @@
+﻿@page "/product/ram/{RamId}"
+
+@using MasterPC_WASM.Components.Tables
+@using MasterPC_WASM.Services
+
+@inject NavigationManager NavigationManager
+@inject IRAMService ramService
+
+<RAMTable Elements="ramList" />
+
+
+@code {
+    [Parameter] public String RamId { get; set; }
+
+    public RAMVM ramVM { get; set; }
+
+    public List<RAMVM> ramList = new List<RAMVM>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (RamId == null)
+        {
+            NavigationManager.NavigateTo("/products/rams");
+        }
+        else
+        {
+            ramVM = await ramService.GetRamByIdAsync(RamId);
+            ramList.Add(ramVM);
+        }
+    }
+}

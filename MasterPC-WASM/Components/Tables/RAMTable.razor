@@ -41,7 +41,7 @@
 
             <PropertyColumn Property="ramVM => ramVM.PricePerGB" Title="Price/GB">
                 <CellTemplate>
-                    <MudText Typo="Typo.inherit"> @(context.Item.Capacity is not null ? context.Item.Capacity + " GB" : null)</MudText>
+                    <MudText Typo="Typo.inherit"> @(string.Format("${0:N3}", context.Item.PricePerGB))</MudText>
                 </CellTemplate>
             </PropertyColumn>
 

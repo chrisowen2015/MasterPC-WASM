@@ -1,0 +1,209 @@
+﻿@page "/products/rams"
+
+@using MasterPC_WASM.Components
+@using Microsoft.AspNetCore.Authorization;
+@using MasterPC_WASM.Services;
+@using MasterPC_WASM.Components.Tables;
+
+@inject IRAMService ramService
+
+<PageTitle> RAMs </PageTitle>
+
+<div>
+    <div style="padding-top: 2em; display: flex; justify-content: center; align-items: center; background-color: @(theme is not null ? theme.Palette.Tertiary : null)">
+        <MudStack Row="false">
+            <MudText Align="Align.Center" Typo="Typo.h2 " Style="font-weight: 500"> Select Your RAM </MudText>
+            <div style="display: flex; justify-content: center">
+                <MudBreadcrumbs Items="@breadcrumbs">
+                    <SeparatorTemplate>
+                        <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small" />
+                    </SeparatorTemplate>
+                </MudBreadcrumbs>
+            </div>
+        </MudStack>
+    </div>
+
+    <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="margin-top: 2em">
+        <MudGrid>
+            <MudItem xs="12" lg="3">
+                <MudPaper Elevation="1">
+                    <CompatibilityChecker CompatibilityFilter="compatibilityFilter" />
+
+                    <MudStack Row Justify="Justify.SpaceBetween" Style="padding: 16px 24px">
+                        <MudText Typo="Typo.h6">
+                            Filters
+                        </MudText>
+
+                        @if (filterChipList.Count > 0)
+                        {
+                            <MudButton Size="Size.Small" OnClick="ClearFilters">Clear All</MudButton>
+                        }
+                    </MudStack>
+                    @if (filterChipList.Count() > 0)
+                    {
+                        <div style="padding: 0 1em 1em 1em">
+                            @foreach (var chip in filterChipList)
+                            {
+                                @switch (chip.Item1)
+                                {
+                                    case "Price":
+                                        <MudChip id="@chip.Item1" Text="@("Price:  $" + chip.Item2)" Variant="Variant.Filled" Color="Color.Secondary" OnClose="@((filterChip) => UpdateFilterChips(filterChip.FieldId, null))" />
+                                        break;
+                                    case "TDP":
+                                        <MudChip id="@chip.Item1" Text="@("TDP: " + chip.Item2)" Variant="Variant.Filled" Color="Color.Secondary" OnClose="@((filterChip) => UpdateFilterChips(filterChip.FieldId, null))" />
+                                        break;
+                                    case "Core Count":
+                                        <MudChip id="@chip.Item1" Text="@("Core Count: " + chip.Item2)" Variant="Variant.Filled" Color="Color.Secondary" OnClose="@((filterChip) => UpdateFilterChips(filterChip.FieldId, null))" />
+                                        break;
+                                    case "Manufacturer":
+                                        <MudChip id="@chip.Item1" Text="@("Manufacturer: " + chip.Item2)" Variant="Variant.Filled" Color="Color.Secondary" OnClose="@((filterChip) => UpdateFilterChips(filterChip.FieldId, null))" />
+                                        break;
+                                }
+                            }
+                        </div>
+                    }
+
+                    <MudDivider />
+
+                    <div style="padding: 16px 24px 16px 24px">
+                        <b>Price (Max)</b>
+                        <MudSlider T="double?" ValueLabel="true" Min="0" Max="rams.Max(ramVM => ramVM.Price)" Style="padding-top: 1em" Value="priceSlider" ValueChanged="(value) => priceFilterChanged(value)" />
+                    </div>
+
+                    <MudExpansionPanels>
+                        <MudExpansionPanel Style="margin: 0px">
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">Manufacturers</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudStack Row="false" Spacing="1">
+                                    <MudCheckBox T="bool" Value="@(manufacturerFilter == "All")" ValueChanged="@(isChecked => manufacturerFilterChanged(isChecked, "All"))">All</MudCheckBox>
+                                    @foreach (var manufacturer in rams.Where(ramVM => ramVM.Manufacturer is not null).Select(ramVM => ramVM.Manufacturer).Distinct())
+                                    {
+                                        <MudCheckBox T="bool" Value="@(manufacturerFilter == manufacturer)" ValueChanged="@(isChecked => manufacturerFilterChanged(isChecked, manufacturer))">@manufacturer</MudCheckBox>
+                                    }
+                                </MudStack>
+                            </ChildContent>
+                        </MudExpansionPanel>
+                    </MudExpansionPanels>
+                </MudPaper>
+            </MudItem>
+
+            <MudItem xs="12" lg="9">
+                <RAMTable Elements="@ramsToRender" />
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+</div>
+
+@code {
+    [CascadingParameter]
+    private MudTheme? theme { get; set; }
+
+    // Filter for enabling Compatibility check for PC parts compatibility (Needs to be implemented in the future)
+    private bool compatibilityFilter = true;
+
+    List<(string, string)> filterChipList = new List<(string, string)>();
+
+    // Slider values for filtering
+    private double? priceSlider { get; set; }
+
+    // Selected Filter for Manufacturer
+    private string manufacturerFilter { get; set; } = "All";
+
+    private string description = "";
+    private string title = "";
+    private List<RAMVM> rams = new List<RAMVM>();
+    private List<RAMVM> ramsToRender = new List<RAMVM>();
+
+    private List<BreadcrumbItem> breadcrumbs = new List<BreadcrumbItem>()
+    {
+        new BreadcrumbItem("Home", href: "/", icon: Icons.Material.Filled.Home),
+        new BreadcrumbItem("Products", href: "/products", icon: Icons.Material.Filled.ProductionQuantityLimits),
+        new BreadcrumbItem("RAM", href: "products/rams", icon: Icons.Material.Filled.ProductionQuantityLimits, disabled: true),
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        rams = await ramService.GetRamsAsync();
+        ramsToRender = rams;
+
+        priceSlider = rams.Max(ramVM => ramVM.Price);
+
+        await base.OnInitializedAsync();
+    }
+
+    private void Filter()
+    {
+        ramsToRender = rams.Where(ramVM =>
+            ramVM.Price <= priceSlider &&
+            (manufacturerFilter == "All" || ramVM.Manufacturer == manufacturerFilter)
+        ).ToList();
+    }
+
+    private void ClearFilters()
+    {
+        priceSlider = rams.Max(ramVM => ramVM.Price);
+        manufacturerFilter = "All";
+        filterChipList.Clear();
+        Filter();
+    }
+
+    private void priceFilterChanged(double? value)
+    {
+        priceSlider = value;
+        if (value == rams.Max(ramVM => ramVM.Price))
+        {
+            UpdateFilterChips("Price", null);
+        }
+        else
+        {
+            UpdateFilterChips("Price", value?.ToString());
+        }
+    }
+
+    private void manufacturerFilterChanged(bool isChecked, string manufacturer)
+    {
+        if (!isChecked)
+        {
+            manufacturerFilter = "All";
+            UpdateFilterChips("Manufacturer", null);
+        }
+        else
+        {
+            manufacturerFilter = manufacturer;
+            UpdateFilterChips("Manufacturer", manufacturer?.ToString());
+        }
+
+    }
+
+    private void UpdateFilterChips(string filterType, string? filterValue)
+    {
+        bool hasFilter = filterChipList.Any(chip => chip.Item1 == filterType);
+
+        if (hasFilter && !String.IsNullOrEmpty(filterValue))
+        {
+            filterChipList[filterChipList.FindIndex(chip => chip.Item1 == filterType)] = (filterType, filterValue);
+        }
+        else if (hasFilter && String.IsNullOrEmpty(filterValue))
+        {
+            switch (filterType)
+            {
+                case "Price":
+                    priceSlider = rams.Max(ramVM => ramVM.Price);
+                    break;
+                case "Manufacturer":
+                    manufacturerFilter = "All";
+                    break;
+            };
+
+            filterChipList.Remove(filterChipList.First(chip => chip.Item1 == filterType));
+        }
+        else if (!hasFilter && !String.IsNullOrEmpty(filterValue))
+        {
+            filterChipList.Add((filterType, filterValue));
+        }
+
+        Filter();
+    }
+}
