@@ -79,7 +79,7 @@ namespace Api.Repositories
         {
             Gpu newGpu = new Gpu
             {
-                Id = gpu.Id,
+                Id = Guid.NewGuid().ToString(),
                 PCPId = gpu.PCPId,
                 Name = gpu.Name,
                 ImgUrl = gpu.ImgUrl,

@@ -11,6 +11,7 @@
 @inject ICaseService caseService;
 @inject ICPUCoolerService cpuCoolerService;
 @inject IGPUService gpuService;
+@inject IMotherboardService motherboardService;
 
 <div>
     <div style="padding-top: 2em; display: flex; justify-content: center; align-items: center; background-color: @(theme is not null ? theme.Palette.Tertiary : null)">
@@ -219,7 +220,7 @@
     private MudTheme? theme { get; set; }
 
     private string? SelectedEntity { get; set; } = "";
-    private bool SendToDatabase { get; set; } = false;
+    private bool SendToDatabase { get; set; } = true;
 
     private string? _dbSuccessMessage { get; set; } = "";
 
@@ -359,9 +360,16 @@
 
         if (SendToDatabase)
         {
-            foreach (var motherboard in motherboards)
+            try
             {
-                //await motherboardService.AddMotherboardAsync(motherboard);
+                List<string> results = await motherboardService.AddMotherboardsAsync(motherboards);
+
+                _dbSuccessMessage = "All Motherboards uploaded successfully.";
+            }
+            catch (Exception ex)
+            {
+                _dbSuccessMessage = "There was an error uploading the Motherboards. Please try again.";
+                Console.WriteLine(ex.Message);
             }
         }
     }

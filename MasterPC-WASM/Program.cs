@@ -33,5 +33,6 @@ builder.Services.AddScoped<ICPUService, CPUServiceClient>();
 builder.Services.AddScoped<ICaseService, CaseServiceClient>();
 builder.Services.AddScoped<ICPUCoolerService, CPUCoolerServiceClient>();
 builder.Services.AddScoped<IGPUService, GPUServiceClient>();
+builder.Services.AddScoped<IMotherboardService, MotherboardServiceClient>();
 
 await builder.Build().RunAsync();

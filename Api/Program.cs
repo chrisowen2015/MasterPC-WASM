@@ -25,6 +25,8 @@ var host = new HostBuilder()
         services.AddScoped<ICPUCoolerService, CPUCoolerServiceAPI>();
         services.AddScoped<IGPUsRepository, GPUsRepository>();
         services.AddScoped<IGPUService, GPUServiceAPI>();
+        services.AddScoped<IMotherboardsRepository, MotherboardsRepository>();
+        services.AddScoped<IMotherboardService, MotherboardServiceAPI>();
     })
     .Build();
 
