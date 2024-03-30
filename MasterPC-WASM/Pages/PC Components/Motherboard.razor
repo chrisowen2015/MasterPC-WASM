@@ -1,0 +1,31 @@
+﻿@page "/product/motherboard/{MotherboardId}"
+
+@using MasterPC_WASM.Components.Tables
+@using MasterPC_WASM.Services
+
+@inject NavigationManager NavigationManager
+@inject IMotherboardService motherboardService
+
+<MotherboardTable Elements="motherboardList" />
+
+
+@code {
+    [Parameter] public String MotherboardId { get; set; }
+
+    public MotherboardVM motherboardVM { get; set; }
+
+    public List<MotherboardVM> motherboardList = new List<MotherboardVM>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (MotherboardId == null)
+        {
+            NavigationManager.NavigateTo("/products/motherboards");
+        }
+        else
+        {
+            motherboardVM = await motherboardService.GetMotherboardByIdAsync(MotherboardId);
+            motherboardList.Add(motherboardVM);
+        }
+    }
+}

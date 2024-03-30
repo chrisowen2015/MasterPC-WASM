@@ -46,6 +46,7 @@ namespace Api.Repositories
                     Color = Motherboard.Color,
                     M2Slot = Motherboard.M2Slot,
                 };
+                resultMotherboards.Add(MotherboardVM);
             }
 
             return resultMotherboards;
