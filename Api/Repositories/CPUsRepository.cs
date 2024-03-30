@@ -10,6 +10,7 @@ namespace Api.Repository
         public Task<List<CPUVM>> GetCPUsAsync();
         public Task<CPUVM> GetCPUByIdAsync(string id);
         public Task<string> AddCPUAsync(CPUVM cpu);
+        public Task<List<string>> AddCPUsAsync(List<CPUVM> cpus);
     }
 
     public class CPUsRepository : ICPUsRepository
@@ -100,10 +101,38 @@ namespace Api.Repository
                 Smt = cpu.SMT
             };
 
-            _context.Add(newCPU);
+            _context.Cpus.Add(newCPU);
             await _context.SaveChangesAsync();
 
             return newCPU.Id;
+        }
+
+        public async Task<List<string>> AddCPUsAsync(List<CPUVM> cpus)
+        {
+            List<string> newCasesIds = new List<string>();
+
+            List<Cpu> newCPUs = cpus.Select(cpu => new Cpu
+            {
+                Id = Guid.NewGuid().ToString(),
+                PCPId = cpu.PCPId,
+                Name = cpu.Name,
+                ImgUrl = cpu.ImgUrl,
+                Manufacturer = cpu.Manufacturer,
+                Socket = cpu.Socket,
+                HasCooler = cpu.HasCooler,
+                Price = cpu.Price,
+                CoreCount = cpu.CoreCount,
+                CoreClock = cpu.CoreClock,
+                BoostClock = cpu.BoostClock,
+                Tdp = cpu.TDP,
+                Graphics = cpu.Graphics,
+                Smt = cpu.SMT
+            }).ToList();
+
+            _context.Cpus.AddRange(newCPUs);
+            await _context.SaveChangesAsync();
+
+            return newCPUs.Select(c => c.Id).ToList();
         }
     }
 }

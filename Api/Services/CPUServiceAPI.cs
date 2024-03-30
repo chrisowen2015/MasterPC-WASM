@@ -8,6 +8,7 @@ namespace Api.Services
         public Task<List<CPUVM>> GetCPUsAsync();
         public Task<CPUVM> GetCPUByIdAsync(string id);
         public Task<string> AddCPUAsync(CPUVM cpu);
+        public Task<List<string>> AddCPUsAsync(List<CPUVM> cpus);
     }
     public class CPUServiceAPI : ICPUService
     {
@@ -36,6 +37,11 @@ namespace Api.Services
         public async Task<string> AddCPUAsync(CPUVM cpu)
         {
             return await _cpus.AddCPUAsync(cpu);
+        }
+
+        public async Task<List<string>> AddCPUsAsync(List<CPUVM> cpus)
+        {
+            return await _cpus.AddCPUsAsync(cpus);
         }
     }
 }

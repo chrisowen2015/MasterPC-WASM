@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Shared.View_Models;
 using System.Net.Http.Json;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace MasterPC_WASM.Services
 {
@@ -11,8 +12,7 @@ namespace MasterPC_WASM.Services
         public Task<List<CPUVM>> GetCPUsAsync();
         public Task<CPUVM> GetCPUByIdAsync(string id);
         public Task<string> AddCPUAsync(CPUVM cpu);
-        public Task<bool> UpdateCPUAsync(CPUVM cpu);
-        public Task<bool> DeleteCPUAsync(string id);
+        public Task<List<string>> AddCPUsAsync(List<CPUVM> CPUs);
     }
     public class CPUServiceClient(HttpClient httpClient, AuthenticationStateProvider authenticationStateProvider) : ICPUService
     {
@@ -49,31 +49,23 @@ namespace MasterPC_WASM.Services
             }
         }
 
-        public async Task<bool> UpdateCPUAsync(CPUVM cpu)
+        public async Task<List<string>> AddCPUsAsync(List<CPUVM> CPUs)
         {
-            var response = await _httpClient.PutAsJsonAsync($"api/CPUs/{cpu.Id}", cpu);
+            var user = _authenticationStateProvider.GetAuthenticationStateAsync().Result.User;
+            var userId = user.Identities.First().Claims.First(c => c.Type == "oid").Value;
 
-            if (response.IsSuccessStatusCode)
+            var response = await _httpClient.PostAsJsonAsync($"api/cpus/{userId}", CPUs);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.Created)
             {
-                return true;
+                string idJSON = response.Content.ReadAsStringAsync().Result;
+                List<string> ids = JsonSerializer.Deserialize<List<string>>(idJSON);
+
+                return ids;
             }
             else
             {
-                return false;
-            }
-        }
-
-        public async Task<bool> DeleteCPUAsync(string id)
-        {
-            var response = await _httpClient.DeleteAsync($"api/CPUs/{id}");
-
-            if (response.IsSuccessStatusCode)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
+                return null;
             }
         }
     }

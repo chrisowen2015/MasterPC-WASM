@@ -273,17 +273,17 @@
 
         if (SendToDatabase)
         {
-            foreach (var caseVM in cases)
+            try
             {
-                string? result = await caseService.AddCaseAsync(caseVM);
+                List<string> results = await caseService.AddCasesAsync(cases);
 
-                if (result is null)
-                {
-                    _dbSuccessMessage = "There was an error uploading the Case. Please try again.";
-                    break;
-                }
+                _dbSuccessMessage = "All Cases uploaded successfully.";
             }
-            _dbSuccessMessage = "All Cases uploaded successfully.";
+            catch (Exception ex)
+            {
+                _dbSuccessMessage = "There was an error uploading the Cases. Please try again.";
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 
@@ -308,17 +308,17 @@
 
         if (SendToDatabase)
         {
-            foreach (var cpu in cpus)
+            try
             {
-                string? result = await cpuService.AddCPUAsync(cpu);
+                List<string> results = await cpuService.AddCPUsAsync(cpus);
 
-                if (result is null)
-                {
-                    _dbSuccessMessage = "There was an error uploading the CPU. Please try again.";
-                    break;
-                }
+                _dbSuccessMessage = "All CPUs uploaded successfully.";
             }
-            _dbSuccessMessage = "All CPUs uploaded successfully.";
+            catch (Exception ex)
+            {
+                _dbSuccessMessage = "There was an error uploading the CPUs. Please try again.";
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 

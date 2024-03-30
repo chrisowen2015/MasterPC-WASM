@@ -8,6 +8,7 @@ namespace Api.Services
         public Task<List<CaseVM>> GetCasesAsync();
         public Task<CaseVM> GetCaseByIdAsync(string id);
         public Task<string> AddCaseAsync(CaseVM Case);
+        public Task<List<string>> AddCasesAsync(List<CaseVM> Cases);
     }
     public class CaseServiceAPI : ICaseService
     {
@@ -31,6 +32,11 @@ namespace Api.Services
         public async Task<string> AddCaseAsync(CaseVM caseVM)
         {
             return await _cases.AddCaseAsync(caseVM);
+        }
+
+        public async Task<List<string>> AddCasesAsync(List<CaseVM> caseVMs)
+        {
+            return await _cases.AddCasesAsync(caseVMs);
         }
     }
 }

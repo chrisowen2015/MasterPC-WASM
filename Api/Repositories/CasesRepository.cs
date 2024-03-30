@@ -10,6 +10,7 @@ namespace Api.Repositories
         public Task<List<CaseVM>> GetCasesAsync();
         public Task<CaseVM> GetCaseByIdAsync(string id);
         public Task<string> AddCaseAsync(CaseVM Case);
+        public Task<List<string>> AddCasesAsync(List<CaseVM> Cases);
     }
     public class CasesRepository : ICasesRepository
     {
@@ -97,6 +98,32 @@ namespace Api.Repositories
             await _context.SaveChangesAsync();
 
             return newCase.Id;
+        }
+
+        public async Task<List<string>> AddCasesAsync(List<CaseVM> Cases)
+        {
+            List<string> newCasesIds = new List<string>();
+
+            List<Case> newCases = Cases.Select(caseVM => new Case
+            {
+                Id = Guid.NewGuid().ToString(),
+                PCPId = caseVM.PCPId,
+                Name = caseVM.Name,
+                ImgUrl = caseVM.ImgUrl,
+                Manufacturer = caseVM.Manufacturer,
+                Price = caseVM.Price,
+                Type = caseVM.Type,
+                Color = caseVM.Color,
+                Psu = caseVM.Psu,
+                SidePanel = caseVM.SidePanel,
+                ExternalVolume = caseVM.ExternalVolume,
+                InternalBays = caseVM.InternalBays,
+            }).ToList();
+
+            _context.Cases.AddRange(newCases);
+            await _context.SaveChangesAsync();
+
+            return newCases.Select(c => c.Id).ToList();
         }
     }
 }

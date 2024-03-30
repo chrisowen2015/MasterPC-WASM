@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Shared.View_Models;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace MasterPC_WASM.Services
 {
@@ -10,6 +11,7 @@ namespace MasterPC_WASM.Services
         public Task<List<CaseVM>> GetCasesAsync();
         public Task<CaseVM> GetCaseByIdAsync(string id);
         public Task<string> AddCaseAsync(CaseVM caseVM);
+        public Task<List<string>> AddCasesAsync(List<CaseVM> Cases);
     }
     public class CaseServiceClient(HttpClient httpClient, AuthenticationStateProvider authState) : ICaseService
     {
@@ -40,6 +42,26 @@ namespace MasterPC_WASM.Services
                 string id = response.Content.ReadAsStringAsync().Result.ToString();
 
                 return id;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<string>> AddCasesAsync(List<CaseVM> Cases)
+        {
+            var user = _authenticationStateProvider.GetAuthenticationStateAsync().Result.User;
+            var userId = user.Identities.First().Claims.First(c => c.Type == "oid").Value;
+
+            var response = await _httpClient.PostAsJsonAsync($"api/cases/{userId}", Cases);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.Created)
+            {
+                string idJSON = response.Content.ReadAsStringAsync().Result;
+                List<string> ids = JsonSerializer.Deserialize<List<string>>(idJSON);
+
+                return ids;
             }
             else
             {
