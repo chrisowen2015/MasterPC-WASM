@@ -12,6 +12,7 @@
 @inject ICPUCoolerService cpuCoolerService;
 @inject IGPUService gpuService;
 @inject IMotherboardService motherboardService;
+@inject IPSUService psuService;
 
 <div>
     <div style="padding-top: 2em; display: flex; justify-content: center; align-items: center; background-color: @(theme is not null ? theme.Palette.Tertiary : null)">
@@ -381,9 +382,16 @@
 
         if (SendToDatabase)
         {
-            foreach (var psu in psus)
+            try
             {
-                //await psuService.AddPSUAsync(psu);
+                List<string> results = await psuService.AddPSUsAsync(psus);
+
+                _dbSuccessMessage = "All Motherboards uploaded successfully.";
+            }
+            catch (Exception ex)
+            {
+                _dbSuccessMessage = "There was an error uploading the Motherboards. Please try again.";
+                Console.WriteLine(ex.Message);
             }
         }
     }
