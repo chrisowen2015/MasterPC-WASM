@@ -29,6 +29,8 @@ var host = new HostBuilder()
         services.AddScoped<IMotherboardService, MotherboardServiceAPI>();
         services.AddScoped<IPSUsRepository, PSUsRepository>();
         services.AddScoped<IPSUService, PSUServiceAPI>();
+        services.AddScoped<IRamRepository, RamRepository>();
+        services.AddScoped<IRamService, RamServiceAPI>();
     })
     .Build();
 

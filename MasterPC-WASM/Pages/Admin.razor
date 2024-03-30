@@ -13,6 +13,7 @@
 @inject IGPUService gpuService;
 @inject IMotherboardService motherboardService;
 @inject IPSUService psuService;
+@inject IRAMService ramService;
 
 <div>
     <div style="padding-top: 2em; display: flex; justify-content: center; align-items: center; background-color: @(theme is not null ? theme.Palette.Tertiary : null)">
@@ -188,7 +189,7 @@
                     </MudItem>
 
                     <MudItem xs="12" lg="9">
-                        <RAMTable Elements="ram" />
+                        <RAMTable Elements="rams" />
                     </MudItem>
                 </MudGrid>
             </MudContainer>
@@ -231,7 +232,7 @@
     private List<GPUVM> gpus = new List<GPUVM>();
     private List<MotherboardVM> motherboards = new List<MotherboardVM>();
     private List<PSUVM> psus = new List<PSUVM>();
-    private List<RAMVM> ram = new List<RAMVM>();
+    private List<RAMVM> rams = new List<RAMVM>();
     private List<StorageVM> storage = new List<StorageVM>();
 
     private void RadioButtonChanged(string value)
@@ -399,13 +400,20 @@
     async Task HandleRAMUpload(InputFileChangeEventArgs e)
     {
         _dbSuccessMessage = "";
-        ram = await FileUploadFunctions.HandleRAMUpload(e);
+        rams = await FileUploadFunctions.HandleRAMUpload(e);
 
         if (SendToDatabase)
         {
-            foreach (var ramVM in ram)
+            try
             {
-                //await ramService.AddRAMAsync(ramVM);
+                List<string> results = await ramService.AddRamsAsync(rams);
+
+                _dbSuccessMessage = "All Motherboards uploaded successfully.";
+            }
+            catch (Exception ex)
+            {
+                _dbSuccessMessage = "There was an error uploading the Motherboards. Please try again.";
+                Console.WriteLine(ex.Message);
             }
         }
     }
