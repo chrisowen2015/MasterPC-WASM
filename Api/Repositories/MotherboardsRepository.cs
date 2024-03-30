@@ -12,14 +12,9 @@ namespace Api.Repositories
         public Task<string> AddMotherboardAsync(MotherboardVM Motherboard);
         public Task<List<string>> AddMotherboardsAsync(List<MotherboardVM> Motherboards);
     }
-    public class MotherboardsRepository : IMotherboardsRepository
+    public class MotherboardsRepository(MasterPcdbContext applicationDbContext) : IMotherboardsRepository
     {
-        private readonly MasterPcdbContext _context;
-
-        public MotherboardsRepository(MasterPcdbContext applicationDbContext)
-        {
-            _context = applicationDbContext;
-        }
+        private readonly MasterPcdbContext _context = applicationDbContext;
 
         public async Task<List<MotherboardVM>> GetMotherboardsAsync()
         {
@@ -110,33 +105,28 @@ namespace Api.Repositories
 
         public async Task<List<string>> AddMotherboardsAsync(List<MotherboardVM> Motherboards)
         {
-            List<string> newMotherboardIds = new List<string>();
-
-            foreach (var Motherboard in Motherboards)
+            List<Motherboard> newMotherboards = Motherboards.Select(motherboard => new Motherboard
             {
-                Motherboard newMotherboard = new Motherboard
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    PCPId = Motherboard.PCPId,
-                    Name = Motherboard.Name,
-                    ImgUrl = Motherboard.ImgUrl,
-                    Manufacturer = Motherboard.Manufacturer,
-                    Price = Motherboard.Price,
-                    Socket = Motherboard.Socket,
-                    Chipset = Motherboard.Chipset,
-                    FormFactor = Motherboard.FormFactor,
-                    MemorySlots = Motherboard.MemorySlots,
-                    MaxMemory = Motherboard.MaxMemory,
-                    IntegratedWifi = Motherboard.IntegratedWifi,
-                    Color = Motherboard.Color,
-                    M2Slot = Motherboard.M2Slot,
-                };
+                Id = Guid.NewGuid().ToString(),
+                PCPId = motherboard.PCPId,
+                Name = motherboard.Name,
+                ImgUrl = motherboard.ImgUrl,
+                Manufacturer = motherboard.Manufacturer,
+                Price = motherboard.Price,
+                Socket = motherboard.Socket,
+                Chipset = motherboard.Chipset,
+                FormFactor = motherboard.FormFactor,
+                MemorySlots = motherboard.MemorySlots,
+                MaxMemory = motherboard.MaxMemory,
+                IntegratedWifi = motherboard.IntegratedWifi,
+                Color = motherboard.Color,
+                M2Slot = motherboard.M2Slot,
+            }).ToList();
 
-                await _context.Motherboards.AddAsync(newMotherboard);
-                newMotherboardIds.Add(newMotherboard.Id);
-            }
-
+            await _context.Motherboards.AddRangeAsync(newMotherboards);
             await _context.SaveChangesAsync();
+
+            List<string> newMotherboardIds = newMotherboards.Select(m => m.Id).ToList();
 
             return newMotherboardIds;
         }
