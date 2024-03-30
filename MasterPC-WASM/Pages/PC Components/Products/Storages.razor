@@ -1,18 +1,18 @@
-﻿@page "/products/rams"
+﻿@page "/products/storage"
 
 @using MasterPC_WASM.Components
 @using Microsoft.AspNetCore.Authorization;
 @using MasterPC_WASM.Services;
 @using MasterPC_WASM.Components.Tables;
 
-@inject IRAMService ramService
+@inject IStorageService storageService
 
-<PageTitle> RAM </PageTitle>
+<PageTitle> Storage </PageTitle>
 
 <div>
     <div style="padding-top: 2em; display: flex; justify-content: center; align-items: center; background-color: @(theme is not null ? theme.Palette.Tertiary : null)">
         <MudStack Row="false">
-            <MudText Align="Align.Center" Typo="Typo.h2 " Style="font-weight: 500"> Select Your RAM </MudText>
+            <MudText Align="Align.Center" Typo="Typo.h2 " Style="font-weight: 500"> Select Your Storage </MudText>
             <div style="display: flex; justify-content: center">
                 <MudBreadcrumbs Items="@breadcrumbs">
                     <SeparatorTemplate>
@@ -67,7 +67,7 @@
 
                     <div style="padding: 16px 24px 16px 24px">
                         <b>Price (Max)</b>
-                        <MudSlider T="double?" ValueLabel="true" Min="0" Max="rams.Max(ramVM => ramVM.Price)" Style="padding-top: 1em" Value="priceSlider" ValueChanged="(value) => priceFilterChanged(value)" />
+                        <MudSlider T="double?" ValueLabel="true" Min="0" Max="storages.Max(storageVM => storageVM.Price)" Style="padding-top: 1em" Value="priceSlider" ValueChanged="(value) => priceFilterChanged(value)" />
                     </div>
 
                     <MudExpansionPanels>
@@ -78,7 +78,7 @@
                             <ChildContent>
                                 <MudStack Row="false" Spacing="1">
                                     <MudCheckBox T="bool" Value="@(manufacturerFilter == "All")" ValueChanged="@(isChecked => manufacturerFilterChanged(isChecked, "All"))">All</MudCheckBox>
-                                    @foreach (var manufacturer in rams.Where(ramVM => ramVM.Manufacturer is not null).Select(ramVM => ramVM.Manufacturer).Distinct())
+                                    @foreach (var manufacturer in storages.Where(storageVM => storageVM.Manufacturer is not null).Select(storageVM => storageVM.Manufacturer).Distinct())
                                     {
                                         <MudCheckBox T="bool" Value="@(manufacturerFilter == manufacturer)" ValueChanged="@(isChecked => manufacturerFilterChanged(isChecked, manufacturer))">@manufacturer</MudCheckBox>
                                     }
@@ -90,7 +90,7 @@
             </MudItem>
 
             <MudItem xs="12" lg="9">
-                <RAMTable Elements="@ramsToRender" />
+                <StorageTable Elements="@storagesToRender" />
             </MudItem>
         </MudGrid>
     </MudContainer>
@@ -113,37 +113,37 @@
 
     private string description = "";
     private string title = "";
-    private List<RAMVM> rams = new List<RAMVM>();
-    private List<RAMVM> ramsToRender = new List<RAMVM>();
+    private List<StorageVM> storages = new List<StorageVM>();
+    private List<StorageVM> storagesToRender = new List<StorageVM>();
 
     private List<BreadcrumbItem> breadcrumbs = new List<BreadcrumbItem>()
     {
         new BreadcrumbItem("Home", href: "/", icon: Icons.Material.Filled.Home),
         new BreadcrumbItem("Products", href: "/products", icon: Icons.Material.Filled.ProductionQuantityLimits),
-        new BreadcrumbItem("RAM", href: "products/rams", icon: Icons.Material.Filled.ProductionQuantityLimits, disabled: true),
+        new BreadcrumbItem("Storage", href: "products/storages", icon: Icons.Material.Filled.ProductionQuantityLimits, disabled: true),
     };
 
     protected override async Task OnInitializedAsync()
     {
-        rams = await ramService.GetRamsAsync();
-        ramsToRender = rams;
+        storages = await storageService.GetStoragesAsync();
+        storagesToRender = storages;
 
-        priceSlider = rams.Max(ramVM => ramVM.Price);
+        priceSlider = storages.Max(storageVM => storageVM.Price);
 
         await base.OnInitializedAsync();
     }
 
     private void Filter()
     {
-        ramsToRender = rams.Where(ramVM =>
-            ramVM.Price <= priceSlider &&
-            (manufacturerFilter == "All" || ramVM.Manufacturer == manufacturerFilter)
+        storagesToRender = storages.Where(storageVM =>
+            storageVM.Price <= priceSlider &&
+            (manufacturerFilter == "All" || storageVM.Manufacturer == manufacturerFilter)
         ).ToList();
     }
 
     private void ClearFilters()
     {
-        priceSlider = rams.Max(ramVM => ramVM.Price);
+        priceSlider = storages.Max(storageVM => storageVM.Price);
         manufacturerFilter = "All";
         filterChipList.Clear();
         Filter();
@@ -152,7 +152,7 @@
     private void priceFilterChanged(double? value)
     {
         priceSlider = value;
-        if (value == rams.Max(ramVM => ramVM.Price))
+        if (value == storages.Max(storageVM => storageVM.Price))
         {
             UpdateFilterChips("Price", null);
         }
@@ -190,7 +190,7 @@
             switch (filterType)
             {
                 case "Price":
-                    priceSlider = rams.Max(ramVM => ramVM.Price);
+                    priceSlider = storages.Max(storageVM => storageVM.Price);
                     break;
                 case "Manufacturer":
                     manufacturerFilter = "All";

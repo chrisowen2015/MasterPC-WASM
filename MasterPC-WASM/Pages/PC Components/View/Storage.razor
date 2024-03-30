@@ -1,0 +1,31 @@
+﻿@page "/product/storage/{StorageId}"
+
+@using MasterPC_WASM.Components.Tables
+@using MasterPC_WASM.Services
+
+@inject NavigationManager NavigationManager
+@inject IStorageService storageService
+
+<StorageTable Elements="storageList" />
+
+
+@code {
+    [Parameter] public String StorageId { get; set; }
+
+    public StorageVM storageVM { get; set; }
+
+    public List<StorageVM> storageList = new List<StorageVM>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (StorageId == null)
+        {
+            NavigationManager.NavigateTo("/products/storages");
+        }
+        else
+        {
+            storageVM = await storageService.GetStorageByIdAsync(StorageId);
+            storageList.Add(storageVM);
+        }
+    }
+}
