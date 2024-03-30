@@ -13,13 +13,10 @@ namespace Api.Repositories
         public Task<List<string>> AddCPUsAsync(List<CPUVM> cpus);
     }
 
-    public class CPUsRepository : ICPUsRepository
+    public class CPUsRepository(MasterPcdbContext applicationDbContext) : ICPUsRepository
     {
-        private readonly MasterPcdbContext _context;
-        public CPUsRepository(MasterPcdbContext applicationDbContext)
-        {
-            _context = applicationDbContext;
-        }
+        private readonly MasterPcdbContext _context = applicationDbContext;
+
         public async Task<List<CPUVM>> GetCPUsAsync()
         {
             List<CPUVM> resultCPUs = new List<CPUVM>();

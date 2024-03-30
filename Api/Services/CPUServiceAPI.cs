@@ -10,14 +10,9 @@ namespace Api.Services
         public Task<string> AddCPUAsync(CPUVM cpu);
         public Task<List<string>> AddCPUsAsync(List<CPUVM> cpus);
     }
-    public class CPUServiceAPI : ICPUService
+    public class CPUServiceAPI(ICPUsRepository cpus) : ICPUService
     {
-        private readonly ICPUsRepository _cpus;
-
-        public CPUServiceAPI(ICPUsRepository cpus)
-        {
-            _cpus = cpus;
-        }
+        private readonly ICPUsRepository _cpus = cpus;
 
         public bool OnClient()
         {

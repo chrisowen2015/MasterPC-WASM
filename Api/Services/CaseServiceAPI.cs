@@ -10,14 +10,9 @@ namespace Api.Services
         public Task<string> AddCaseAsync(CaseVM Case);
         public Task<List<string>> AddCasesAsync(List<CaseVM> Cases);
     }
-    public class CaseServiceAPI : ICaseService
+    public class CaseServiceAPI(ICasesRepository cases) : ICaseService
     {
-        private readonly ICasesRepository _cases;
-
-        public CaseServiceAPI(ICasesRepository cases)
-        {
-            _cases = cases;
-        }
+        private readonly ICasesRepository _cases = cases;
 
         public async Task<List<CaseVM>> GetCasesAsync()
         {

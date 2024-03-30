@@ -12,13 +12,10 @@ namespace Api.Repositories
         public Task<string> AddCaseAsync(CaseVM Case);
         public Task<List<string>> AddCasesAsync(List<CaseVM> Cases);
     }
-    public class CasesRepository : ICasesRepository
+    public class CasesRepository(MasterPcdbContext applicationDbContext) : ICasesRepository
     {
-        private readonly MasterPcdbContext _context;
-        public CasesRepository(MasterPcdbContext applicationDbContext)
-        {
-            _context = applicationDbContext;
-        }
+        private readonly MasterPcdbContext _context = applicationDbContext;
+
         public async Task<List<CaseVM>> GetCasesAsync()
         {
             List<CaseVM> resultCases = new List<CaseVM>();
