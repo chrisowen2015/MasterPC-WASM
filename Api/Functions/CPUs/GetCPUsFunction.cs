@@ -5,7 +5,7 @@ using Api.Services;
 
 namespace Api.Functions.CPUs
 {
-    public class GetCasesFunction(ICPUService cpuService)
+    public class GetCPUsFunction(ICPUService cpuService)
     {
         private readonly ICPUService _cpuService = cpuService;
 
