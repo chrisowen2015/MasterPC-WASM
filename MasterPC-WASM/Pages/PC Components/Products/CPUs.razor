@@ -122,8 +122,8 @@
  </div>
 
  @code {
-    [CascadingParameter]
-    private MudTheme? theme { get; set; }
+    [CascadingParameter (Name = "theme")]
+    private MyMudTheme? theme { get; set; }
 
     // Filter for enabling Compatibility check for PC parts compatibility (Needs to be implemented in the future)
     private bool compatibilityFilter = true;

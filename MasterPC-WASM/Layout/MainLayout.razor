@@ -5,33 +5,36 @@
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudHidden Breakpoint="Breakpoint.LgAndUp" Invert="true">
-        <AppBar />
-    </MudHidden>
+    <CascadingValue Value="myMudTheme" Name="theme">
 
-    <MudHidden Breakpoint="Breakpoint.MdAndDown" Invert="true">
-        <MobileAppBar DrawerToggle="DrawerToggle" DrawerOpen="_drawerOpen" />
-
-        <MudSwipeArea Style="width: 100%;">
-            <MudDrawer @bind-Open="_drawerOpen" Elevation="2">
-                <MudDrawerHeader>
-                    <MudStack Row AlignItems="AlignItems.Center">
-                        <MudImage Src="favicon.ico" />
-                        <MudText Typo="Typo.h5" Class="mt-1">MasterPC</MudText>
-                    </MudStack>
-                </MudDrawerHeader>
-                <NavMenu />
-            </MudDrawer>
-        </MudSwipeArea>
-    </MudHidden>
-
-    <MudMainContent Style="padding-top: 0px">
-        <MudHidden Breakpoint="Breakpoint.MdAndDown" Invert="true">
-            <div style="min-height: 64px"></div>
+        <MudHidden Breakpoint="Breakpoint.LgAndUp" Invert="true">
+            <AppBar />
         </MudHidden>
 
-        @Body
-    </MudMainContent>
+        <MudHidden Breakpoint="Breakpoint.MdAndDown" Invert="true">
+            <MobileAppBar DrawerToggle="DrawerToggle" DrawerOpen="_drawerOpen" />
+
+            <MudSwipeArea Style="width: 100%;">
+                <MudDrawer @bind-Open="_drawerOpen" Elevation="2">
+                    <MudDrawerHeader>
+                        <MudStack Row AlignItems="AlignItems.Center">
+                            <MudImage Src="favicon.ico" />
+                            <MudText Typo="Typo.h5" Class="mt-1">MasterPC</MudText>
+                        </MudStack>
+                    </MudDrawerHeader>
+                    <NavMenu />
+                </MudDrawer>
+            </MudSwipeArea>
+        </MudHidden>
+
+        <MudMainContent Style="padding-top: 0px">
+            <MudHidden Breakpoint="Breakpoint.MdAndDown" Invert="true">
+                <div style="min-height: 64px"></div>
+            </MudHidden>
+
+            @Body
+        </MudMainContent>
+    </CascadingValue>
 </MudLayout>
 
 <div id="blazor-error-ui">
@@ -41,6 +44,7 @@
 </div>
 
 @code {
+    public MyMudTheme myMudTheme = new MyMudTheme();
     public bool _drawerOpen = false;
 
     public void DrawerToggle()
