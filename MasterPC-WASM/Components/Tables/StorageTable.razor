@@ -43,7 +43,7 @@
                 </CellTemplate>
             </PropertyColumn>
 
-            <PropertyColumn Property="storageVM => storageVM.FormFactor" Title="Form Factor" />
+            <PropertyColumn Property="storageVM => GetFormFactor(storageVM.FormFactor)" Title="Form Factor" />
 
             <PropertyColumn Property="storageVM => storageVM.Interface" Title="Interface" />
 
@@ -116,6 +116,25 @@
             else
             {
                 return (cache / 1000) + " GB";
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private string? GetFormFactor(string? formFactor)
+    {
+        if (formFactor is not null)
+        {
+            if(formFactor == "2.5" || formFactor == "3.5")
+            {
+                return formFactor + "\"";
+            }
+            else
+            {
+                return formFactor;
             }
         }
         else

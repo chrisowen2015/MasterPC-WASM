@@ -1,20 +1,28 @@
 ﻿@page "/product/power-supply/{PsuId}"
 
+@using MasterPC_WASM.Components
 @using MasterPC_WASM.Components.Tables
 @using MasterPC_WASM.Services
 
 @inject NavigationManager NavigationManager
 @inject IPSUService psuService
 
-<PSUTable Elements="psuList" />
-
+@if (psuVM is not null)
+{
+    <ViewProduct Name="@psuVM.Name" ImageUrl="@psuVM.ImgUrl" PCPId="@psuVM.PCPId" ProductId="@psuVM.Id" ImportantSpecifications="ImportantSpecifications" Specifications="Specifications" />
+}
+else
+{
+    <LoadingSpinner />
+}
 
 @code {
     [Parameter] public String PsuId { get; set; }
 
     public PSUVM psuVM { get; set; }
 
-    public List<PSUVM> psuList = new List<PSUVM>();
+    public List<string[]> ImportantSpecifications { get; set; } = new List<string[]>();
+    public List<string[]> Specifications { get; set; } = new List<string[]>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -25,7 +33,26 @@
         else
         {
             psuVM = await psuService.GetPSUByIdAsync(PsuId);
-            psuList.Add(psuVM);
+
+            if(psuVM is not null)
+            {
+                ImportantSpecifications.Add(new string[] { "Wattage", psuVM.Wattage is not null ? psuVM.Wattage + " W" : "" });
+                ImportantSpecifications.Add(new string[] { "Efficiency", psuVM.Efficiency is not null ? psuVM.Efficiency : "" });
+                ImportantSpecifications.Add(new string[] { "Type", psuVM.Type is not null ? psuVM.Type : "" });
+                ImportantSpecifications.Add(new string[] { "Color", psuVM.Color is not null ? psuVM.Color : "" });
+
+                Specifications.Add(new string[] { "Manufacturer", psuVM.Manufacturer is not null ? psuVM.Manufacturer : "" });
+                Specifications.Add(new string[] { "Model", psuVM.Name is not null ? psuVM.Name : "" });
+                Specifications.Add(new string[] { "Wattage", psuVM.Wattage is not null ? psuVM.Wattage + " W" : "" });
+                Specifications.Add(new string[] { "Efficiency", psuVM.Efficiency is not null ? psuVM.Efficiency : "" });
+                Specifications.Add(new string[] { "Type", psuVM.Type is not null ? psuVM.Type : "" });
+                Specifications.Add(new string[] { "Modular", psuVM.Modular is not null ? psuVM.Modular : "" });
+                Specifications.Add(new string[] { "Color", psuVM.Color is not null ? psuVM.Color : "" });
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/products/psus");
+            }
         }
     }
 }

@@ -1,12 +1,20 @@
 ﻿@page "/product/cpu/{CPUId}"
 
+@using MasterPC_WASM.Components
 @using MasterPC_WASM.Components.Tables
 @using MasterPC_WASM.Services
 
 @inject NavigationManager NavigationManager
 @inject ICPUService cpuService
 
-<CPUTable Elements="CpuList" />
+@if (CpuVM is not null)
+{
+    <ViewProduct Name="@CpuVM.Name" ImageUrl="@CpuVM.ImgUrl" PCPId="@CpuVM.PCPId" ProductId="@CpuVM.Id" ImportantSpecifications="ImportantSpecifications" Specifications="Specifications" />
+}
+else
+{
+    <LoadingSpinner />
+}
 
 
 @code {
@@ -14,7 +22,8 @@
 
     public CPUVM CpuVM { get; set; }
 
-    public List<CPUVM> CpuList = new List<CPUVM>();
+    public List<string[]> ImportantSpecifications { get; set; } = new List<string[]>();
+    public List<string[]> Specifications { get; set; } = new List<string[]>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -25,7 +34,29 @@
         else
         {
             CpuVM = await cpuService.GetCPUByIdAsync(CPUId);
-            CpuList.Add(CpuVM);
+
+            if (CpuVM is not null)
+            {
+                ImportantSpecifications.Add(new string[] { "Performance Core Clock", CpuVM.CoreClock is not null ? CpuVM.CoreClock + " GHz" : "" });
+                ImportantSpecifications.Add(new string[] { "Performance Boost Clock", CpuVM.BoostClock is not null ? CpuVM.BoostClock + " GHz" : "" });
+                ImportantSpecifications.Add(new string[] { "TDP", CpuVM.TDP is not null ? CpuVM.TDP + " W" : "" });
+                ImportantSpecifications.Add(new string[] { "Includes Cooler", CpuVM.HasCooler ? "Yes" : "No" });
+
+                Specifications.Add(new string[] { "Manufacturer", CpuVM.Manufacturer is not null ? CpuVM.Manufacturer : "" });
+                Specifications.Add(new string[] { "Model", CpuVM.Name is not null ? CpuVM.Name : "" });
+                Specifications.Add(new string[] { "Socket", CpuVM.Socket is not null ? CpuVM.Socket : "" });
+                Specifications.Add(new string[] { "Core Count", CpuVM.CoreCount is not null ? CpuVM.CoreCount + "" : "" });
+                Specifications.Add(new string[] { "Core Clock", CpuVM.CoreClock is not null ? CpuVM.CoreClock + " GHz" : "" });
+                Specifications.Add(new string[] { "Boost Clock", CpuVM.BoostClock is not null ? CpuVM.BoostClock + " GHz" : "" });
+                Specifications.Add(new string[] { "TDP", CpuVM.TDP is not null ? CpuVM.TDP + " W" : "" });
+                Specifications.Add(new string[] { "Integrated Graphics", CpuVM.Graphics is not null ? CpuVM.Graphics : "" });
+                Specifications.Add(new string[] { "Simultaneous Multithreading", CpuVM.SMT is not null && CpuVM.SMT == true ? "Yes" : "No" });
+                Specifications.Add(new string[] { "Includes Cooler", CpuVM.HasCooler ? "Yes" : "No" });
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/products/cpus");
+            }
         }
     }
 }

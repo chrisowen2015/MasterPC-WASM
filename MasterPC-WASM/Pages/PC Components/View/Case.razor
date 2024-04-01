@@ -1,20 +1,28 @@
 ﻿@page "/product/case/{CaseId}"
 
+@using MasterPC_WASM.Components
 @using MasterPC_WASM.Components.Tables
 @using MasterPC_WASM.Services
 
 @inject NavigationManager NavigationManager
 @inject ICaseService caseService
 
-<CaseTable Elements="CaseList" />
-
+@if (CaseVM is not null)
+{
+    <ViewProduct Name="@CaseVM.Name" ImageUrl="@CaseVM.ImgUrl" PCPId="@CaseVM.PCPId" ProductId="@CaseVM.Id" ImportantSpecifications="ImportantSpecifications" Specifications="Specifications" />
+}
+else
+{
+    <LoadingSpinner />
+}
 
 @code {
     [Parameter] public String CaseId { get; set; }
 
     public CaseVM CaseVM { get; set; }
 
-    public List<CaseVM> CaseList = new List<CaseVM>();
+    public List<string[]> ImportantSpecifications { get; set; } = new List<string[]>();
+    public List<string[]> Specifications { get; set; } = new List<string[]>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -25,7 +33,22 @@
         else
         {
             CaseVM = await caseService.GetCaseByIdAsync(CaseId);
-            CaseList.Add(CaseVM);
+
+            if (CaseVM is not null)
+            {
+                ImportantSpecifications.Add(new string[] { "Type", CaseVM.Type is not null ? CaseVM.Type : "" });
+                ImportantSpecifications.Add(new string[] { "Color", CaseVM.Color is not null ? CaseVM.Color : "" });
+                ImportantSpecifications.Add(new string[] { "Side Panel", CaseVM.SidePanel is not null ? CaseVM.SidePanel : "" });
+
+                Specifications.Add(new string[] { "Manufacturer", CaseVM.Manufacturer is not null ? CaseVM.Manufacturer : "" });
+                Specifications.Add(new string[] { "Model", CaseVM.Name is not null ? CaseVM.Name : "" });
+                Specifications.Add(new string[] { "Type", CaseVM.Type is not null ? CaseVM.Type : "" });
+                Specifications.Add(new string[] { "Color", CaseVM.Color is not null ? CaseVM.Color : "" });
+                Specifications.Add(new string[] { "Power Supply", CaseVM.Psu is not null ? CaseVM.Psu : "None" });
+                Specifications.Add(new string[] { "Side Panel", CaseVM.SidePanel is not null ? CaseVM.SidePanel : "" });
+                Specifications.Add(new string[] { "Volume", CaseVM.ExternalVolume is not null ? CaseVM.ExternalVolume + " L" : "" });
+                Specifications.Add(new string[] { "Internal 3.5\" Bays", CaseVM.InternalBays is not null ? CaseVM.InternalBays + "" : "" });
+            }
         }
     }
 }

@@ -1,20 +1,28 @@
 ﻿@page "/product/gpu/{GpuId}"
 
+@using MasterPC_WASM.Components
 @using MasterPC_WASM.Components.Tables
 @using MasterPC_WASM.Services
 
 @inject NavigationManager NavigationManager
 @inject IGPUService gpuService
 
-<GPUTable Elements="gpuList" />
-
+@if (gpuVM is not null)
+{
+    <ViewProduct Name="@gpuVM.Name" ImageUrl="@gpuVM.ImgUrl" PCPId="@gpuVM.PCPId" ProductId="@gpuVM.Id" ImportantSpecifications="ImportantSpecifications" Specifications="Specifications" />
+}
+else
+{
+    <LoadingSpinner />
+}
 
 @code {
     [Parameter] public String GpuId { get; set; }
 
     public GPUVM gpuVM { get; set; }
 
-    public List<GPUVM> gpuList = new List<GPUVM>();
+    public List<string[]> ImportantSpecifications { get; set; } = new List<string[]>();
+    public List<string[]> Specifications { get; set; } = new List<string[]>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -25,7 +33,31 @@
         else
         {
             gpuVM = await gpuService.GetGPUByIdAsync(GpuId);
-            gpuList.Add(gpuVM);
+
+            if(gpuVM is not null)
+            {
+                ImportantSpecifications.Add(new string[] { "Chipset", gpuVM.Chipset is not null ? gpuVM.Chipset : "" });
+                ImportantSpecifications.Add(new string[] { "Memory", gpuVM.Memory is not null ? gpuVM.Memory + " GB" : "" });
+                ImportantSpecifications.Add(new string[] { "Core Clock", gpuVM.CoreClock is not null ? gpuVM.CoreClock + " MHz" : "" });
+                ImportantSpecifications.Add(new string[] { "Boost Clock", gpuVM.BoostClock is not null ? gpuVM.BoostClock + " MHz" : "" });
+                ImportantSpecifications.Add(new string[] { "Color", gpuVM.Color is not null ? gpuVM.Color : "" });
+                ImportantSpecifications.Add(new string[] { "Length", gpuVM.Length is not null ? gpuVM.Length + " mm" : "" });
+                ImportantSpecifications.Add(new string[] { "TDP", gpuVM.Tdp is not null ? gpuVM.Tdp + " W" : "" });
+
+                Specifications.Add(new string[] { "Manufacturer", gpuVM.Manufacturer is not null ? gpuVM.Manufacturer : "" });
+                Specifications.Add(new string[] { "Model", gpuVM.Name is not null ? gpuVM.Name : "" });
+                Specifications.Add(new string[] { "Chipset", gpuVM.Chipset is not null ? gpuVM.Chipset : "" });
+                Specifications.Add(new string[] { "Memory", gpuVM.Memory is not null ? gpuVM.Memory + " GB" : "" });
+                Specifications.Add(new string[] { "Core Clock", gpuVM.CoreClock is not null ? gpuVM.CoreClock + " MHz" : "" });
+                Specifications.Add(new string[] { "Boost Clock", gpuVM.BoostClock is not null ? gpuVM.BoostClock + " MHz" : "" });
+                Specifications.Add(new string[] { "Color", gpuVM.Color is not null ? gpuVM.Color : "" });
+                Specifications.Add(new string[] { "Length", gpuVM.Length is not null ? gpuVM.Length + " mm" : "" });
+                Specifications.Add(new string[] { "TDP", gpuVM.Tdp is not null ? gpuVM.Tdp + " W" : "" });
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/products/gpus");
+            }
         }
     }
 }
