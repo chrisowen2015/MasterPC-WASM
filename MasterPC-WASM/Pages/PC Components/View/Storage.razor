@@ -1,20 +1,30 @@
-﻿@page "/product/storage/{StorageId}"
+﻿@page "/storage/{StorageId}"
 
+@using MasterPC_WASM.Components
 @using MasterPC_WASM.Components.Tables
 @using MasterPC_WASM.Services
 
 @inject NavigationManager NavigationManager
 @inject IStorageService storageService
 
-<StorageTable Elements="storageList" />
-
+@if (storageVM is not null)
+{
+    <ViewProduct Name="@storageVM.Name" ImageUrl="@storageVM.ImgUrl" PCPId="@storageVM.PCPId" ProductId="@storageVM.Id" ImportantSpecifications="ImportantSpecifications" Specifications="Specifications" />
+}
+else
+{
+    <LoadingSpinner />
+}
 
 @code {
     [Parameter] public String StorageId { get; set; }
 
     public StorageVM storageVM { get; set; }
 
-    public List<StorageVM> storageList = new List<StorageVM>();
+    public List<string[]> ImportantSpecifications { get; set; } = new List<string[]>();
+    public List<string[]> Specifications { get; set; } = new List<string[]>();
+
+    public string TypeString { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -25,7 +35,116 @@
         else
         {
             storageVM = await storageService.GetStorageByIdAsync(StorageId);
-            storageList.Add(storageVM);
+
+            TypeString = GetTypeString();
+
+            if(storageVM is not null)
+            {
+                ImportantSpecifications.Add(new string[] { "Capacity", GetCapacityString() });
+                ImportantSpecifications.Add(new string[] { "Cache", GetCacheString() });
+                ImportantSpecifications.Add(new string[] { "Interface", storageVM.Interface is not null ? storageVM.Interface : "" });
+                ImportantSpecifications.Add(new string[] { "Type", storageVM.Type is not null ? storageVM.Type : "" });
+
+                Specifications.Add(new string[] { "Manufacturer", storageVM.Manufacturer is not null ? storageVM.Manufacturer : "" });
+                Specifications.Add(new string[] { "Model", storageVM.Name is not null ? storageVM.Name : "" });
+                Specifications.Add(new string[] { "Capacity", GetCapacityString() });
+                Specifications.Add(new string[] { "Cache", GetCacheString() });
+                Specifications.Add(new string[] { "Price/GB", storageVM.PricePerGB is not null ? string.Format("${0:N3}", storageVM.PricePerGB) : "" });
+                Specifications.Add(new string[] { "Form Factor", GetFormFactor() });
+                Specifications.Add(new string[] { "Type", TypeString });
+                Specifications.Add(new string[] { "HDD Rotational Speed", GetHDDSpeedString() });
+                Specifications.Add(new string[] { "Interface", storageVM.Interface is not null ? storageVM.Interface : "" });
+            } else
+            {
+                NavigationManager.NavigateTo("/products/storages");
+            }
+        }
+    }
+
+    private string GetCapacityString()
+    {
+        if (storageVM.Capacity is not null)
+        {
+            if (storageVM.Capacity < 1000)
+            {
+                return storageVM.Capacity + " GB";
+            }
+            else
+            {
+                return (storageVM.Capacity / 1000) + " TB";
+            }
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+    private string GetCacheString()
+    {
+        if (storageVM.Cache is not null)
+        {
+            if (storageVM.Cache < 1000)
+            {
+                return storageVM.Cache + " MB";
+            }
+            else
+            {
+                return (storageVM.Cache / 1000) + " GB";
+            }
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+    private string GetTypeString()
+    {
+        if (storageVM.Type is not null)
+        {
+            if(storageVM.Type == "SSD")
+            {
+                return "SSD";
+            } else
+            {
+                return "HDD";
+            }
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+    private string GetHDDSpeedString()
+    {
+        if (TypeString == "HDD")
+        {
+            return storageVM.Type + "";
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+    private string GetFormFactor()
+    {
+        if (storageVM.FormFactor is not null)
+        {
+            if (storageVM.FormFactor == "2.5" || storageVM.FormFactor == "3.5")
+            {
+                return storageVM.FormFactor + "\"";
+            }
+            else
+            {
+                return storageVM.FormFactor;
+            }
+        }
+        else
+        {
+            return "";
         }
     }
 }

@@ -1,20 +1,28 @@
-﻿@page "/product/ram/{RamId}"
+﻿@page "/ram/{RamId}"
 
+@using MasterPC_WASM.Components
 @using MasterPC_WASM.Components.Tables
 @using MasterPC_WASM.Services
 
 @inject NavigationManager NavigationManager
 @inject IRAMService ramService
 
-<RAMTable Elements="ramList" />
-
+@if (ramVM is not null)
+{
+    <ViewProduct Name="@ramVM.Name" ImageUrl="@ramVM.ImgUrl" PCPId="@ramVM.PCPId" ProductId="@ramVM.Id" ImportantSpecifications="ImportantSpecifications" Specifications="Specifications" />
+}
+else
+{
+    <LoadingSpinner />
+}
 
 @code {
     [Parameter] public String RamId { get; set; }
 
     public RAMVM ramVM { get; set; }
 
-    public List<RAMVM> ramList = new List<RAMVM>();
+    public List<string[]> ImportantSpecifications { get; set; } = new List<string[]>();
+    public List<string[]> Specifications { get; set; } = new List<string[]>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -25,7 +33,29 @@
         else
         {
             ramVM = await ramService.GetRamByIdAsync(RamId);
-            ramList.Add(ramVM);
+
+            if(ramVM is not null)
+            {
+                ImportantSpecifications.Add(new string[] { "Modules", (ramVM.Capacity is not null && ramVM.NumModules is not null) ? (ramVM.NumModules + " x " + ramVM.Capacity + " GB") : "" });
+                ImportantSpecifications.Add(new string[] { "Speed", ramVM.Speed is not null && ramVM.Type is not null ? ramVM.Type + "-" + ramVM.Speed : "" });
+                ImportantSpecifications.Add(new string[] { "CAS Latency", ramVM.CASLatency is not null ? ramVM.CASLatency + "" : "" });
+                ImportantSpecifications.Add(new string[] { "Color", ramVM.Color is not null ? ramVM.Color : "" });
+
+                Specifications.Add(new string[] { "Manufacturer", ramVM.Manufacturer is not null ? ramVM.Manufacturer : "" });
+                Specifications.Add(new string[] { "Model", ramVM.Name is not null ? ramVM.Name : "" });
+                Specifications.Add(new string[] { "Modules", (ramVM.Capacity is not null && ramVM.NumModules is not null) ? (ramVM.NumModules + " x " + ramVM.Capacity + " GB") : "" });
+                Specifications.Add(new string[] { "Type", ramVM.Type is not null ? ramVM.Type : "" });
+                Specifications.Add(new string[] { "Speed", ramVM.Speed is not null ? ramVM.Speed + " MHz" : "" });
+                Specifications.Add(new string[] { "Price/GB", ramVM.PricePerGB is not null ? string.Format("${0:N3}", ramVM.PricePerGB) : "" });
+                Specifications.Add(new string[] { "CAS Latency", ramVM.CASLatency is not null ? ramVM.CASLatency + "" : "" });
+                Specifications.Add(new string[] { "First Word Latency", ramVM.FirstWordLatency is not null ? ramVM.FirstWordLatency + " ns" : "" });
+                Specifications.Add(new string[] { "Heat Spreader", ramVM.HeatSpreader is not null ? "Yes" : "No" });
+                Specifications.Add(new string[] { "RGB", ramVM.RGB is not null ? "Yes" : "No" });
+                Specifications.Add(new string[] { "Color", ramVM.Color is not null ? ramVM.Color : "" });
+            } else
+            {
+                NavigationManager.NavigateTo("/products/rams");
+            }
         }
     }
 }

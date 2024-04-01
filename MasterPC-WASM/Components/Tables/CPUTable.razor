@@ -16,7 +16,7 @@
                 <CellTemplate>
                     <MudStack Row AlignItems="AlignItems.Center">
                         <MudImage Height="50" Width="50" Avatar="true" Src="@(context.Item.ImgUrl != null ? context.Item.ImgUrl : "favicon.ico")" />
-                        <a href="@("product/cpu/" + context.Item.Id)"><MudText Typo="Typo.body1"><b>@(context.Item.Name)</b></MudText></a>
+                        <a href="@("cpu/" + context.Item.Id)"><MudText Typo="Typo.body1"><b>@(context.Item.Name)</b></MudText></a>
                     </MudStack>
                 </CellTemplate>
             </PropertyColumn>
@@ -27,13 +27,13 @@
 
             <PropertyColumn Property="cpu => cpu.CoreClock" Title="Core Clock" >
                 <CellTemplate>
-                    <MudText Typo="Typo.inherit">@(context.Item.CoreClock is not null ? context.Item.CoreClock + " MHz" : null)</MudText>
+                    <MudText Typo="Typo.inherit">@(context.Item.CoreClock is not null ? context.Item.CoreClock + " GHz" : null)</MudText>
                 </CellTemplate>
             </PropertyColumn>
 
             <PropertyColumn Property="cpu => cpu.BoostClock" Title="Boost Clock">
                 <CellTemplate>
-                    <MudText Typo="Typo.inherit"> @(context.Item.BoostClock is not null ? context.Item.BoostClock + " MHz" : null)</MudText>
+                    <MudText Typo="Typo.inherit"> @(context.Item.BoostClock is not null ? context.Item.BoostClock + " GHz" : null)</MudText>
                 </CellTemplate>
             </PropertyColumn>
 

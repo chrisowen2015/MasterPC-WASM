@@ -63,7 +63,7 @@
                 <MudMenuItem Href="products/gpus"> GPUs </MudMenuItem>
                 <MudMenuItem Href="products/motherboards"> Motherboards </MudMenuItem>
                 <MudMenuItem Href="products/power-supplies"> Power Supplies </MudMenuItem>
-                <MudMenuItem Href="products/rams"> RAM </MudMenuItem>
+                <MudMenuItem Href="products/ram"> RAM </MudMenuItem>
                 <MudMenuItem Href="products/storage"> Storage </MudMenuItem>
             </ChildContent>
         </MudMenu>
@@ -78,7 +78,7 @@
 
     @if (expandSearchBar)
     {
-        <MudTextField Class="mt-0" @bind-Value="searchParams" Placeholder="Search" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Clearable="true" OnAdornmentClick="Search" OnKeyDown="SearchKeyPress" OnClearButtonClick="HandleClearSearch" Immediate="true" AdornmentColor="Color.Inherit" />
+        <MudTextField Class="mt-0" @bind-Value="searchParams" Placeholder="Search" Variant="Variant.Outlined" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Clearable="true" OnAdornmentClick="Search" OnKeyDown="SearchKeyPress" OnClearButtonClick="HandleClearSearch" Immediate="true" AdornmentColor="Color.Inherit" Style="color: white" />
     }
     else
     {

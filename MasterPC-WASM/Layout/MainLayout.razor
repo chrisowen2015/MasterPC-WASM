@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider />
+<MudThemeProvider Theme="myMudTheme.GetTheme()" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -13,6 +13,7 @@
 
         <MudHidden Breakpoint="Breakpoint.MdAndDown" Invert="true">
             <MobileAppBar DrawerToggle="DrawerToggle" DrawerOpen="_drawerOpen" />
+            <div style="min-height: 56px"></div>
 
             <MudSwipeArea Style="width: 100%;">
                 <MudDrawer @bind-Open="_drawerOpen" Elevation="2">
@@ -28,10 +29,6 @@
         </MudHidden>
 
         <MudMainContent Style="padding-top: 0px">
-            <MudHidden Breakpoint="Breakpoint.MdAndDown" Invert="true">
-                <div style="min-height: 64px"></div>
-            </MudHidden>
-
             @Body
         </MudMainContent>
     </CascadingValue>

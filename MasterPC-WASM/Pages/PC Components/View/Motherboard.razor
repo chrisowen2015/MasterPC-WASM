@@ -1,20 +1,28 @@
-﻿@page "/product/motherboard/{MotherboardId}"
+﻿@page "/motherboard/{MotherboardId}"
 
+@using MasterPC_WASM.Components
 @using MasterPC_WASM.Components.Tables
 @using MasterPC_WASM.Services
 
 @inject NavigationManager NavigationManager
 @inject IMotherboardService motherboardService
 
-<MotherboardTable Elements="motherboardList" />
-
+@if (motherboardVM is not null)
+{
+    <ViewProduct Name="@motherboardVM.Name" ImageUrl="@motherboardVM.ImgUrl" PCPId="@motherboardVM.PCPId" ProductId="@motherboardVM.Id" ImportantSpecifications="ImportantSpecifications" Specifications="Specifications" />
+}
+else
+{
+    <LoadingSpinner />
+}
 
 @code {
     [Parameter] public String MotherboardId { get; set; }
 
     public MotherboardVM motherboardVM { get; set; }
 
-    public List<MotherboardVM> motherboardList = new List<MotherboardVM>();
+    public List<string[]> ImportantSpecifications { get; set; } = new List<string[]>();
+    public List<string[]> Specifications { get; set; } = new List<string[]>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -25,7 +33,29 @@
         else
         {
             motherboardVM = await motherboardService.GetMotherboardByIdAsync(MotherboardId);
-            motherboardList.Add(motherboardVM);
+
+            if (motherboardVM is not null)
+            {
+                ImportantSpecifications.Add(new string[] { "Chipset", motherboardVM.Chipset is not null ? motherboardVM.Chipset : "" });
+                ImportantSpecifications.Add(new string[] { "Form Factor", motherboardVM.FormFactor is not null ? motherboardVM.FormFactor : "" });
+                ImportantSpecifications.Add(new string[] { "Socket", motherboardVM.Socket is not null ? motherboardVM.Socket : "" });
+                ImportantSpecifications.Add(new string[] { "Color", motherboardVM.Color is not null ? motherboardVM.Color : "" });
+
+                Specifications.Add(new string[] { "Manufacturer", motherboardVM.Manufacturer is not null ? motherboardVM.Manufacturer : "" });
+                Specifications.Add(new string[] { "Model", motherboardVM.Name is not null ? motherboardVM.Name : "" });
+                Specifications.Add(new string[] { "Form Factor", motherboardVM.FormFactor is not null ? motherboardVM.FormFactor : "" });
+                Specifications.Add(new string[] { "Chipset", motherboardVM.Chipset is not null ? motherboardVM.Chipset : "" });
+                Specifications.Add(new string[] { "CPU Socket", motherboardVM.Socket is not null ? motherboardVM.Socket : "" });
+                Specifications.Add(new string[] { "Memory Slots", motherboardVM.MemorySlots is not null ? motherboardVM.MemorySlots + "" : "" });
+                Specifications.Add(new string[] { "Max Memory", motherboardVM.MaxMemory is not null ? motherboardVM.MaxMemory + " GB" : "" });
+                Specifications.Add(new string[] { "Integrated Wi-Fi", motherboardVM.IntegratedWifi is not null ? motherboardVM.IntegratedWifi : "" });
+                Specifications.Add(new string[] { "Color", motherboardVM.Color is not null ? motherboardVM.Color : "" });
+                Specifications.Add(new string[] { "M.2 Slot", motherboardVM.M2Slot is not null && motherboardVM.M2Slot == true ? "Yes" : "No" });
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/products/motherboards");
+            }
         }
     }
 }

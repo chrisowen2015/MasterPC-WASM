@@ -1,0 +1,103 @@
+﻿<div>
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Style="margin-top: 2em">
+        <MudPaper Class="product-view-spec-paper" Style="padding: 2em; border-radius: 10px" Elevation="3">
+            <MudGrid>
+                <MudItem xs="12" md="3" lg="2">
+                    <MudImage Height="200" Width="200" Src="@(ImageUrl != null ? ImageUrl : "favicon.ico")" />
+                </MudItem>
+
+                <MudItem xs="12" md="5" lg="8">
+                    <MudStack Row AlignItems="AlignItems.Center" Justify="Justify.FlexStart" Style="height: 100%">
+                        <MudText Typo="Typo.h4" Align="Align.Center">@Name</MudText>
+                    </MudStack>
+                </MudItem>
+
+                <MudItem xs="12" md="4" lg="2">
+                    <MudStack Spacing="3" Justify="Justify.Center" Style="height: 100%">
+                        <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Style="padding: 1em">Add To Build</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="padding: 1em">Go to Purchase</MudButton>
+                    </MudStack>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+
+        <MudGrid Style="margin-top: 1em" Spacing="4">
+            <MudItem xs="12" lg="4">
+                <MudStack Spacing="4">
+                    @foreach (var spec in ImportantSpecifications) if (!String.IsNullOrEmpty(spec[1]))
+                        {
+                            <MudPaper Class="product-view-spec-paper" Style="border-radius: 10px" Elevation="3">
+                                <MudStack Spacing="4" AlignItems="AlignItems.Center">
+                                    <div class="product-view-spec-header" style="background-color: @(Colors.LightBlue.Lighten4)">
+                                        <MudText Typo="Typo.h5" Style="font-weight: 500">
+                                            @spec[0]
+                                        </MudText>
+                                    </div>
+
+                                    <div style="border-radius: 5px; padding: 1em 3em; width: fit-content; background-color: @(theme is not null ? theme.Palette.Primary : null)">
+                                        <MudText Typo="Typo.body1" Style="color:white">
+                                            @spec[1]
+                                        </MudText>
+                                    </div>
+                                </MudStack>
+                            </MudPaper>
+                        }
+                </MudStack>
+            </MudItem>
+
+            <MudItem xs="12" lg="8">
+                <MudPaper Class="product-view-spec-paper" Style="border-radius: 10px" Elevation="3">
+                    <div class="product-view-spec-header" style="background-color: @(Colors.LightBlue.Lighten4)">
+                        <MudText Typo="Typo.h5" Style="font-weight: 500">
+                            Specifications
+                        </MudText>
+                    </div>
+
+                    <div>
+                        @foreach (var spec in ValidSpecifications) if (!String.IsNullOrEmpty(spec[1]))
+                            {
+                                <MudStack Row Justify="Justify.SpaceBetween" Style="padding: 1.5em .5em 1em .5em;">
+                                    <MudText Typo="Typo.h6" Style="font-weight: 400">
+                                        @spec[0]:
+                                    </MudText>
+                                    <MudText Typo="Typo.body1">
+                                        @spec[1]
+                                    </MudText>
+                                </MudStack>
+
+                                @if (spec != ValidSpecifications.Last())
+                                {
+                                    <MudDivider Light="true" />
+                                }
+                            }
+                    </div>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+</div>
+@code {
+    [CascadingParameter(Name = "theme")]
+    private MyMudTheme? theme { get; set; }
+
+    [Parameter]
+    public string Name { get; set; } = null!;
+
+    [Parameter]
+    public string? ImageUrl { get; set; }
+
+    [Parameter]
+    public string PCPId { get; set; } = null!;
+
+    [Parameter]
+    public string ProductId { get; set; } = null!;
+
+    [Parameter]
+    public List<String[]> ImportantSpecifications { get; set; } = null!;
+
+    [Parameter]
+    public List<String[]> Specifications { get; set; } = null!;
+
+    private List<String[]> ValidSpecifications => Specifications.Where(s => !String.IsNullOrEmpty(s[1])).ToList();
+
+}

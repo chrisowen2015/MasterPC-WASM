@@ -1,20 +1,28 @@
-﻿@page "/product/cpu-cooler/{CpuCoolerId}"
+﻿@page "/cpu-cooler/{CpuCoolerId}"
 
+@using MasterPC_WASM.Components
 @using MasterPC_WASM.Components.Tables
 @using MasterPC_WASM.Services
 
 @inject NavigationManager NavigationManager
 @inject ICPUCoolerService cpuCoolerService
 
-<CPUCoolerTable Elements="CPUCoolerList" />
-
+@if (CPUCoolerVM is not null)
+{
+    <ViewProduct Name="@CPUCoolerVM.Name" ImageUrl="@CPUCoolerVM.ImgUrl" PCPId="@CPUCoolerVM.PCPId" ProductId="@CPUCoolerVM.Id" ImportantSpecifications="ImportantSpecifications" Specifications="Specifications" />
+}
+else
+{
+    <LoadingSpinner />
+}
 
 @code {
     [Parameter] public String CpuCoolerId { get; set; }
 
     public CPUCoolerVM CPUCoolerVM { get; set; }
 
-    public List<CPUCoolerVM> CPUCoolerList = new List<CPUCoolerVM>();
+    public List<string[]> ImportantSpecifications { get; set; } = new List<string[]>();
+    public List<string[]> Specifications { get; set; } = new List<string[]>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -25,7 +33,77 @@
         else
         {
             CPUCoolerVM = await cpuCoolerService.GetCPUCoolerByIdAsync(CpuCoolerId);
-            CPUCoolerList.Add(CPUCoolerVM);
+
+            if (CPUCoolerVM is not null)
+            {
+                ImportantSpecifications.Add(new string[] { "Type", CPUCoolerVM.RadiatorSize is not null ? "AIO Liquid Cooler" : "Air Cooler" });
+                ImportantSpecifications.Add(new string[] { "Color", CPUCoolerVM.Color is not null ? CPUCoolerVM.Color : "" });
+                ImportantSpecifications.Add(new string[] { "Compatible Sockets", GetCompatibleSocketsString() });
+
+                Specifications.Add(new string[] { "Manufacturer", CPUCoolerVM.Manufacturer is not null ? CPUCoolerVM.Manufacturer : "" });
+                Specifications.Add(new string[] { "Model", CPUCoolerVM.Name is not null ? CPUCoolerVM.Name : "" });
+                Specifications.Add(new string[] { "Type", CPUCoolerVM.RadiatorSize is not null ? "AIO Liquid Cooler" : "Air Cooler" });
+                Specifications.Add(new string[] { "Fan RPM", GetRPMString() });
+                Specifications.Add(new string[] { "Noise Level", GetNoiseLevelString() });
+                Specifications.Add(new string[] { "Color", CPUCoolerVM.Color is not null ? CPUCoolerVM.Color : "" });
+                Specifications.Add(new string[] { "Compatible Sockets", GetCompatibleSocketsString() });
+                Specifications.Add(new string[] { "Radiator Size", CPUCoolerVM.RadiatorSize is not null ? CPUCoolerVM.RadiatorSize + "" : "" });
+                Specifications.Add(new string[] { "Color", CPUCoolerVM.Color is not null ? CPUCoolerVM.Color : "" });
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/products/cpu-coolers");
+            }
         }
+    }
+
+    private string GetNoiseLevelString()
+    {
+        string noiseLevel = "";
+
+        if (CPUCoolerVM.MinNoise is not null)
+        {
+            if (CPUCoolerVM.MaxNoise is not null)
+            {
+                noiseLevel = CPUCoolerVM.MinNoise + " - " + CPUCoolerVM.MaxNoise + " dB";
+            }
+            else
+            {
+                noiseLevel = CPUCoolerVM.MinNoise + " dB";
+            }
+        }
+
+        return noiseLevel;
+    }
+
+    private string GetRPMString()
+    {
+        string rpm = "";
+
+        if (CPUCoolerVM.MinRPM is not null)
+        {
+            if (CPUCoolerVM.MaxRPM is not null)
+            {
+                rpm = CPUCoolerVM.MinRPM + " - " + CPUCoolerVM.MaxRPM + " RPM";
+            }
+            else
+            {
+                rpm = CPUCoolerVM.MinRPM + " RPM";
+            }
+        }
+
+        return rpm;
+    }
+
+    private string GetCompatibleSocketsString()
+    {
+        string compatibleSockets = "";
+
+        if (CPUCoolerVM.CompatibleSockets is not null && CPUCoolerVM.CompatibleSockets.Count > 0)
+        {
+            compatibleSockets = string.Join(", ", CPUCoolerVM.CompatibleSockets);
+        }
+
+        return compatibleSockets;
     }
 }
