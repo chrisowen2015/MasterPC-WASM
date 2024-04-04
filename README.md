@@ -4,7 +4,7 @@
 
 - [Description](#description)
 - [Usage](#usage)
-- [Compatibility Check](#compatibility_check)
+- [Compatibility Check](#compatibility-check)
 - [License](#license)
 
 ## Description
