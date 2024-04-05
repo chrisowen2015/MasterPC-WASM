@@ -2,8 +2,133 @@
 
 @attribute [Authorize]
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Build Your MasterPC</PageTitle>
 
-<h1>Hello, world!</h1>
+<div>
+    <div style="padding-top: 3em;">
+        <MudText Align="Align.Center" Typo="Typo.h3" Style="font-weight: 600" GutterBottom="false">
+            Select Components. Share and Compare.
+        </MudText>
 
-Welcome to your new app.
+        <MudLink Href="/build">
+            <MudText Align="Align.Center" Typo="Typo.h3" Color="Color.Primary" Style="font-weight: 800" GutterBottom> Build your MasterPC. </MudText>
+        </MudLink>
+
+        <MudText Align="Align.Center" Typo="Typo.h6" GutterBottom>
+            Create your dream computer build, share with friends, or publish to help others.
+        </MudText>
+
+        <div style="display: flex; justify-content: center; padding: 2em">
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Build" Href="/part-list" Color="Color.Primary" Size="Size.Large">
+                Start Your Build
+            </MudButton>
+        </div>
+    </div>
+
+    <div style="padding: 2em; padding-bottom: 3em; background-color: @(theme is not null ? theme.Palette.Tertiary : null)">
+        <MudText Align="Align.Center" Typo="Typo.h4" Style="font-weight: 500; margin-bottom: 1em">
+            Or Start by Selecting Some Components Below.
+        </MudText>
+
+        <MudGrid Spacing="4">
+            @foreach (var productTile in productTiles)
+            {
+                <MudItem xs="6" md="4" lg="3">
+                    <MudPaper Style="border-radius: 15px; width: 100%">
+                        <div style="border-radius: 15px; width: 100%; height: 40vh; background-image: url(@(productTile.Image)); background-position: center; background-size: cover; background-repeat: no-repeat">
+                            <MudLink Href="@productTile.Href" Style="text-decoration-color: white; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center">
+                                <span style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)); border-radius: 15px; padding: 20px; backdrop-filter: blur(5px);">
+                                    <MudText Typo="Typo.h4" Style="font-weight: 600; color: white;">@productTile.Name</MudText>
+                                </span>
+                            </MudLink>
+                        </div>
+                    </MudPaper>
+                </MudItem>
+            }
+        </MudGrid>
+    </div>
+
+
+    <MudContainer MaxWidth="MaxWidth.Large" Style="padding: 2em 0 2em 0">
+        <MudText Align="Align.Center" Typo="Typo.h3" GutterBottom Style="font-weight: 500">
+            How to Use MasterPC to Build Your Masterpiece?
+        </MudText>
+
+        <MudText Typo="Typo.h6">
+            MasterPC makes it easy to start building your dream computer with little hassle. To start, click on the "Build your MasterPC" button above. You will be taken to the build page where you can select components for your PC. Once you have selected all the components, you can share a link to your build with friends or to request help. You can also save your build for later use, and then publish it to be visible to others on the site.
+        </MudText>
+
+        <MudText Align="Align.Center" Typo="Typo.h5" GutterBottom Style="font-weight: 500">
+            If you still need help, check out our 
+            <MudLink Href="/guide" Typo="Typo.h5">
+                guide
+            </MudLink> 
+            to get step by step instructions.
+        </MudText>
+    </MudContainer>
+</div>
+
+
+@code {
+    [CascadingParameter(Name = "theme")]
+    private MyMudTheme? theme { get; set; }
+
+    private class ProductTile
+    {
+        public string Name { get; set; } = null!;
+        public string Href { get; set; } = null!;
+        public string Image { get; set; } = null!;
+    }
+
+    private List<ProductTile> productTiles = new List<ProductTile>()
+    {
+        new ProductTile()
+        {
+            Name = "Cases",
+            Href = "/products/cases",
+            Image = "/images/case.jpg"
+        },
+        new ProductTile()
+        {
+            Name = "CPUs",
+            Href = "/products/cpus",
+            Image = "/images/cpu.jpg"
+        },
+        new ProductTile()
+        {
+            Name = "CPU Coolers",
+            Href = "/products/cpu-coolers",
+            Image = "/images/cpu-cooler.png"
+        },
+        new ProductTile()
+        {
+            Name = "GPUs",
+            Href = "/products/gpus",
+            Image = "/images/gpu.jpg"
+        },
+        new ProductTile()
+        {
+            Name = "Motherboards",
+            Href = "/products/motherboards",
+            Image = "/images/motherboard.jpg"
+        },
+        new ProductTile()
+        {
+            Name = "Power Supplies",
+            Href = "/products/power-supplies",
+            Image = "/images/psu.jpg"
+        },
+        new ProductTile()
+        {
+            Name = "RAM",
+            Href = "/products/ram",
+            Image = "/images/ram.jpg"
+        },
+        new ProductTile()
+        {
+            Name = "Storage",
+            Href = "/products/storage",
+            Image = "/images/storage.jpg"
+        },
+    };
+}
