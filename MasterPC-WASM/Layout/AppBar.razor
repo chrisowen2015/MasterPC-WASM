@@ -27,19 +27,6 @@
             <MudButton Size="Size.Large" Href="Account/Login" StartIcon="@Icons.Material.Filled.Login" Color="Color.Inherit">Login</MudButton>
         </NotAuthorized>
     </AuthorizeView>
-    @*
-    <AuthorizeView>
-    <Authorized>
-    <MudButton Size="Size.Large" Href="Account/Manage" StartIcon="@Icons.Material.Filled.AccountCircle" Color="Color.Inherit">@context.User.Identity?.Name</MudButton>
-    <MudButton Size="Size.Large" StartIcon="@Icons.Material.Filled.Favorite" Color="Color.Inherit">Favorite Parts</MudButton>
-    <MudButton Size="Size.Large" StartIcon="@Icons.Material.Filled.History" Color="Color.Inherit">Saved PC Builds</MudButton>
-    <MudButton Size="Size.Large" StartIcon="@Icons.Material.Filled.Logout" Color="Color.Inherit">Log Out</MudButton>
-    </Authorized>
-    <NotAuthorized>
-    <MudButton Size="Size.Large" Href="Account/Register" StartIcon="@Icons.Material.Filled.AppRegistration" Color="Color.Inherit">Register</MudButton>
-    <MudButton Size="Size.Large" Href="Account/Login" StartIcon="@Icons.Material.Filled.Login" Color="Color.Inherit">Login</MudButton>
-    </NotAuthorized>
-    </AuthorizeView> *@
 </MudAppBar>
 
 <MudDivider />
@@ -49,24 +36,44 @@
         <MudButton StartIcon="@Icons.Material.Filled.Construction" Color="Color.Inherit" Edge="Edge.Start">
             PC Builder
         </MudButton>
-
+@* 
         <MudMenu FullWidth="true" ActivationEvent="@MouseEvent.MouseOver" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
             <ActivatorContent>
                 <MudButton Href="products" StartIcon="@Icons.Material.Filled.Category" EndIcon="@Icons.Material.Filled.ArrowDropDown" Color="Color.Inherit">
                     Products
                 </MudButton>
             </ActivatorContent>
+
             <ChildContent>
-                <MudMenuItem Href="products/cases"> Cases </MudMenuItem>
-                <MudMenuItem Href="products/cpu-coolers"> CPU Coolers </MudMenuItem>
-                <MudMenuItem Href="products/cpus"> CPUs </MudMenuItem>
-                <MudMenuItem Href="products/gpus"> GPUs </MudMenuItem>
-                <MudMenuItem Href="products/motherboards"> Motherboards </MudMenuItem>
-                <MudMenuItem Href="products/power-supplies"> Power Supplies </MudMenuItem>
-                <MudMenuItem Href="products/ram"> RAM </MudMenuItem>
-                <MudMenuItem Href="products/storage"> Storage </MudMenuItem>
+                <MudMenuItem Icon="@Icons.Material.Filled.Power" Href="products/cases" Style="min-width:fit-content"> Cases </MudMenuItem>
+                <MudMenuItem Href="products/cpu-coolers" Style="min-width:fit-content"> CPU Coolers </MudMenuItem>
+                <MudMenuItem Href="products/cpus" Style="min-width:fit-content"> CPUs </MudMenuItem>
+                <MudMenuItem Href="products/gpus" Style="min-width:fit-content"> GPUs </MudMenuItem>
+                <MudMenuItem Href="products/motherboards" Style="min-width:fit-content"> Motherboards </MudMenuItem>
+                <MudMenuItem Href="products/power-supplies" Style="min-width:fit-content"> Power Supplies </MudMenuItem>
+                <MudMenuItem Href="products/ram" Style="min-width:fit-content"> RAM </MudMenuItem>
+                <MudMenuItem Href="products/storage" Style="min-width:fit-content"> Storage </MudMenuItem>
             </ChildContent>
-        </MudMenu>
+        </MudMenu> *@
+
+        <MudButton Color="Color.Inherit" Href="/products" EndIcon="@Icons.Material.Filled.ArrowDropDown" @onmouseenter="() => _isOpen = true">
+            Products
+        </MudButton>
+        <MudPopover Open="@_isOpen" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Fixed="true" Class="p-4" Style="max-width: 550px" @onmouseleave="() => _isOpen = false">
+            <MudGrid Spacing="2">
+                @foreach(var productTile in productTiles)
+                {
+                    <MudItem xs="12" lg="6" Style="padding: 0">
+                        <MudButton OnClick="(() => OnClickProduct(productTile.Href))" Color="Color.Inherit" Style="width: 100%; display:flex; justify-content: flex-start; padding: 20px">
+                            <MudImage Src="@(productTile.Image)" Height="60" Width="60" />
+                            <MudText Color="Color.Inherit" Typo="Typo.h6" Style="padding-left: 10px">
+                                @productTile.Name
+                            </MudText>
+                        </MudButton>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudPopover>
 
         <MudButton StartIcon="@Icons.Material.Filled.Computer" Color="Color.Inherit" Edge="Edge.Start">
             Completed Builds
@@ -91,7 +98,66 @@
     private bool expandSearchBar { get; set; } = false;
     public string? searchParams { get; set; }
 
-    private ClaimsPrincipal User { get; set; }
+    private bool _isOpen { get; set; } = false;
+
+    private class ProductTile
+    {
+        public string Name { get; set; } = null!;
+        public string Href { get; set; } = null!;
+        public string Image { get; set; } = null!;
+    }
+
+    private List<ProductTile> productTiles = new List<ProductTile>()
+    {
+        new ProductTile()
+        {
+            Name = "Cases",
+            Href = "/products/cases",
+            Image = "/images/small/case.jpg"
+        },
+        new ProductTile()
+        {
+            Name = "CPUs",
+            Href = "/products/cpus",
+            Image = "/images/small/cpu.jpg"
+        },
+        new ProductTile()
+        {
+            Name = "CPU Coolers",
+            Href = "/products/cpu-coolers",
+            Image = "/images/small/cpu-cooler.png"
+        },
+        new ProductTile()
+        {
+            Name = "GPUs",
+            Href = "/products/gpus",
+            Image = "/images/small/gpu.jpg"
+        },
+        new ProductTile()
+        {
+            Name = "Motherboards",
+            Href = "/products/motherboards",
+            Image = "/images/small/motherboard.jpg"
+        },
+        new ProductTile()
+        {
+            Name = "Power Supplies",
+            Href = "/products/power-supplies",
+            Image = "/images/small/psu.jpg"
+        },
+        new ProductTile()
+        {
+            Name = "RAM",
+            Href = "/products/ram",
+            Image = "/images/small/ram.jpg"
+        },
+        new ProductTile()
+        {
+            Name = "Storage",
+            Href = "/products/storage",
+            Image = "/images/small/storage.jpg"
+        },
+    };
 
     private void Search()
     {
@@ -118,5 +184,11 @@
     private void LogOut()
     {
         NavigationManager.NavigateToLogout("/authentication/logout", "/");
+    }
+
+    private void OnClickProduct(string href)
+    {
+        _isOpen = false;
+        NavigationManager.NavigateTo(href);
     }
 }

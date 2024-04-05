@@ -1,0 +1,125 @@
+﻿@page "/products"
+
+@using MasterPC_WASM.Components
+@using Microsoft.AspNetCore.Authorization;
+@using MasterPC_WASM.Services;
+@using MasterPC_WASM.Components.Tables;
+
+@inject ICPUService cpuService
+
+<PageTitle> Products </PageTitle>
+
+<div>
+    <div style="padding-top: 2em; display: flex; justify-content: center; align-items: center; background-color: @(theme is not null ? theme.Palette.Tertiary : null)">
+        <MudStack Row="false">
+            <MudText Align="Align.Center" Typo="Typo.h2 " Style="font-weight: 500"> Products </MudText>
+            <div style="display: flex; justify-content: center">
+                <MudBreadcrumbs Items="@breadcrumbs">
+                    <SeparatorTemplate>
+                        <MudIcon Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Small" />
+                    </SeparatorTemplate>
+                </MudBreadcrumbs>
+            </div>
+        </MudStack>
+    </div>
+
+    <MudContainer MaxWidth="MaxWidth.Large" Style="margin-top: 2em">
+        <MudGrid Spacing="4">
+            @foreach (var productTile in productTiles)
+            {
+                <MudItem xs="12" lg="6">
+                    <MudPaper Style="border-radius: 15px; width: 100%">
+                        <div style="border-radius: 15px; width: 100%; height: 40vh; background-image: url(@(productTile.Image)); background-position: center; background-size: cover; background-repeat: no-repeat">
+                            <MudLink Href="@productTile.Href" Style="text-decoration-color: white; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center">
+                                <span style="background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)); border-radius: 15px; padding: 20px; backdrop-filter: blur(5px);">
+                                    <MudText Typo="Typo.h4" Style="font-weight: 600; color: white;">@productTile.Name</MudText>
+                                </span>
+                            </MudLink>
+                        </div>
+                    </MudPaper>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudContainer>
+</div>
+
+@code {
+    [CascadingParameter(Name = "theme")]
+    private MyMudTheme? theme { get; set; }
+
+    private string description = "";
+    private string title = "";
+
+    private class ProductTile
+    {
+        public string Name { get; set; } = null!;
+        public string Href { get; set; } = null!;
+        public string Image { get; set; } = null!;
+    }
+
+    private List<BreadcrumbItem> breadcrumbs = new List<BreadcrumbItem>()
+    {
+        new BreadcrumbItem("Home", href: "/", icon: Icons.Material.Filled.Home),
+        new BreadcrumbItem("Products", href: "/products", icon: Icons.Material.Filled.ProductionQuantityLimits, disabled: true),
+    };
+
+    private List<BreadcrumbItem> products = new List<BreadcrumbItem>()
+    {
+        new BreadcrumbItem("Home", href: "/", icon: Icons.Material.Filled.Home),
+        new BreadcrumbItem("Products", href: "/products", icon: Icons.Material.Filled.ProductionQuantityLimits),
+        new BreadcrumbItem("CPUs", href: "/products/cpus", icon: Icons.Material.Filled.ProductionQuantityLimits, disabled: true),
+    };
+
+    private List<ProductTile> productTiles = new List<ProductTile>()
+    {
+        new ProductTile()
+        {
+            Name = "Cases",
+            Href = "/products/cases",
+            Image = "/images/case.jpg"
+        },
+        new ProductTile()
+        {
+            Name = "CPUs",
+            Href = "/products/cpus",
+            Image = "/images/cpu.jpg"
+        },
+        new ProductTile()
+        {
+            Name = "CPU Coolers",
+            Href = "/products/cpu-coolers",
+            Image = "/images/cpu-cooler.png"
+        },
+        new ProductTile()
+        {
+            Name = "GPUs",
+            Href = "/products/gpus",
+            Image = "/images/gpu.jpg"
+        },
+        new ProductTile()
+        {
+            Name = "Motherboards",
+            Href = "/products/motherboards",
+            Image = "/images/motherboard.jpg"
+        },
+        new ProductTile()
+        {
+            Name = "Power Supplies",
+            Href = "/products/power-supplies",
+            Image = "/images/psu.jpg"
+        },
+        new ProductTile()
+        {
+            Name = "RAM",
+            Href = "/products/ram",
+            Image = "/images/ram.jpg"
+        },
+        new ProductTile()
+        {
+            Name = "Storage",
+            Href = "/products/storage",
+            Image = "/images/storage.jpg"
+        },
+    };
+
+}
