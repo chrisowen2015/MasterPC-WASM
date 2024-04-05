@@ -1,0 +1,168 @@
+﻿@inject NavigationManager NavigationManager
+
+<div style="background-color:@(theme.Palette.Primary); width: 100%; padding-top: 2em" class="pb-4">
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+        <MudGrid>
+            <MudItem xs="12" md="3">
+                <MudGrid Spacing="2">
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.h6" Color="Color.Surface" Style="color:white" GutterBottom>
+                            MasterPC
+                        </MudText>
+
+                        <MudDivider />
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <MudLink Typo="Typo.body1" Href="part-list" Color="Color.Surface" Style="color:white">
+                            PC Builder
+                        </MudLink>
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <MudLink Typo="Typo.body1" Href="products" Color="Color.Surface" Style="color:white">
+                            Products
+                        </MudLink>
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <MudLink Typo="Typo.body1" Href="guides" Color="Color.Surface" Style="color:white">
+                            Guides
+                        </MudLink>
+                    </MudItem>
+
+                    <MudItem xs="12">
+                        <MudLink Typo="Typo.body1" Href="completed-builds" Color="Color.Surface" Style="color:white">
+                            Completed Builds
+                        </MudLink>
+                    </MudItem>
+                </MudGrid>
+            </MudItem>
+
+            <AuthorizeView>
+                <Authorized>
+                    <MudItem xs="12" md="3">
+                        <MudGrid Spacing="2">
+                            <MudItem xs="12">
+                                <MudText Typo="Typo.h6" Color="Color.Surface" Style="color:white" GutterBottom>
+                                    Account
+                                </MudText>
+
+                                <MudDivider />
+                            </MudItem>
+
+                            <MudItem xs="12">
+                                <MudLink Typo="Typo.body1" Href="account" Color="Color.Surface" Style="color:white">
+                                    Your Account
+                                </MudLink>
+                            </MudItem>
+
+                            <MudItem xs="12">
+                                <MudLink Typo="Typo.body1" Href="saved-part-lists" Color="Color.Surface" Style="color:white">
+                                    Saved Part Lists
+                                </MudLink>
+                            </MudItem>
+
+                            <MudItem xs="12">
+                                <MudLink Typo="Typo.body1" Href="/authentication/logout" Color="Color.Surface" Style="color:white">
+                                    Log Out
+                                </MudLink>
+                            </MudItem>
+                        </MudGrid>
+                    </MudItem>
+                </Authorized>
+
+                <NotAuthorized>
+                    <MudItem xs="12" md="3">
+                        <MudGrid Spacing="2">
+                            <MudItem xs="12">
+                                <MudText Typo="Typo.h6" Color="Color.Surface" Style="color:white" GutterBottom>
+                                    Account
+                                </MudText>
+
+                                <MudDivider />
+                            </MudItem>
+
+                            <MudItem xs="12">
+                                <MudLink Typo="Typo.body1" Href="account/login" Color="Color.Surface" Style="color:white">
+                                    Log In
+                                </MudLink>
+                            </MudItem>
+                        </MudGrid>
+                    </MudItem>
+                </NotAuthorized>
+            </AuthorizeView>
+            <MudItem xs="12" md="6">
+                <MudGrid Spacing="2">
+                    <MudItem xs="12">
+                        <MudText Typo="Typo.h6" Color="Color.Surface" Style="color:white" GutterBottom>
+                            Products
+                        </MudText>
+
+                        <MudDivider />
+                    </MudItem>
+
+                    <MudItem xs="6" md="6">
+                        <MudLink Typo="Typo.body1" Href="cases" Color="Color.Surface" Style="color:white">
+                            Cases
+                        </MudLink>
+                    </MudItem>
+
+                    <MudItem xs="6" md="6">
+                        <MudLink Typo="Typo.body1" Href="cpus" Color="Color.Surface" Style="color:white">
+                            CPUs
+                        </MudLink>
+                    </MudItem>
+
+                    <MudItem xs="6" md="6">
+                        <MudLink Typo="Typo.body1" Href="cpu-coolers" Color="Color.Surface" Style="color:white">
+                            CPU Coolers
+                        </MudLink>
+                    </MudItem>
+
+                    <MudItem xs="6" md="6">
+                        <MudLink Typo="Typo.body1" Href="gpus" Color="Color.Surface" Style="color:white">
+                            GPUs
+                        </MudLink>
+                    </MudItem>
+
+                    <MudItem xs="6" md="6">
+                        <MudLink Typo="Typo.body1" Href="motherboards" Color="Color.Surface" Style="color:white">
+                            Motherboards
+                        </MudLink>
+                    </MudItem>
+
+                    <MudItem xs="6" md="6">
+                        <MudLink Typo="Typo.body1" Href="power-supplies" Color="Color.Surface" Style="color:white">
+                            Power Supplies
+                        </MudLink>
+                    </MudItem>
+
+                    <MudItem xs="6" md="6">
+                        <MudLink Typo="Typo.body1" Href="ram" Color="Color.Surface" Style="color:white">
+                            RAM
+                        </MudLink>
+                    </MudItem>
+
+                    <MudItem xs="6" md="6">
+                        <MudLink Typo="Typo.body1" Href="storage" Color="Color.Surface" Style="color:white">
+                            Storage
+                        </MudLink>
+                    </MudItem>
+                </MudGrid>
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+</div>
+
+@code {
+    [CascadingParameter(Name = "theme")]
+    private MyMudTheme? theme { get; set; }
+
+
+    private void LogOut()
+    {
+        NavigationManager.NavigateToLogout("/authentication/logout", "/");
+    }
+
+}

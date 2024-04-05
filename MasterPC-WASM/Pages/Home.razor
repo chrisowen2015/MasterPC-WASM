@@ -5,7 +5,7 @@
 <PageTitle>Build Your MasterPC</PageTitle>
 
 <div>
-    <div style="padding-top: 3em;">
+    <div style="padding: 1.5em 1em;">
         <MudText Align="Align.Center" Typo="Typo.h3" Style="font-weight: 600" GutterBottom="false">
             Select Components. Share and Compare.
         </MudText>
@@ -26,14 +26,14 @@
     </div>
 
     <div style="padding: 2em; padding-bottom: 3em; background-color: @(theme is not null ? theme.Palette.Tertiary : null)">
-        <MudText Align="Align.Center" Typo="Typo.h4" Style="font-weight: 500; margin-bottom: 1em">
-            Or Start by Selecting Some Components Below.
+        <MudText Align="Align.Center" Typo="Typo.h4" Style="font-weight: 600; margin-bottom: 1em">
+            Or Start by Browsing and Selecting Some Components Below.
         </MudText>
 
         <MudGrid Spacing="4">
             @foreach (var productTile in productTiles)
             {
-                <MudItem xs="6" md="4" lg="3">
+                <MudItem xs="12" md="6" lg="3">
                     <MudPaper Style="border-radius: 15px; width: 100%">
                         <div style="border-radius: 15px; width: 100%; height: 40vh; background-image: url(@(productTile.Image)); background-position: center; background-size: cover; background-repeat: no-repeat">
                             <MudLink Href="@productTile.Href" Style="text-decoration-color: white; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center">
@@ -48,12 +48,12 @@
         </MudGrid>
     </div>
 
-    <MudContainer MaxWidth="MaxWidth.Large" Style="padding: 2em 0 2em 0">
+    <MudContainer MaxWidth="MaxWidth.Large" Style="padding: 2em 1em">
         <MudText Align="Align.Center" Typo="Typo.h3" GutterBottom Style="font-weight: 500">
             How to Use MasterPC to Build Your Masterpiece?
         </MudText>
 
-        <MudText Typo="Typo.h6">
+        <MudText Typo="Typo.h6" Style="padding-bottom: 2em">
             MasterPC makes it easy to start building your dream computer with little hassle. To start, click on the "Build your MasterPC" button above. You will be taken to the build page where you can select components for your PC. Once you have selected all the components, you can share a link to your build with friends or to request help. You can also save your build for later use, and then publish it to be visible to others on the site.
         </MudText>
 
