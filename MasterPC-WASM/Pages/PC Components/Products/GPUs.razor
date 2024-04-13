@@ -6,6 +6,9 @@
 @using MasterPC_WASM.Components.Tables;
 
 @inject IGPUService gpuService
+@inject ILocalStorageServiceClient localStorageService
+@inject ISnackbar Snackbar
+@inject NavigationManager navigationManager
 
 <PageTitle> GPUs </PageTitle>
 
@@ -90,7 +93,7 @@
             </MudItem>
 
             <MudItem xs="12" lg="9">
-                <GPUTable Elements="@gpusToRender" />
+                <GPUTable Elements="@gpusToRender" OnAddGPU="AddGPU" />
             </MudItem>
         </MudGrid>
     </MudContainer>
@@ -131,6 +134,23 @@
         priceSlider = gpus.Max(gpuVM => gpuVM.Price);
 
         await base.OnInitializedAsync();
+    }
+
+    public async void AddGPU(GPUVM gpu)
+    {
+        Snackbar.Clear();
+        bool success = await localStorageService.AddGPUAsync(gpu);
+
+        if (success)
+        {
+            Snackbar.Add("GPU added to part list", Severity.Success);
+
+            navigationManager.NavigateTo("part-list");
+        }
+        else
+        {
+            Snackbar.Add("Error adding GPU to part list. Please try again later.", Severity.Error);
+        }
     }
 
     private void Filter()

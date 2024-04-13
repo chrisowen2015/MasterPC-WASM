@@ -6,6 +6,9 @@
 @using MasterPC_WASM.Components.Tables;
 
 @inject IStorageService storageService
+@inject ILocalStorageServiceClient localStorageService
+@inject ISnackbar Snackbar
+@inject NavigationManager navigationManager
 
 <PageTitle> Storage </PageTitle>
 
@@ -90,7 +93,7 @@
             </MudItem>
 
             <MudItem xs="12" lg="9">
-                <StorageTable Elements="@storagesToRender" />
+                <StorageTable Elements="@storagesToRender" OnAddStorage="AddStorage" />
             </MudItem>
         </MudGrid>
     </MudContainer>
@@ -131,6 +134,23 @@
         priceSlider = storages.Max(storageVM => storageVM.Price);
 
         await base.OnInitializedAsync();
+    }
+
+    public async void AddStorage(StorageVM storageVM)
+    {
+        Snackbar.Clear();
+        bool success = await localStorageService.AddStorageAsync(storageVM);
+
+        if (success)
+        {
+            Snackbar.Add("Storage added to part list", Severity.Success);
+
+            navigationManager.NavigateTo("part-list");
+        }
+        else
+        {
+            Snackbar.Add("Error adding Storage to part list. Please try again later.", Severity.Error);
+        }
     }
 
     private void Filter()

@@ -6,6 +6,9 @@
 @using MasterPC_WASM.Components.Tables;
 
 @inject ICaseService caseService
+@inject ILocalStorageServiceClient localStorageService
+@inject ISnackbar Snackbar
+@inject NavigationManager navigationManager
 
 <PageTitle> Cases </PageTitle>
 
@@ -90,7 +93,7 @@
             </MudItem>
 
             <MudItem xs="12" lg="9">
-                <CaseTable Elements="@casesToRender" />
+                <CaseTable Elements="@casesToRender" OnAddCase="AddCase" />
             </MudItem>
         </MudGrid>
     </MudContainer>
@@ -133,6 +136,23 @@
         priceSlider = cases.Max(caseVM => caseVM.Price);
 
         await base.OnInitializedAsync();
+    }
+
+    public async void AddCase(CaseVM caseVM)
+    {
+        Snackbar.Clear();
+        bool success = await localStorageService.AddCaseAsync(caseVM);
+
+        if (success)
+        {
+            Snackbar.Add("Case added to part list", Severity.Success);
+
+            navigationManager.NavigateTo("part-list");
+        }
+        else
+        {
+            Snackbar.Add("Error adding Case to part list. Please try again later.", Severity.Error);
+        }
     }
 
     private void Filter()

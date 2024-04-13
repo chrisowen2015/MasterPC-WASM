@@ -1,4 +1,5 @@
 ﻿@namespace MasterPC_WASM.Components.Tables
+@using MasterPC_WASM.Services
 @using Shared.View_Models
 
 <MudPaper Elevation="3">
@@ -63,7 +64,7 @@
                         <b>
                             <MudText Typo="Typo.inherit"> @(string.Format("${0:N2}", context.Item.Price))</MudText>
                         </b>
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Add</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" OnClick="() => OnAddCPU.InvokeAsync(context.Item)">Add</MudButton>
                     </MudStack>
                 </CellTemplate>
             </PropertyColumn>
@@ -77,6 +78,9 @@
 @code {
     [Parameter]
     public List<CPUVM>? Elements { get; set; }
+
+    [Parameter]
+    public EventCallback<CPUVM> OnAddCPU { get; set; }
 
     private string? _searchString { get; set; }
 

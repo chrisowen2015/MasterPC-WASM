@@ -6,6 +6,9 @@
 @using MasterPC_WASM.Components.Tables;
 
 @inject IPSUService psuService
+@inject ILocalStorageServiceClient localStorageService
+@inject ISnackbar Snackbar
+@inject NavigationManager navigationManager
 
 <PageTitle> Power Supplies </PageTitle>
 
@@ -90,7 +93,7 @@
             </MudItem>
 
             <MudItem xs="12" lg="9">
-                <PSUTable Elements="@psusToRender" />
+                <PSUTable Elements="@psusToRender" OnAddPSU="AddPSU" />
             </MudItem>
         </MudGrid>
     </MudContainer>
@@ -131,6 +134,23 @@
         priceSlider = psus.Max(psuVM => psuVM.Price);
 
         await base.OnInitializedAsync();
+    }
+
+    public async void AddPSU(PSUVM psu)
+    {
+        Snackbar.Clear();
+        bool success = await localStorageService.AddPowerSupplyAsync(psu);
+
+        if (success)
+        {
+            Snackbar.Add("Power Supply added to part list", Severity.Success);
+
+            navigationManager.NavigateTo("part-list");
+        }
+        else
+        {
+            Snackbar.Add("Error adding Power Supply to part list. Please try again later.", Severity.Error);
+        }
     }
 
     private void Filter()

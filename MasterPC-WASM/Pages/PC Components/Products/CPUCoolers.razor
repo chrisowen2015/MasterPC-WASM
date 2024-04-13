@@ -6,6 +6,9 @@
 @using MasterPC_WASM.Components.Tables;
 
 @inject ICPUCoolerService cpuCoolerService
+@inject ILocalStorageServiceClient localStorageService
+@inject ISnackbar Snackbar
+@inject NavigationManager navigationManager
 
 <PageTitle> CPU Coolers </PageTitle>
 
@@ -90,7 +93,7 @@
             </MudItem>
 
             <MudItem xs="12" lg="9">
-                <CPUCoolerTable Elements="@cpuCoolersToRender" />
+                <CPUCoolerTable Elements="@cpuCoolersToRender" OnAddCPUCooler="AddCPUCooler" />
             </MudItem>
         </MudGrid>
     </MudContainer>
@@ -133,6 +136,23 @@
         priceSlider = cpuCoolers.Max(cpuCoolerVM => cpuCoolerVM.Price);
 
         await base.OnInitializedAsync();
+    }
+
+    public async void AddCPUCooler(CPUCoolerVM cpuCoolerVM)
+    {
+        Snackbar.Clear();
+        bool success = await localStorageService.AddCPUCoolerAsync(cpuCoolerVM);
+
+        if (success)
+        {
+            Snackbar.Add("CPU Cooler added to part list", Severity.Success);
+
+            navigationManager.NavigateTo("part-list");
+        }
+        else
+        {
+            Snackbar.Add("Error adding CPU Cooler to part list. Please try again later.", Severity.Error);
+        }
     }
 
     private void Filter()

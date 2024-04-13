@@ -6,6 +6,9 @@
 @using MasterPC_WASM.Components.Tables;
 
 @inject ICPUService cpuService
+@inject ILocalStorageServiceClient localStorageService
+@inject ISnackbar Snackbar
+@inject NavigationManager navigationManager
 
 <PageTitle> CPUs </PageTitle>
 
@@ -30,99 +33,99 @@
                     <CompatibilityChecker CompatibilityFilter="compatibilityFilter" />
 
                     <MudStack Row Justify="Justify.SpaceBetween" Style="padding: 16px 24px">
-                        <MudText Typo="Typo.h6" >
+                        <MudText Typo="Typo.h6">
                             Filters
                         </MudText>
-                    
-                        @if(filterChipList.Count > 0)
+
+                        @if (filterChipList.Count > 0)
                         {
                             <MudButton Size="Size.Small" OnClick="ClearFilters">Clear All</MudButton>
                         }
                     </MudStack>
-                    @if(filterChipList.Count() > 0)
+                    @if (filterChipList.Count() > 0)
                     {
-                    <div style="padding: 0 1em 1em 1em">
-                        @foreach (var chip in filterChipList)
-                        {
-                            @switch(chip.Item1)
+                        <div style="padding: 0 1em 1em 1em">
+                            @foreach (var chip in filterChipList)
                             {
-                                case "Price":
-                                    <MudChip id="@chip.Item1" Text="@("Price:  $" + chip.Item2)" Variant="Variant.Filled" Color="Color.Secondary" OnClose="@((filterChip) => UpdateFilterChips(filterChip.FieldId, null))" />
-                                    break;
-                                case "TDP":
-                                    <MudChip id="@chip.Item1" Text="@("TDP: " + chip.Item2)" Variant="Variant.Filled" Color="Color.Secondary" OnClose="@((filterChip) => UpdateFilterChips(filterChip.FieldId, null))" />
-                                    break;
-                                case "Core Count":
-                                    <MudChip id="@chip.Item1" Text="@("Core Count: " + chip.Item2)" Variant="Variant.Filled" Color="Color.Secondary" OnClose="@((filterChip) => UpdateFilterChips(filterChip.FieldId, null))" />
-                                    break;
-                                case "Manufacturer":
-                                    <MudChip id="@chip.Item1" Text="@("Manufacturer: " + chip.Item2)" Variant="Variant.Filled" Color="Color.Secondary" OnClose="@((filterChip) => UpdateFilterChips(filterChip.FieldId, null))" />
-                                    break;
+                                @switch (chip.Item1)
+                                {
+                                    case "Price":
+                                        <MudChip id="@chip.Item1" Text="@("Price:  $" + chip.Item2)" Variant="Variant.Filled" Color="Color.Secondary" OnClose="@((filterChip) => UpdateFilterChips(filterChip.FieldId, null))" />
+                                        break;
+                                    case "TDP":
+                                        <MudChip id="@chip.Item1" Text="@("TDP: " + chip.Item2)" Variant="Variant.Filled" Color="Color.Secondary" OnClose="@((filterChip) => UpdateFilterChips(filterChip.FieldId, null))" />
+                                        break;
+                                    case "Core Count":
+                                        <MudChip id="@chip.Item1" Text="@("Core Count: " + chip.Item2)" Variant="Variant.Filled" Color="Color.Secondary" OnClose="@((filterChip) => UpdateFilterChips(filterChip.FieldId, null))" />
+                                        break;
+                                    case "Manufacturer":
+                                        <MudChip id="@chip.Item1" Text="@("Manufacturer: " + chip.Item2)" Variant="Variant.Filled" Color="Color.Secondary" OnClose="@((filterChip) => UpdateFilterChips(filterChip.FieldId, null))" />
+                                        break;
+                                }
                             }
-                        }
-                    </div>
+                        </div>
                     }
 
                     <MudDivider />
-                    
+
                     <div style="padding: 16px 24px 16px 24px">
                         <b>Price (Max)</b>
                         <MudSlider T="double?" ValueLabel="true" Min="0" Max="cpus.Max(cpu => cpu.Price)" Style="padding-top: 1em" Value="priceSlider" ValueChanged="(value) => priceFilterChanged(value)" />
                     </div>
 
-                     <MudExpansionPanels>
-                         <MudExpansionPanel Style="margin: 0px">
-                             <TitleContent>
-                                 <MudText Typo="Typo.h6">Manufacturers</MudText>
-                             </TitleContent>
-                             <ChildContent>
-                                 <MudStack Row="false">
-                                     <MudCheckBox T="bool" Value="@(manufacturerFilter == "All")" ValueChanged="@(isChecked => manufacturerFilterChanged(isChecked, "All"))">All</MudCheckBox>
-                                     <MudCheckBox T="bool" Value="@(manufacturerFilter == "AMD")" ValueChanged="@(isChecked => manufacturerFilterChanged(isChecked, "AMD"))">AMD</MudCheckBox>
-                                     <MudCheckBox T="bool" Value="@(manufacturerFilter == "Intel")" ValueChanged="@(isChecked => manufacturerFilterChanged(isChecked, "Intel"))">Intel</MudCheckBox>
-                                 </MudStack>
-                             </ChildContent>
-                         </MudExpansionPanel>
+                    <MudExpansionPanels>
+                        <MudExpansionPanel Style="margin: 0px">
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">Manufacturers</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudStack Row="false">
+                                    <MudCheckBox T="bool" Value="@(manufacturerFilter == "All")" ValueChanged="@(isChecked => manufacturerFilterChanged(isChecked, "All"))">All</MudCheckBox>
+                                    <MudCheckBox T="bool" Value="@(manufacturerFilter == "AMD")" ValueChanged="@(isChecked => manufacturerFilterChanged(isChecked, "AMD"))">AMD</MudCheckBox>
+                                    <MudCheckBox T="bool" Value="@(manufacturerFilter == "Intel")" ValueChanged="@(isChecked => manufacturerFilterChanged(isChecked, "Intel"))">Intel</MudCheckBox>
+                                </MudStack>
+                            </ChildContent>
+                        </MudExpansionPanel>
 
-                         <MudExpansionPanel Style="margin: 0px">
-                             <TitleContent>
-                                 <MudText Typo="Typo.h6">Socket</MudText>
-                             </TitleContent>
-                             <ChildContent>
-                                 <MudText Typo="Typo.body1">Sockets Go Here</MudText>
-                             </ChildContent>
-                         </MudExpansionPanel>
+                        <MudExpansionPanel Style="margin: 0px">
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">Socket</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudText Typo="Typo.body1">Sockets Go Here</MudText>
+                            </ChildContent>
+                        </MudExpansionPanel>
 
-                         <MudExpansionPanel Style="margin: 0px">
-                             <TitleContent>
-                                 <MudText Typo="Typo.h6">Core Count</MudText>
-                             </TitleContent>
-                             <ChildContent>
-                                 <MudSlider T="int?" ValueLabel Min="cpus.Min(cpu => cpu.CoreCount)" Max="cpus.Max(cpu => cpu.CoreCount)" Style="padding: 0 1em" Value="coreCountSlider" ValueChanged="(value) => coreCountFilterChanged(value)" />
-                             </ChildContent>
-                         </MudExpansionPanel>
+                        <MudExpansionPanel Style="margin: 0px">
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">Core Count</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudSlider T="int?" ValueLabel Min="cpus.Min(cpu => cpu.CoreCount)" Max="cpus.Max(cpu => cpu.CoreCount)" Style="padding: 0 1em" Value="coreCountSlider" ValueChanged="(value) => coreCountFilterChanged(value)" />
+                            </ChildContent>
+                        </MudExpansionPanel>
 
-                         <MudExpansionPanel Style="margin: 0px">
-                             <TitleContent>
-                                 <MudText Typo="Typo.h6">TDP</MudText>
-                             </TitleContent>
-                             <ChildContent>
-                                 <MudSlider T="int?" ValueLabel Min="cpus.Min(cpu => cpu.TDP)" Max="cpus.Max(cpu => cpu.TDP)" Style="padding: 0 1em" Value="tdpSlider" ValueChanged="(value) => tdpFilterChanged(value)" />
-                             </ChildContent>
-                         </MudExpansionPanel>
-                     </MudExpansionPanels>
-                 </MudPaper>
-             </MudItem>
+                        <MudExpansionPanel Style="margin: 0px">
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">TDP</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                <MudSlider T="int?" ValueLabel Min="cpus.Min(cpu => cpu.TDP)" Max="cpus.Max(cpu => cpu.TDP)" Style="padding: 0 1em" Value="tdpSlider" ValueChanged="(value) => tdpFilterChanged(value)" />
+                            </ChildContent>
+                        </MudExpansionPanel>
+                    </MudExpansionPanels>
+                </MudPaper>
+            </MudItem>
 
-             <MudItem xs="12" lg="9">
-                 <CPUTable Elements="@cpusToRender" />
-             </MudItem>
-         </MudGrid>
-     </MudContainer>
- </div>
+            <MudItem xs="12" lg="9">
+                <CPUTable Elements="@cpusToRender" OnAddCPU="AddCPU" />
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+</div>
 
- @code {
-    [CascadingParameter (Name = "theme")]
+@code {
+    [CascadingParameter(Name = "theme")]
     private MyMudTheme? theme { get; set; }
 
     // Filter for enabling Compatibility check for PC parts compatibility (Needs to be implemented in the future)
@@ -166,6 +169,23 @@
         await base.OnInitializedAsync();
     }
 
+    public async void AddCPU(CPUVM cpu)
+    {
+        Snackbar.Clear();
+        bool success = await localStorageService.AddCPUAsync(cpu);
+
+        if (success)
+        {
+            Snackbar.Add("CPU added to part list", Severity.Success);
+
+            navigationManager.NavigateTo("part-list");
+        }
+        else
+        {
+            Snackbar.Add("Error adding CPU to part list. Please try again later.", Severity.Error);
+        }
+    }
+
     private void Filter()
     {
         cpusToRender = cpus.Where(cpu =>
@@ -176,18 +196,20 @@
         ).ToList();
     }
 
-    private void ClearFilters(){
+    private void ClearFilters()
+    {
         priceSlider = cpus.Max(cpu => cpu.Price);
         coreCountSlider = cpus.Max(cpu => cpu.CoreCount);
         tdpSlider = cpus.Max(cpu => cpu.TDP);
         manufacturerFilter = "All";
         filterChipList.Clear();
-        Filter();}
+        Filter();
+    }
 
     private void priceFilterChanged(double? value)
     {
         priceSlider = value;
-        if(value == cpus.Max(cpu => cpu.Price))
+        if (value == cpus.Max(cpu => cpu.Price))
         {
             UpdateFilterChips("Price", null);
         }
@@ -216,7 +238,7 @@
     {
         tdpSlider = value;
 
-        if(value == cpus.Max(cpu => cpu.TDP))
+        if (value == cpus.Max(cpu => cpu.TDP))
         {
             UpdateFilterChips("TDP", null);
         }
@@ -230,7 +252,7 @@
     {
         coreCountSlider = value;
 
-        if(value == cpus.Max(cpu => cpu.CoreCount))
+        if (value == cpus.Max(cpu => cpu.CoreCount))
         {
             UpdateFilterChips("Core Count", null);
         }
@@ -269,7 +291,7 @@
 
             filterChipList.Remove(filterChipList.First(chip => chip.Item1 == filterType));
         }
-        else if(!hasFilter && !String.IsNullOrEmpty(filterValue))
+        else if (!hasFilter && !String.IsNullOrEmpty(filterValue))
         {
             filterChipList.Add((filterType, filterValue));
         }

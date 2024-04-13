@@ -6,6 +6,9 @@
 @using MasterPC_WASM.Components.Tables;
 
 @inject IRAMService ramService
+@inject ILocalStorageServiceClient localStorageService
+@inject ISnackbar Snackbar
+@inject NavigationManager navigationManager
 
 <PageTitle> RAM </PageTitle>
 
@@ -90,7 +93,7 @@
             </MudItem>
 
             <MudItem xs="12" lg="9">
-                <RAMTable Elements="@ramsToRender" />
+                <RAMTable Elements="@ramsToRender" OnAddRAM="AddRAM" />
             </MudItem>
         </MudGrid>
     </MudContainer>
@@ -131,6 +134,23 @@
         priceSlider = rams.Max(ramVM => ramVM.Price);
 
         await base.OnInitializedAsync();
+    }
+
+    public async void AddRAM(RAMVM ram)
+    {
+        Snackbar.Clear();
+        bool success = await localStorageService.AddRAMAsync(ram);
+
+        if (success)
+        {
+            Snackbar.Add("RAM added to part list", Severity.Success);
+
+            navigationManager.NavigateTo("part-list");
+        }
+        else
+        {
+            Snackbar.Add("Error adding RAM to part list. Please try again later.", Severity.Error);
+        }
     }
 
     private void Filter()
