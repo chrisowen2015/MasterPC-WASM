@@ -3,6 +3,7 @@ using MasterPC_WASM;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
+using Blazored.LocalStorage;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -29,6 +30,9 @@ builder.Services.AddAuthorizationCore(options =>
     });
 });
 
+builder.Services.AddBlazoredLocalStorage();
+
+builder.Services.AddScoped<ILocalStorageServiceClient, LocalStorageServiceClient>();
 builder.Services.AddScoped<ICPUService, CPUServiceClient>();
 builder.Services.AddScoped<ICaseService, CaseServiceClient>();
 builder.Services.AddScoped<ICPUCoolerService, CPUCoolerServiceClient>();

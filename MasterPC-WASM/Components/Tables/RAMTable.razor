@@ -71,7 +71,7 @@
                         <b>
                             <MudText Typo="Typo.inherit"> @(string.Format("${0:N2}", context.Item.Price))</MudText>
                         </b>
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Add</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" OnClick="() => OnAddRAM.InvokeAsync(context.Item)">Add</MudButton>
                     </MudStack>
                 </CellTemplate>
             </PropertyColumn>
@@ -85,6 +85,9 @@
 @code {
     [Parameter]
     public List<RAMVM>? Elements { get; set; }
+
+    [Parameter]
+    public EventCallback<RAMVM> OnAddRAM { get; set; }
 
     private string? _searchString { get; set; }
 

@@ -1,0 +1,455 @@
+﻿<MudPaper Style="border-radius: 15px; padding: 1em 1em 2em 1em">
+    <div>
+        <MudGrid>
+            <MudItem xs="12" lg="2">
+                <MudText Typo="Typo.h6">Component</MudText>
+            </MudItem>
+            <MudItem xs="12" lg="10">
+                <MudText Typo="Typo.h6">Product</MudText>
+            </MudItem>
+            <MudItem xs="12">
+                <MudDivider />
+            </MudItem>
+        </MudGrid>
+    </div>
+
+    <MudGrid>
+        <MudItem xs="12" lg="2">
+            <div class="part-list-center-content">
+                <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="products/cases">Case</MudLink>
+            </div>
+        </MudItem>
+
+        @if (PartListVM.Case is not null)
+        {
+            <MudItem xs="12" lg="8">
+                <MudGrid>
+                    <MudItem xs="2" lg="2">
+                        <div class="part-list-center-content">
+                            <MudImage Height="60" Width="60" Src="@(PartListVM.Case.ImgUrl is not null ? PartListVM.Case.ImgUrl : "favicon.ico")" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="10" lg="10">
+                        <div class="part-list-center-content">
+                            @PartListVM.Case.Name
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudItem>
+            <MudItem xs="12" lg="2">
+                <MudStack Row Class="part-list-center-content" Justify="Justify.FlexEnd">
+                    <MudButton Color="Color.Primary" Variant="Variant.Filled">
+                        Buy
+                    </MudButton>
+
+                    <MudTooltip Placement="Placement.Top" Text="Remove Case From List">
+                        <MudIconButton Icon="@Icons.Material.Filled.Clear" OnClick="() => OnDeleteCase.InvokeAsync()" />
+                    </MudTooltip>
+                </MudStack>
+            </MudItem>
+        }
+        else
+        {
+            <MudItem xs="12" lg="8">
+                <MudButton StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href="products/cases">
+                    Add Case
+                </MudButton>
+            </MudItem>
+        }
+
+        <MudItem xs="12">
+            <MudDivider />
+        </MudItem>
+
+        <MudItem xs="12" lg="2">
+            <div class="part-list-center-content">
+                <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="products/cpus">CPU</MudLink>
+            </div>
+        </MudItem>
+
+        @if (PartListVM.CPU is not null)
+        {
+            <MudItem xs="12" lg="8">
+                <MudGrid>
+                    <MudItem xs="2" lg="2">
+                        <div class="part-list-center-content">
+                            <MudImage Height="60" Width="60" Src="@(PartListVM.CPU.ImgUrl is not null ? PartListVM.CPU.ImgUrl : "favicon.ico")" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="10" lg="10">
+                        <div class="part-list-center-content">
+                            @PartListVM.CPU.Name
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudItem>
+            <MudItem xs="12" lg="2">
+                <MudStack Row Class="part-list-center-content" Justify="Justify.FlexEnd">
+                    <MudButton Color="Color.Primary" Variant="Variant.Filled">
+                        Buy
+                    </MudButton>
+
+                    <MudTooltip Placement="Placement.Top" Text="Remove CPU From List">
+                        <MudIconButton Icon="@Icons.Material.Filled.Clear" OnClick="() => OnDeleteCPU.InvokeAsync()" />
+                    </MudTooltip>
+                </MudStack>
+            </MudItem>
+        }
+        else
+        {
+            <MudItem xs="12" lg="8">
+                <MudButton StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href="products/cpus">
+                    Add CPU
+                </MudButton>
+            </MudItem>
+        }
+
+        <MudItem xs="12">
+            <MudDivider />
+        </MudItem>
+
+        <MudItem xs="12" lg="2">
+            <div class="part-list-center-content">
+                <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="products/cpu-coolers">CPU Cooler</MudLink>
+            </div>
+        </MudItem>
+
+        @if (PartListVM.CPUCooler is not null)
+        {
+            <MudItem xs="12" lg="8">
+                <MudGrid>
+                    <MudItem xs="2" lg="2">
+                        <div class="part-list-center-content">
+                            <MudImage Height="60" Width="60" Src="@(PartListVM.CPUCooler.ImgUrl is not null ? PartListVM.CPUCooler.ImgUrl : "favicon.ico")" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="10" lg="10">
+                        <div class="part-list-center-content">
+                            @PartListVM.CPUCooler.Name
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudItem>
+            <MudItem xs="12" lg="2">
+                <MudStack Row Class="part-list-center-content" Justify="Justify.FlexEnd">
+                    <MudButton Color="Color.Primary" Variant="Variant.Filled">
+                        Buy
+                    </MudButton>
+
+                    <MudTooltip Placement="Placement.Top" Text="Remove CPU Cooler From List">
+                        <MudIconButton Icon="@Icons.Material.Filled.Clear" OnClick="() => OnDeleteCPUCooler.InvokeAsync()" />
+                    </MudTooltip>
+                </MudStack>
+            </MudItem>
+        }
+        else
+        {
+            <MudItem xs="12" lg="8">
+                <MudButton StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href="products/cpu-coolers">
+                    Add CPU Cooler
+                </MudButton>
+            </MudItem>
+        }
+
+        <MudItem xs="12">
+            <MudDivider />
+        </MudItem>
+
+        <MudItem xs="12" lg="2">
+            <div class="part-list-center-content">
+                <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="products/gpus">GPU</MudLink>
+            </div>
+        </MudItem>
+
+        @if (PartListVM.GPU is not null)
+        {
+            <MudItem xs="12" lg="8">
+                <MudGrid>
+                    <MudItem xs="2" lg="2">
+                        <div class="part-list-center-content">
+                            <MudImage Height="60" Width="60" Src="@(PartListVM.GPU.ImgUrl is not null ? PartListVM.GPU.ImgUrl : "favicon.ico")" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="10" lg="10">
+                        <div class="part-list-center-content">
+                            @PartListVM.GPU.Name
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudItem>
+            <MudItem xs="12" lg="2">
+                <MudStack Row Class="part-list-center-content" Justify="Justify.FlexEnd">
+                    <MudButton Color="Color.Primary" Variant="Variant.Filled">
+                        Buy
+                    </MudButton>
+
+                    <MudTooltip Placement="Placement.Top" Text="Remove GPU From List">
+                        <MudIconButton Icon="@Icons.Material.Filled.Clear" OnClick="() => OnDeleteGPU.InvokeAsync()" />
+                    </MudTooltip>
+                </MudStack>
+            </MudItem>
+        }
+        else
+        {
+            <MudItem xs="12" lg="8">
+                <MudButton StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href="products/gpus">
+                    Add GPU
+                </MudButton>
+            </MudItem>
+        }
+
+        <MudItem xs="12">
+            <MudDivider />
+        </MudItem>
+
+        <MudItem xs="12" lg="2">
+            <div class="part-list-center-content">
+                <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="products/motherboards">Motherboard</MudLink>
+            </div>
+        </MudItem>
+
+        @if (PartListVM.Motherboard is not null)
+        {
+            <MudItem xs="12" lg="8">
+                <MudGrid>
+                    <MudItem xs="2" lg="2">
+                        <div class="part-list-center-content">
+                            <MudImage Height="60" Width="60" Src="@(PartListVM.Motherboard.ImgUrl is not null ? PartListVM.Motherboard.ImgUrl : "favicon.ico")" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="10" lg="10">
+                        <div class="part-list-center-content">
+                            <b>
+                                @PartListVM.Motherboard.Name
+                            </b>
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudItem>
+            <MudItem xs="12" lg="2">
+                <MudStack Row Class="part-list-center-content" Justify="Justify.FlexEnd">
+                    <MudButton Color="Color.Primary" Variant="Variant.Filled">
+                        Buy
+                    </MudButton>
+
+                    <MudTooltip Placement="Placement.Top" Text="Remove Motherboard From List">
+                        <MudIconButton Icon="@Icons.Material.Filled.Clear" OnClick="() => OnDeleteMotherboard.InvokeAsync()" />
+                    </MudTooltip>
+                </MudStack>
+            </MudItem>
+        }
+        else
+        {
+            <MudItem xs="12" lg="8">
+                <MudButton StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href="products/motherboards">
+                    Add Motherboard
+                </MudButton>
+            </MudItem>
+        }
+
+        <MudItem xs="12">
+            <MudDivider />
+        </MudItem>
+
+        <MudItem xs="12" lg="2">
+            <div class="part-list-center-content">
+                <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="products/power-supplies">Power Supply</MudLink>
+            </div>
+        </MudItem>
+
+        @if (PartListVM.PSU is not null)
+        {
+            <MudItem xs="12" lg="8">
+                <MudGrid>
+                    <MudItem xs="2" lg="2">
+                        <div class="part-list-center-content">
+                            <MudImage Height="60" Width="60" Src="@(PartListVM.PSU.ImgUrl is not null ? PartListVM.PSU.ImgUrl : "favicon.ico")" />
+                        </div>
+                    </MudItem>
+                    <MudItem xs="10" lg="10">
+                        <div class="part-list-center-content">
+                            @PartListVM.PSU.Name
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudItem>
+            <MudItem xs="12" lg="2">
+                <MudStack Row Class="part-list-center-content" Justify="Justify.FlexEnd">
+                    <MudButton Color="Color.Primary" Variant="Variant.Filled">
+                        Buy
+                    </MudButton>
+
+                    <MudTooltip Placement="Placement.Top" Text="Remove Power Supply From List">
+                        <MudIconButton Icon="@Icons.Material.Filled.Clear" OnClick="() => OnDeletePSU.InvokeAsync()" />
+                    </MudTooltip>
+                </MudStack>
+            </MudItem>
+        }
+        else
+        {
+            <MudItem xs="12" lg="8">
+                <MudButton StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href="products/power-supplies">
+                    Add PSU
+                </MudButton>
+            </MudItem>
+        }
+
+        <MudItem xs="12">
+            <MudDivider />
+        </MudItem>
+
+        <MudItem xs="12" lg="2">
+            <div class="part-list-center-content">
+                <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="products/ram">RAM</MudLink>
+            </div>
+        </MudItem>
+
+        @if (PartListVM.RAMs is not null && PartListVM.RAMs.Any())
+        {
+            foreach (RAMVM ram in PartListVM.RAMs)
+            {
+                @if (PartListVM.RAMs.IndexOf(ram) != 0)
+                {
+                    <MudItem xs="12" lg="2" />
+
+                }
+
+                <MudItem xs="12" lg="8">
+                    <MudGrid>
+                        <MudItem xs="2" lg="2">
+                            <div class="part-list-center-content">
+                                <MudImage Height="60" Width="60" Src="@(ram.ImgUrl is not null ? ram.ImgUrl : "favicon.ico")" />
+                            </div>
+                        </MudItem>
+                        <MudItem xs="10" lg="10">
+                            <div class="part-list-center-content">
+                                @ram.Name
+                            </div>
+                        </MudItem>
+                    </MudGrid>
+                </MudItem>
+                <MudItem xs="12" lg="2">
+                    <MudStack Row Class="part-list-center-content" Justify="Justify.FlexEnd">
+                        <MudButton Color="Color.Primary" Variant="Variant.Filled">
+                            Buy
+                        </MudButton>
+
+                        <MudTooltip Placement="Placement.Top" Text="Remove RAM From List">
+                            <MudIconButton Icon="@Icons.Material.Filled.Clear" OnClick="() => OnDeleteRAM.InvokeAsync(ram)" />
+                        </MudTooltip>
+                    </MudStack>
+                </MudItem>
+            }
+            <MudItem xs="12" lg="2" />
+            <MudItem xs="12" lg="10">
+                <MudButton StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href="products/ram">
+                    Add Additional RAM
+                </MudButton>
+            </MudItem>
+        }
+        else
+        {
+            <MudItem xs="12" lg="8">
+                <MudButton StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href="products/ram">
+                    Add RAM
+                </MudButton>
+            </MudItem>
+        }
+
+        <MudItem xs="12">
+            <MudDivider />
+        </MudItem>
+
+        <MudItem xs="12" lg="2">
+            <div class="part-list-center-content">
+                <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="products/storage">Storage</MudLink>
+            </div>
+        </MudItem>
+
+        @if (PartListVM.Storages is not null && PartListVM.Storages.Any())
+        {
+            foreach (StorageVM storage in PartListVM.Storages)
+            {
+                @if (PartListVM.Storages.IndexOf(storage) != 0)
+                {
+                    <MudItem xs="12" lg="2" />
+
+                }
+
+                <MudItem xs="12" lg="8">
+                    <MudGrid>
+                        <MudItem xs="2" lg="2">
+                            <div class="part-list-center-content">
+                                <MudImage Height="60" Width="60" Src="@(storage.ImgUrl is not null ? storage.ImgUrl : "favicon.ico")" />
+                            </div>
+                        </MudItem>
+                        <MudItem xs="10" lg="10">
+                            <div class="part-list-center-content">
+                                @storage.Name
+                            </div>
+                        </MudItem>
+                    </MudGrid>
+                </MudItem>
+                <MudItem xs="12" lg="2">
+                    <MudStack Row Class="part-list-center-content" Justify="Justify.FlexEnd">
+                        <MudButton Color="Color.Primary" Variant="Variant.Filled">
+                            Buy
+                        </MudButton>
+
+                        <MudTooltip Placement="Placement.Top" Text="Remove Storage From List">
+                            <MudIconButton Icon="@Icons.Material.Filled.Clear" OnClick="() => OnDeleteStorage.InvokeAsync(storage)" />
+                        </MudTooltip>
+                    </MudStack>
+                </MudItem>
+
+            }
+            <MudItem xs="12" lg="2" />
+            <MudItem xs="12" lg="8">
+                <MudButton StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href="products/storage">
+                    Add Additional Storage
+                </MudButton>
+            </MudItem>
+        }
+        else
+        {
+            <MudItem xs="12" lg="8">
+                <MudButton StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href="products/storage">
+                    Add Storage
+                </MudButton>
+            </MudItem>
+        }
+
+    </MudGrid>
+</MudPaper>
+
+@code {
+    // TODO: Add Add More Storage/RAM Logic
+
+    [Parameter]
+    public PartListVM PartListVM { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback OnDeleteCase { get; set; }
+
+    [Parameter]
+    public EventCallback OnDeleteCPU { get; set; }
+
+    [Parameter]
+    public EventCallback OnDeleteCPUCooler { get; set; }
+
+    [Parameter]
+    public EventCallback OnDeleteGPU { get; set; }
+
+    [Parameter]
+    public EventCallback OnDeleteMotherboard { get; set; }
+
+    [Parameter]
+    public EventCallback OnDeletePSU { get; set; }
+
+    [Parameter]
+    public EventCallback<RAMVM> OnDeleteRAM { get; set; }
+
+    [Parameter]
+    public EventCallback<StorageVM> OnDeleteStorage { get; set; }
+
+}

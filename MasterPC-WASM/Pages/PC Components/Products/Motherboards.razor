@@ -6,6 +6,9 @@
 @using MasterPC_WASM.Components.Tables;
 
 @inject IMotherboardService motherboardService
+@inject ILocalStorageServiceClient localStorageService
+@inject ISnackbar Snackbar
+@inject NavigationManager navigationManager
 
 <PageTitle> Motherboards </PageTitle>
 
@@ -90,7 +93,7 @@
             </MudItem>
 
             <MudItem xs="12" lg="9">
-                <MotherboardTable Elements="@motherboardsToRender" />
+                <MotherboardTable Elements="@motherboardsToRender" OnAddMotherboard="AddMotherboard" />
             </MudItem>
         </MudGrid>
     </MudContainer>
@@ -131,6 +134,23 @@
         priceSlider = motherboards.Max(motherboardVM => motherboardVM.Price);
 
         await base.OnInitializedAsync();
+    }
+
+    public async void AddMotherboard(MotherboardVM motherboard)
+    {
+        Snackbar.Clear();
+        bool success = await localStorageService.AddMotherboardAsync(motherboard);
+
+        if (success)
+        {
+            Snackbar.Add("Motherboard added to part list", Severity.Success);
+
+            navigationManager.NavigateTo("part-list");
+        }
+        else
+        {
+            Snackbar.Add("Error adding Motherboard to part list. Please try again later.", Severity.Error);
+        }
     }
 
     private void Filter()
