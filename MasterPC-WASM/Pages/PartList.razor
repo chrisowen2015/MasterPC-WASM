@@ -1,72 +1,87 @@
 ﻿@page "/part-list"
 
+@using MasterPC_WASM.Components
 @using MasterPC_WASM.Components.Tables
 @using MasterPC_WASM.Services;
+@using MasterPC_WASM.Utils;
 
 @inject ILocalStorageServiceClient localStorageService
 @inject NavigationManager navigationManager
 
 <PageTitle> Part List </PageTitle>
 
+@if (loading)
+{
+    <LoadingSpinner />
+}
+else
+{
+    <div>
+        <div style="padding: 2em 0; display: flex; justify-content: center; align-items: center; background-color: @(theme is not null ? theme.Palette.Tertiary : null)">
+            <MudText Align="Align.Center" Typo="Typo.h2 " Style="font-weight: 500"> Create Your Part List </MudText>
+        </div>
 
-<div>
-    <div style="padding: 2em 0; display: flex; justify-content: center; align-items: center; background-color: @(theme is not null ? theme.Palette.Tertiary : null)">
-        <MudText Align="Align.Center" Typo="Typo.h2 " Style="font-weight: 500"> Create Your Part List </MudText>
+        <div style="width: 100%; display: flex; justify-content: center">
+            <MudContainer MaxWidth="MaxWidth.ExtraLarge" Style="margin: 2em 0;">
+                <div style="margin-bottom: 2em">
+                    <MudPaper Elevation="25" Style="border-radius: 15px;">
+                        <MudToolBar>
+                            <MudTooltip Text="Copy to Clipboard" Placement="Placement.Top">
+                                <MudIconButton Icon="@Icons.Material.Outlined.ContentCopy" Color="Color.Inherit" Style="margin-right: .5em" />
+                            </MudTooltip>
+
+                            <MudText Typo="Typo.button">
+                                @uniqueURL
+                            </MudText>
+
+                            <MudSpacer />
+
+                            <MudTooltip Text="Save Part List" Placement="Placement.Top">
+                                <MudButton StartIcon="@Icons.Material.Filled.SaveAs" Variant="Variant.Outlined">
+                                    Save As
+                                </MudButton>
+                            </MudTooltip>
+
+                            <MudTooltip Text="Start New Part List" Placement="Placement.Top">
+                                <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Outlined" Style="margin-left: .5em">
+                                    Start New
+                                </MudButton>
+                            </MudTooltip>
+                        </MudToolBar>
+
+                        <MudDivider />
+
+                        <CompatibilityPanel CompatibilityMessages="compatibilityMessages" />
+                    </MudPaper>
+                </div>
+
+                @if (partListVM is not null)
+                {
+                    <PartListTable PartListVM="partListVM" OnDeleteCase="OnRemoveCase" OnDeleteCPU="OnRemoveCPU"
+                                   OnDeleteCPUCooler="OnRemoveCPUCooler" OnDeleteGPU="OnRemoveGPU" OnDeleteMotherboard="OnRemoveMotherboard"
+                                   OnDeletePSU="OnRemovePSU" OnDeleteRAM="OnRemoveRAM" OnDeleteStorage="OnRemoveStorage" />
+                }
+            </MudContainer>
+        </div>
     </div>
-
-    <div style="width: 100%; display: flex; justify-content: center">
-        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Style="margin: 2em 0;">
-            <div style="margin-bottom: 2em">
-                <MudPaper Elevation="25" Style="border-radius: 15px;">
-                    <MudToolBar>
-                        <MudTooltip Text="Copy to Clipboard" Placement="Placement.Top">
-                            <MudIconButton Icon="@Icons.Material.Outlined.ContentCopy" Color="Color.Inherit" Style="margin-right: .5em" />
-                        </MudTooltip>
-
-                        <MudText Typo="Typo.button">
-                            @uniqueURL
-                        </MudText>
-
-                        <MudSpacer />
-
-                        <MudTooltip Text="Save Part List" Placement="Placement.Top">
-                            <MudButton StartIcon="@Icons.Material.Filled.SaveAs" Variant="Variant.Outlined">
-                                Save As
-                            </MudButton>
-                        </MudTooltip>
-
-                        <MudTooltip Text="Start New Part List" Placement="Placement.Top">
-                            <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Outlined" Style="margin-left: .5em">
-                                Start New
-                            </MudButton>
-                        </MudTooltip>
-                    </MudToolBar>
-                </MudPaper>
-            </div>
-
-            @if (partListVM is not null)
-            {
-                <PartListTable PartListVM="partListVM" OnDeleteCase="OnRemoveCase" OnDeleteCPU="OnRemoveCPU" 
-                    OnDeleteCPUCooler="OnRemoveCPUCooler" OnDeleteGPU="OnRemoveGPU" OnDeleteMotherboard="OnRemoveMotherboard" 
-                    OnDeletePSU="OnRemovePSU" OnDeleteRAM="OnRemoveRAM" OnDeleteStorage="OnRemoveStorage" />
-            }
-        </MudContainer>
-    </div>
-</div>
-
-
+}
 
 @code {
     [CascadingParameter(Name = "theme")]
     private MyMudTheme? theme { get; set; }
 
+    private bool loading = true;
+
     private PartListVM partListVM { get; set; } = new PartListVM();
+    protected List<string> compatibilityMessages = new List<string>();
     private string? uniqueURL { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         partListVM = await localStorageService.GetPartListAsync();
+        compatibilityMessages = await CompatibilityCheckFunctions.GetCompatibilityMessagesAsync(partListVM);
         uniqueURL = GetUniqueURL();
+        loading = false;
 
         await base.OnInitializedAsync();
     }

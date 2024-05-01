@@ -61,6 +61,9 @@
                                     case "Manufacturer":
                                         <MudChip id="@chip.Item1" Text="@("Manufacturer: " + chip.Item2)" Variant="Variant.Filled" Color="Color.Secondary" OnClose="@((filterChip) => UpdateFilterChips(filterChip.FieldId, null))" />
                                         break;
+                                    case "Socket":
+                                        <MudChip id="@chip.Item1" Text="@("Socket: " + chip.Item2)" Variant="Variant.Filled" Color="Color.Secondary" OnClose="@((filterChip) => UpdateFilterChips(filterChip.FieldId, null))" />
+                                        break;
                                 }
                             }
                         </div>
@@ -92,7 +95,13 @@
                                 <MudText Typo="Typo.h6">Socket</MudText>
                             </TitleContent>
                             <ChildContent>
-                                <MudText Typo="Typo.body1">Sockets Go Here</MudText>
+                                <MudStack Row="false">
+                                    <MudCheckBox T="bool" Value="@(socketFilter == "All")" ValueChanged="@(isChecked => socketFilterChanged(isChecked, "All"))">All</MudCheckBox>
+                                    @foreach (var socket in cpus.Where(cpuVM => cpuVM.Socket is not null).Select(cpuVM => cpuVM.Socket).Distinct())
+                                    {
+                                        <MudCheckBox T="bool" Value="@(socketFilter == socket)" ValueChanged="@(isChecked => socketFilterChanged(isChecked, socket))">@socket</MudCheckBox>
+                                    }
+                                </MudStack>
                             </ChildContent>
                         </MudExpansionPanel>
 
@@ -138,8 +147,9 @@
     private int? tdpSlider { get; set; }
     private int? coreCountSlider { get; set; }
 
-    // Selected Filter for Manufacturer
+    // Selected Filter for Manufacturer and Socket
     private string manufacturerFilter { get; set; } = "All";
+    private string socketFilter { get; set; } = "All";
 
     private string description = "";
     private string title = "";
@@ -192,7 +202,8 @@
             cpu.Price <= priceSlider &&
             cpu.TDP <= tdpSlider &&
             cpu.CoreCount <= coreCountSlider &&
-            (manufacturerFilter == "All" || cpu.Manufacturer == manufacturerFilter)
+            (manufacturerFilter == "All" || cpu.Manufacturer == manufacturerFilter) &&
+            (socketFilter == "All" || cpu.Socket == socketFilter)
         ).ToList();
     }
 
@@ -230,6 +241,21 @@
         {
             manufacturerFilter = manufacturer;
             UpdateFilterChips("Manufacturer", manufacturer?.ToString());
+        }
+
+    }
+
+    private void socketFilterChanged(bool isChecked, string manufacturer)
+    {
+        if (!isChecked)
+        {
+            socketFilter = "All";
+            UpdateFilterChips("Socket", null);
+        }
+        else
+        {
+            socketFilter = manufacturer;
+            UpdateFilterChips("Socket", manufacturer?.ToString());
         }
 
     }
@@ -286,6 +312,9 @@
                     break;
                 case "Manufacturer":
                     manufacturerFilter = "All";
+                    break;
+                case "Socket":
+                    socketFilter = "All";
                     break;
             };
 

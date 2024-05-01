@@ -2,10 +2,10 @@
     <div>
         <MudGrid>
             <MudItem xs="12" lg="2">
-                <MudText Typo="Typo.h6">Component</MudText>
+                <MudText Typo="Typo.h5" Style="font-weight: 600">Component</MudText>
             </MudItem>
             <MudItem xs="12" lg="10">
-                <MudText Typo="Typo.h6">Product</MudText>
+                <MudText Typo="Typo.h5" Style="font-weight: 600">Product</MudText>
             </MudItem>
             <MudItem xs="12">
                 <MudDivider />
@@ -16,7 +16,7 @@
     <MudGrid>
         <MudItem xs="12" lg="2">
             <div class="part-list-center-content">
-                <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="products/cases">Case</MudLink>
+                <MudLink Typo="Typo.h5" Style="font-weight: 500" Color="Color.Inherit" Href="products/cases">Case</MudLink>
             </div>
         </MudItem>
 
@@ -31,7 +31,9 @@
                     </MudItem>
                     <MudItem xs="10" lg="10">
                         <div class="part-list-center-content">
-                            @PartListVM.Case.Name
+                            <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="@("case/" + PartListVM.Case.Id)">
+                                @PartListVM.Case.Name
+                            </MudLink>
                         </div>
                     </MudItem>
                 </MudGrid>
@@ -63,7 +65,7 @@
 
         <MudItem xs="12" lg="2">
             <div class="part-list-center-content">
-                <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="products/cpus">CPU</MudLink>
+                <MudLink Typo="Typo.h5" Color="Color.Inherit" Href="products/cpus" Style="font-weight: 500">CPU</MudLink>
             </div>
         </MudItem>
 
@@ -78,7 +80,9 @@
                     </MudItem>
                     <MudItem xs="10" lg="10">
                         <div class="part-list-center-content">
-                            @PartListVM.CPU.Name
+                            <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="@("cpu/" + PartListVM.CPU.Id)">
+                                @PartListVM.CPU.Name
+                            </MudLink>
                         </div>
                     </MudItem>
                 </MudGrid>
@@ -110,7 +114,7 @@
 
         <MudItem xs="12" lg="2">
             <div class="part-list-center-content">
-                <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="products/cpu-coolers">CPU Cooler</MudLink>
+                <MudLink Typo="Typo.h5" Style="font-weight: 500" Color="Color.Inherit" Href="products/cpu-coolers">CPU Cooler</MudLink>
             </div>
         </MudItem>
 
@@ -125,7 +129,9 @@
                     </MudItem>
                     <MudItem xs="10" lg="10">
                         <div class="part-list-center-content">
-                            @PartListVM.CPUCooler.Name
+                            <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="@("cpu-cooler/" + PartListVM.CPUCooler.Id)">
+                                @PartListVM.CPUCooler.Name
+                            </MudLink>
                         </div>
                     </MudItem>
                 </MudGrid>
@@ -157,7 +163,7 @@
 
         <MudItem xs="12" lg="2">
             <div class="part-list-center-content">
-                <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="products/gpus">GPU</MudLink>
+                <MudLink Typo="Typo.h5" Style="font-weight: 500" Color="Color.Inherit" Href="products/gpus">GPU</MudLink>
             </div>
         </MudItem>
 
@@ -172,7 +178,9 @@
                     </MudItem>
                     <MudItem xs="10" lg="10">
                         <div class="part-list-center-content">
-                            @PartListVM.GPU.Name
+                            <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="@("gpu/" + PartListVM.GPU.Id)">
+                                @PartListVM.GPU.Name
+                            </MudLink>
                         </div>
                     </MudItem>
                 </MudGrid>
@@ -204,7 +212,7 @@
 
         <MudItem xs="12" lg="2">
             <div class="part-list-center-content">
-                <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="products/motherboards">Motherboard</MudLink>
+                <MudLink Typo="Typo.h5" Style="font-weight: 500" Color="Color.Inherit" Href="products/motherboards">Motherboard</MudLink>
             </div>
         </MudItem>
 
@@ -219,9 +227,9 @@
                     </MudItem>
                     <MudItem xs="10" lg="10">
                         <div class="part-list-center-content">
-                            <b>
+                            <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="@("motherboard/" + PartListVM.Motherboard.Id)">
                                 @PartListVM.Motherboard.Name
-                            </b>
+                            </MudLink>
                         </div>
                     </MudItem>
                 </MudGrid>
@@ -253,7 +261,7 @@
 
         <MudItem xs="12" lg="2">
             <div class="part-list-center-content">
-                <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="products/power-supplies">Power Supply</MudLink>
+                <MudLink Typo="Typo.h5" Style="font-weight: 500" Color="Color.Inherit" Href="products/power-supplies">Power Supply</MudLink>
             </div>
         </MudItem>
 
@@ -268,7 +276,9 @@
                     </MudItem>
                     <MudItem xs="10" lg="10">
                         <div class="part-list-center-content">
-                            @PartListVM.PSU.Name
+                            <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="@("power-supply/" + PartListVM.PSU.Id)">
+                                @PartListVM.PSU.Name
+                            </MudLink>
                         </div>
                     </MudItem>
                 </MudGrid>
@@ -300,7 +310,7 @@
 
         <MudItem xs="12" lg="2">
             <div class="part-list-center-content">
-                <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="products/ram">RAM</MudLink>
+                <MudLink Typo="Typo.h5" Style="font-weight: 500" Color="Color.Inherit" Href="products/ram">RAM</MudLink>
             </div>
         </MudItem>
 
@@ -323,7 +333,9 @@
                         </MudItem>
                         <MudItem xs="10" lg="10">
                             <div class="part-list-center-content">
-                                @ram.Name
+                                <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="@("ram/" + ram.Id)">
+                                    @ram.Name
+                                </MudLink>
                             </div>
                         </MudItem>
                     </MudGrid>
@@ -342,7 +354,7 @@
             }
             <MudItem xs="12" lg="2" />
             <MudItem xs="12" lg="10">
-                <MudButton StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href="products/ram">
+                <MudButton StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href="products/ram" Style="width: 242px">
                     Add Additional RAM
                 </MudButton>
             </MudItem>
@@ -362,7 +374,7 @@
 
         <MudItem xs="12" lg="2">
             <div class="part-list-center-content">
-                <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="products/storage">Storage</MudLink>
+                <MudLink Typo="Typo.h5" Style="font-weight: 500" Color="Color.Inherit" Href="products/storage">Storage</MudLink>
             </div>
         </MudItem>
 
@@ -385,7 +397,9 @@
                         </MudItem>
                         <MudItem xs="10" lg="10">
                             <div class="part-list-center-content">
-                                @storage.Name
+                                <MudLink Typo="Typo.h6" Color="Color.Inherit" Href="@("storage/" + storage.Id)">
+                                    @storage.Name
+                                </MudLink>
                             </div>
                         </MudItem>
                     </MudGrid>
@@ -405,7 +419,7 @@
             }
             <MudItem xs="12" lg="2" />
             <MudItem xs="12" lg="8">
-                <MudButton StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href="products/storage">
+                <MudButton StartIcon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled" Href="products/storage" Style="width: 242px">
                     Add Additional Storage
                 </MudButton>
             </MudItem>
